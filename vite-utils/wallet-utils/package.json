@@ -1,0 +1,16 @@
+{
+  "name": "vitejs-wallet-utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "",
+    "extract_private": "node src/extract_private.js",
+    "random_mnemonic": "node src/random_mnemonic.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vite/vitejs": "^2.3.14"
+  }
+}
