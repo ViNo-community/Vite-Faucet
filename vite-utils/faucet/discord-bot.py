@@ -1,9 +1,10 @@
 # Import discord.py. Allows access to Discord's API.
 import discord
 
-# Import the os,time module.
+# Import the os,time,random module.
 import os
 import time
+import random
 
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
@@ -26,6 +27,18 @@ assert DISCORD_TOKEN is not None, 'environment variable[DISCORD_TOKEN] must be s
 bot = commands.Bot(command_prefix="!")
 
 limits = {}
+
+# Data for trivia game
+
+questions = ["What is my dog's favorite food?",
+    "What day of the week is after Sunday?",
+    "What is the capital of Russia?"]
+
+answers = [["Beef","Tacos","Ice Cream"],
+    ["Monday","Tuesday","Funday"],
+    ["St Petersburg","Moscow","Omsk"]]
+
+right_answer= [0,0,1]
 
 
 @bot.command(
@@ -63,6 +76,11 @@ async def send(ctx, *args):
             return
     limits[vite_address] = time.time() + 60 * 60
 
+    # Grab a random trivia question and ask him
+    index = random.randint(0,len(questions))
+
+    await ctx.reply(questions[index])
+    
     # Loops through the list of arguments that the user inputs.
     #blockHash = send_vite.sendVite(vite_address)
     blockHash = "[SENDING VITE TEMPORARILY DISABLED]"
