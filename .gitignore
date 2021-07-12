@@ -1,0 +1,6 @@
+*.sw?
+*.env
+*pycache*
+*.log
+logs/*
+*~
