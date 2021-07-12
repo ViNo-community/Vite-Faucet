@@ -19,6 +19,8 @@ load_dotenv()
 # Grab the API token from the .env file.
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
+print("DISCORD TOKEN is ", DISCORD_TOKEN)
+
 assert DISCORD_TOKEN is not None, 'environment variable[DISCORD_TOKEN] must be set'
 
 bot = commands.Bot(command_prefix="!")
@@ -62,7 +64,8 @@ async def send(ctx, *args):
     limits[vite_address] = time.time() + 60 * 60
 
     # Loops through the list of arguments that the user inputs.
-    blockHash = send_vite.sendVite(vite_address)
+    #blockHash = send_vite.sendVite(vite_address)
+    blockHash = "[SENDING VITE TEMPORARILY DISABLED]"
     # Sends a message to the channel using the Context object.
     await ctx.reply(blockHash)
 

@@ -5,10 +5,14 @@
 import json
 import time
 import os
+from dotenv.main import load_dotenv
 import requests
 
 session = requests.Session()
 session.trust_env = False
+
+# Loads the .env file that resides on the same level as the script.
+load_dotenv()
 
 NODE_URL = 'http://127.0.0.1:48132'
 if os.getenv('NODE_URL') != None:
@@ -18,6 +22,12 @@ from_address = os.getenv('FROM_ADDRESS')
 from_priv = os.getenv('FROM_PRIV')
 tokenId = os.getenv('TOKEN_ID')
 amount = os.getenv('TOKEN_AMOUNT')
+
+print("Environmental Variables:")
+print("From Addres: ", from_address)
+print("Private Key: ", from_priv)
+print("Token ID: ", tokenId)
+print("Amount: ", amount)
 
 assert from_address is not None, 'environment variable[FROM_ADDRESS] must be set'
 assert from_priv is not None, 'environment variable[FROM_PRIV] must be set'
