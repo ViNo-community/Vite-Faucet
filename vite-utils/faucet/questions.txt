@@ -1,0 +1,47 @@
+What is the capital of Russia?
+Moscow
+St Petersburg
+Cairo
+Omsk
+
+What element has the symbol S?
+Sulphur
+Silicon
+Selenium
+Cobalt
+
+What does Science mean in Latin?
+Knowing
+Seeing
+Measuring
+Arrogance
+
+What color has the highest frequency?
+Red
+Orange
+Violet
+Blue
+
+Light from the Sun takes eight _____ to reach Earth?
+seconds
+minutes
+hours
+days
+
+The total fee for a nano transaction is:
+Nothing
+0.00025 
+0.00055
+0.01000
+
+Nano uses the _______ consensus mechanism
+Open Representative Voting 
+Proof-of-Work
+Proof-of-Capacity
+Proof-of-Burn
+
+Both Nano and Vite use:
+Blockchain
+Directed ACyclic Graphs
+Merkle Chains
+Turing Machines
