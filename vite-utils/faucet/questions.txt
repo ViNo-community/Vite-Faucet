@@ -17,14 +17,14 @@ Measuring
 Arrogance
 
 What color has the highest frequency?
+Violet
 Red
 Orange
-Violet
 Blue
 
 Light from the Sun takes eight _____ to reach Earth?
-seconds
 minutes
+seconds
 hours
 days
 
@@ -43,5 +43,5 @@ Proof-of-Burn
 Both Nano and Vite use:
 Blockchain
 Directed ACyclic Graphs
-Merkle Chains
+Markov Chains
 Turing Machines
