@@ -45,3 +45,54 @@ Blockchain
 Directed ACyclic Graphs
 Markov Chains
 Turing Machines
+
+What Nano's original name?
+SpeedCoin
+NanoCoin
+RaiBlocks
+EnviroToken
+
+When was Nano released?
+2010
+2018
+2019
+2015
+
+What is the max supply of Nano?
+133,248,297
+99,272,786
+87,525,783
+1,000,000,000
+
+How much energy does a Nano transaction use?
+0.000112 kWh
+0.000113 kWh
+0.000002 kWh
+0.004535 kWh
+
+What is the total supply of Vite?
+3,897,467,289
+1,018,621,598
+7,928,819,896
+867,637
+
+What year was the ViteX decentralized exchange launched?
+2020
+2021
+2019
+2017
+
+Which of following is ViteX not?
+A pizza company
+A clubhouse clone
+A company that makes Rubiks cubes
+All of the above
+
+What does DeFi mean?
+Decentralized Exchange
+Decentralized Finance
+Decentralized Fiberglass
+All of the above
+
+
+
