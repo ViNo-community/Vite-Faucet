@@ -110,7 +110,16 @@ async def question(ctx, *args):
         i = i + 1
     await ctx.reply(response)
 
+# Update bot status
+@bot.event
+async def on_ready():
+    status = f" say {COMMAND_PREFIX}help"
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=status))
+    print("Bot is ready!")
+
+# Run bot
 if not DISCORD_TOKEN.isspace():
     bot.run(DISCORD_TOKEN)
 else:
     print("discord token not exists")
+
