@@ -33,7 +33,13 @@ limits = {}
 
 questions = []
 
-# Load Questions array from questions.txt file
+# Example of how to make a new Question
+question1 = Question("What is the capital of Russia?", ["Moscow","St Louis","New York City","Omsk"])
+print(question1.get_question())
+print(question1.get_anwers())
+
+# Load questions from questions.txt file
+# into Questions list
 f = open("questions.txt", "r")
 while True:
     question = f.readline().strip()
@@ -46,17 +52,22 @@ while True:
         break
     questions.append(Question(question,answers))
 
-question1 = Question("What is the capital of Russia?", ["Moscow","St Louis","New York City","Omsk"])
-print(question1.get_question())
-print(question1.get_anwers())
+# Randomly shuffle questions
+random.shuffle(questions)
 
 # Show questions
-for question in questions:
-    print(question.get_question())
+for q in questions:
+    question = q.get_question()
+    answers = q.get_anwers()
+    random.shuffle(answers)
+    print(question)
     i = 1
-    for answer in question.get_answers():
-        print(i + ") " + answer)
+    for answer in answers:
+        print(str(i) + ") " + answer)
         i = i + 1 # Stupid fucking language doesn't have i++
+
+exit()
+# FUCKING RETARDED LANGUAGE!!!!
 
 @bot.command(
     # Adds this value to the $help ping message.
@@ -96,8 +107,8 @@ async def send(ctx, *args):
     # Grab a random trivia question and ask him
     index = random.randint(0,len(questions))
 
-    await ctx.reply(questions[index].get_question())
-    await ctx.reply(questions[index].get_answers())
+   # await ctx.reply(questions[index].get_question())
+   # await ctx.reply(questions[index].get_answers())
 
 
 if not DISCORD_TOKEN.isspace():
