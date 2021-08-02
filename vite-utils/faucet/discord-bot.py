@@ -19,9 +19,11 @@ import send_vite
 load_dotenv()
 
 # Grab the API token from the .env file.
-DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+GREYLIST_TIMEOUT = os.getenv('GREYLIST_TIMEOUT')
 
 print("DISCORD TOKEN is ", DISCORD_TOKEN)
+print("TIMEOUT IS ", GREYLIST_TIMEOUT)
 
 assert DISCORD_TOKEN is not None, 'environment variable[DISCORD_TOKEN] must be set'
 
@@ -29,17 +31,7 @@ bot = commands.Bot(command_prefix="bot!")
 
 limits = {}
 
-# Data for trivia game
-
-questions = ["What is my dog's favorite food?",
-    "What day of the week is after Sunday?",
-    "What is the capital of Russia?"]
-
-answers = [["Beef","Tacos","Ice Cream"],
-    ["Monday","Tuesday","Funday"],
-    ["St Petersburg","Moscow","Omsk"]]
-
-right_answer= [0,0,1]
+questions = []
 
 # Load Questions array from questions.txt file
 f = open("questions.txt", "r")
@@ -90,21 +82,15 @@ async def send(ctx, *args):
         if limits[vite_address] > int(time.time()):
             await ctx.reply("You are greylisted for another" +
                             str(int((limits[vite_address] - time.time()) /
-                                    60)) + " minutes.")
+                                    GREYLIST_TIMEOUT)) + " minutes.")
             return
-    limits[vite_address] = time.time() + 60 * 60
+    limits[vite_address] = time.time() + 60 * GREYLIST_TIMEOUT
 
     # Grab a random trivia question and ask him
     index = random.randint(0,len(questions))
 
-    print("Index ", index)
-    await ctx.reply(questions[index])
-
-    # Loops through the list of arguments that the user inputs.
-    #blockHash = send_vite.sendVite(vite_address)
-    blockHash = "[SENDING VITE TEMPORARILY DISABLED]"
-    # Sends a message to the channel using the Context object.
-    await ctx.reply(blockHash)
+    await ctx.reply(questions[index].get_question())
+    await ctx.reply(questions[index].get_answers())
 
 
 if not DISCORD_TOKEN.isspace():
