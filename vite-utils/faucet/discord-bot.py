@@ -35,13 +35,20 @@ questions = []
 
 # Load Questions array from questions.txt file
 f = open("questions.txt", "r")
-for line in f:
+while True:
     question = f.readline().strip()
     answers = [f.readline().strip(),
               f.readline().strip(),
               f.readline().strip(),
               f.readline().strip()]
-    questions.add(Question(question,answers))
+    if(not f.readline()): 
+        print("Exit")
+        break
+    questions.append(Question(question,answers))
+
+question1 = Question("What is the capital of Russia?", ["Moscow","St Louis","New York City","Omsk"])
+print(question1.get_question())
+print(question1.get_anwers())
 
 # Show questions
 for question in questions:
