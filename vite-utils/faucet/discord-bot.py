@@ -27,7 +27,7 @@ print("TIMEOUT IS ", GREYLIST_TIMEOUT)
 
 assert DISCORD_TOKEN is not None, 'environment variable[DISCORD_TOKEN] must be set'
 
-bot = commands.Bot(command_prefix="bot!")
+bot = commands.Bot(command_prefix="!")
 
 limits = {}
 
@@ -67,27 +67,22 @@ for q in questions:
         i = i + 1
 
 @bot.command(
-    # Adds this value to the $help ping message.
-    help=
-    "Play ping-pong with bot",
-    # Adds this value to the $help message.
-    brief="Prints pong back to the channel.")
-
+    help="!ping",
+    brief="Plays ping-pong with bot.")
 async def ping(ctx):
-    # Sends a message to the channel using the Context object.
-    await ctx.reply("pong")
+    await ctx.reply("I am a stupid piece of shit robot.")
+
 @bot.command(
     help="!question <vite address>",
     brief="Displays a randomly chosen question.")
 async def question(ctx, *args):
-    response = ""
 
     # Validate that address is correct
     if len(args) != 1:
         await ctx.reply("Incorrect vite address. Use: !question <vite address>")
         return
     vite_address = args[0]
-    if(vite_address.startswith("!vite") == False):
+    if(vite_address.startswith("vite") == False):
         await ctx.reply("Please only use vite addresses.")
         return
 
@@ -100,11 +95,19 @@ async def question(ctx, *args):
             return
     limits[vite_address] = time.time() + 60 * GREYLIST_TIMEOUT
 
-    # Grab a random trivia question and ask him
+    # Grab a random trivia question 
     index = random.randint(0,len(questions))
-
-    await ctx.reply(questions[index].get_question())
-
+    q = questions[index]
+    # Print out question as multiple-choice
+    question = q.get_question()
+    answers = q.get_anwers()
+    random.shuffle(answers)
+    response = question + "\n"
+    i = 1
+    for answer in answers:
+        response = str(i) + ") " + answer + "\n"
+        i = i + 1
+    await ctx.reply(response)
 
 if not DISCORD_TOKEN.isspace():
     bot.run(DISCORD_TOKEN)
