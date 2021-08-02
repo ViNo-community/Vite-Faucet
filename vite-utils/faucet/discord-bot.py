@@ -64,12 +64,6 @@ for q in questions:
         i = i + 1
 
 @bot.command(
-    help="!ping",
-    brief="Plays ping-pong with bot.")
-async def ping(ctx):
-    await ctx.reply("I am a stupid piece of shit robot.")
-
-@bot.command(
     help="!question <vite address>",
     brief="Displays a randomly chosen question.")
 async def question(ctx, *args):
