@@ -105,3 +105,27 @@ Send
 Receive
 Open an account
 Close an account
+
+When was Banano created?
+2018
+2016
+2017
+2020
+
+What is Banano?
+A token on the Nano blockchain
+A fork of Nano
+A standalone coin
+An Erc-20 token
+
+What is the total supply of Banano?
+2.9 Billion
+2.8 Billion
+2.5 Billion
+3 Billion
+
+Banano Hodlers statistically have more _____ in their bodies?
+Beta-Carotene
+Potassium
+Protein
+Epic sauce
