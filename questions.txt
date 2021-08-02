@@ -42,7 +42,7 @@ Proof-of-Burn
 
 Both Nano and Vite use:
 Blockchain
-Directed ACyclic Graphs
+Directed Acyclic Graphs
 Markov Chains
 Turing Machines
 
@@ -93,3 +93,15 @@ Decentralized Exchange
 Decentralized Finance
 Decentralized Fiberglass
 All of the above
+
+In Nano, a block has _____ transaction(s)
+One
+100
+256
+1024
+
+Which of the following is NOT a type of Nano transaction ?
+Send
+Receive
+Open an account
+Close an account
