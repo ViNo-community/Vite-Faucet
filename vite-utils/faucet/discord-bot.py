@@ -1,5 +1,6 @@
 # Import discord.py. Allows access to Discord's API.
 import discord
+import dotenv
 from question import Question
 
 # Import the os,time,random module.
@@ -64,10 +65,30 @@ for q in questions:
         i = i + 1
 
 @bot.command(
+    help="!set_prefix <new_prefix>",
+    brief="Sets the bot prefix")
+async def set_prefix(ctx, *args):
+    try:
+        # Validate that the user entered a new prefix
+        if len(args) != 1:
+            await ctx.reply("Incorrect prefix. Usage: !set_prefix <new_prefix>")
+            return
+        # Grab the new prefix
+        new_prefix = args[0]
+        # Update the .env file
+        dotenv.set_key(".env","command_prefix", new_prefix)
+        # Update the internal bot prefix
+        # self.bot.command_prefix = new_prefix
+        # Update the bot status
+        # await self.bot.update_status()
+        await ctx.send(f"Set new command prefix to \"{new_prefix}\"")
+    except Exception as e:
+        raise Exception(f"Could not change command prefix to \"{new_prefix}\"", e)  
+
+@bot.command(
     help="!question <vite address>",
     brief="Displays a randomly chosen question.")
 async def question(ctx, *args):
-
     # Validate that address is correct
     if len(args) != 1:
         await ctx.reply("Incorrect vite address. Usage: !question <vite address>")
@@ -77,28 +98,30 @@ async def question(ctx, *args):
         await ctx.reply("Please only use vite addresses. Usage: !question <vite address>")
         return
 
-    # Check if this address is grey-listed
-    if vite_address in limits:
-        if limits[vite_address] > int(time.time()):
-            await ctx.reply("You are greylisted for another " +
-                str(int((limits[vite_address] - time.time()) /
-                    GREYLIST_TIMEOUT)) + " minutes.")
-            return
-    limits[vite_address] = time.time() + 60 * GREYLIST_TIMEOUT
-
-    # Grab a random trivia question 
-    index = random.randint(0,len(questions))
-    q = questions[index]
-    # Print out question as multiple-choice
-    question = q.get_question()
-    answers = q.get_anwers()
-    random.shuffle(answers)
-    response = question + "\n"
-    i = 1
-    for answer in answers:
-        response += str(i) + ") " + answer + "\n"
-        i = i + 1
-    await ctx.reply(response)
+    try:
+        # Check if this address is grey-listed
+        if vite_address in limits:
+            if limits[vite_address] > int(time.time()):
+                await ctx.reply("You are greylisted for another " +
+                    str(int((limits[vite_address] - time.time()) /
+                        GREYLIST_TIMEOUT)) + " minutes.")
+                return
+        limits[vite_address] = time.time() + 60 * GREYLIST_TIMEOUT
+        # Grab a random trivia question 
+        index = random.randint(0,len(questions))
+        q = questions[index]
+        # Print out question as multiple-choice
+        question = q.get_question()
+        answers = q.get_anwers()
+        random.shuffle(answers)
+        response = question + "\n"
+        i = 1
+        for answer in answers:
+            response += str(i) + ") " + answer + "\n"
+            i = i + 1
+        await ctx.reply(response)
+    except Exception as e:
+        raise Exception(f"Error processing question request", e)  
 
 # Update bot status
 @bot.event
