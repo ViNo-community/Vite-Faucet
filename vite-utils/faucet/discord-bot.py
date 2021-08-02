@@ -1,5 +1,6 @@
 # Import discord.py. Allows access to Discord's API.
 import discord
+from question import Question
 
 # Import the os,time,random module.
 import os
@@ -24,7 +25,7 @@ print("DISCORD TOKEN is ", DISCORD_TOKEN)
 
 assert DISCORD_TOKEN is not None, 'environment variable[DISCORD_TOKEN] must be set'
 
-bot = commands.Bot(command_prefix="!")
+bot = commands.Bot(command_prefix="bot!")
 
 limits = {}
 
@@ -40,6 +41,23 @@ answers = [["Beef","Tacos","Ice Cream"],
 
 right_answer= [0,0,1]
 
+# Load Questions array from questions.txt file
+f = open("questions.txt", "r")
+for line in f:
+    question = f.readline().strip()
+    answers = [f.readline().strip(),
+              f.readline().strip(),
+              f.readline().strip(),
+              f.readline().strip()]
+    questions.add(Question(question,answers))
+
+# Show questions
+for question in questions:
+    print(question.get_question())
+    i = 1
+    for answer in question.get_answers():
+        print(i + ") " + answer)
+        i = i + 1 # Stupid fucking language doesn't have i++
 
 @bot.command(
     # Adds this value to the $help ping message.
@@ -79,8 +97,9 @@ async def send(ctx, *args):
     # Grab a random trivia question and ask him
     index = random.randint(0,len(questions))
 
+    print("Index ", index)
     await ctx.reply(questions[index])
-    
+
     # Loops through the list of arguments that the user inputs.
     #blockHash = send_vite.sendVite(vite_address)
     blockHash = "[SENDING VITE TEMPORARILY DISABLED]"
