@@ -18,8 +18,8 @@ NODE_URL = 'http://127.0.0.1:48132'
 if os.getenv('NODE_URL') != None:
     NODE_URL = os.getenv('NODE_URL')
 
-from_address = os.getenv('FROM_ADDRESS')
-from_priv = os.getenv('FROM_PRIV')
+from_address = os.getenv('FAUCET_ADDRESS')
+from_priv = os.getenv('FAUCET_PRIVATE_KEY')
 tokenId = os.getenv('TOKEN_ID')
 amount = os.getenv('TOKEN_AMOUNT')
 
@@ -28,11 +28,10 @@ print("Private Key: ", from_priv)
 print("Token ID: ", tokenId)
 print("Amount: ", amount)
 
-assert from_address is not None, 'environment variable[FROM_ADDRESS] must be set'
-assert from_priv is not None, 'environment variable[FROM_PRIV] must be set'
+assert from_address is not None, 'environment variable[FAUCET_ADDRESS] must be set'
+assert from_priv is not None, 'environment variable[FAUCET_PRIVATE_KEY] must be set'
 assert tokenId is not None, 'environment variable[TOKEN_ID] must be set'
 assert amount is not None, 'environment variable[TOKEN_AMOUNT] must be set'
-
 
 def json_rpc(rpc_url, payload, thx=True):
     response = session.post(rpc_url, json=payload, timeout=2).json()
