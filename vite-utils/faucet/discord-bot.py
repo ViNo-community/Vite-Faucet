@@ -20,7 +20,7 @@ load_dotenv()
 
 # Grab the API token from the .env file.
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
-GREYLIST_TIMEOUT = os.getenv('GREYLIST_TIMEOUT')
+GREYLIST_TIMEOUT = int(os.getenv('GREYLIST_TIMEOUT'))
 COMMAND_PREFIX = os.getenv('COMMAND_PREFIX')
 
 print("DISCORD TOKEN is ", DISCORD_TOKEN)
@@ -80,19 +80,19 @@ async def question(ctx, *args):
 
     # Validate that address is correct
     if len(args) != 1:
-        await ctx.reply("Incorrect vite address. Use: !question <vite address>")
+        await ctx.reply("Incorrect vite address. Usage: !question <vite address>")
         return
     vite_address = args[0]
     if(vite_address.startswith("vite") == False):
-        await ctx.reply("Please only use vite addresses.")
+        await ctx.reply("Please only use vite addresses. Usage: !question <vite address>")
         return
 
     # Check if this address is grey-listed
     if vite_address in limits:
         if limits[vite_address] > int(time.time()):
-            await ctx.reply("You are greylisted for another" +
-                            str(int((limits[vite_address] - time.time()) /
-                                    GREYLIST_TIMEOUT)) + " minutes.")
+            await ctx.reply("You are greylisted for another " +
+                str(int((limits[vite_address] - time.time()) /
+                    GREYLIST_TIMEOUT)) + " minutes.")
             return
     limits[vite_address] = time.time() + 60 * GREYLIST_TIMEOUT
 
@@ -121,5 +121,4 @@ async def on_ready():
 if not DISCORD_TOKEN.isspace():
     bot.run(DISCORD_TOKEN)
 else:
-    print("discord token not exists")
-
+    print("Bad DISCORD_TOKEN")
