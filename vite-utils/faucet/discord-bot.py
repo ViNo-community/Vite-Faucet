@@ -20,10 +20,10 @@ load_dotenv()
 
 # Grab the API token from the .env file.
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
-GREYLIST_TIMEOUT = float(os.getenv('GREYLIST_TIMEOUT')) 
+GREYLIST_TIMEOUT = float(os.getenv('GREYLIST_TIMEOUT') or 0.0)
 TOKEN_AMOUNT = float(os.getenv('TOKEN_AMOUNT'))
-MAX_QUESTIONS_AMOUNT = float(os.getenv('MAX_QUESTIONS_AMOUNT')) 
-COMMAND_PREFIX = os.getenv('COMMAND_PREFIX')
+MAX_QUESTIONS_AMOUNT = float(os.getenv('MAX_QUESTIONS_AMOUNT') or 0.0) 
+COMMAND_PREFIX = os.getenv('COMMAND_PREFIX') or "!"
 
 print("DISCORD TOKEN is ", DISCORD_TOKEN)
 print("TIMEOUT IS ", GREYLIST_TIMEOUT)
@@ -109,9 +109,10 @@ async def question(ctx, *args):
 # Update bot status
 @bot.event
 async def on_ready():
+    print("Bot is ready!")
     status = f" say {COMMAND_PREFIX}help"
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=status))
-    print("Bot is ready!")
+
 
 # Run bot
 if not DISCORD_TOKEN.isspace():
