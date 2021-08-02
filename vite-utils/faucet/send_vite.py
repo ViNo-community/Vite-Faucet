@@ -23,7 +23,6 @@ from_priv = os.getenv('FROM_PRIV')
 tokenId = os.getenv('TOKEN_ID')
 amount = os.getenv('TOKEN_AMOUNT')
 
-print("Environmental Variables:")
 print("From Addres: ", from_address)
 print("Private Key: ", from_priv)
 print("Token ID: ", tokenId)
