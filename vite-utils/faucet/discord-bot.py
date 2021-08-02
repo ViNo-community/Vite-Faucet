@@ -21,13 +21,14 @@ load_dotenv()
 # Grab the API token from the .env file.
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 GREYLIST_TIMEOUT = os.getenv('GREYLIST_TIMEOUT')
+COMMAND_PREFIX = os.getenv('COMMAND_PREFIX')
 
 print("DISCORD TOKEN is ", DISCORD_TOKEN)
 print("TIMEOUT IS ", GREYLIST_TIMEOUT)
 
 assert DISCORD_TOKEN is not None, 'environment variable[DISCORD_TOKEN] must be set'
 
-bot = commands.Bot(command_prefix="!")
+bot = commands.Bot(command_prefix=COMMAND_PREFIX)
 
 limits = {}
 
