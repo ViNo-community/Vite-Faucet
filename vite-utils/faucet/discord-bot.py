@@ -20,27 +20,23 @@ load_dotenv()
 
 # Grab the API token from the .env file.
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
-GREYLIST_TIMEOUT = int(os.getenv('GREYLIST_TIMEOUT'))
+GREYLIST_TIMEOUT = float(os.getenv('GREYLIST_TIMEOUT')) 
+TOKEN_AMOUNT = float(os.getenv('TOKEN_AMOUNT'))
+MAX_QUESTIONS_AMOUNT = float(os.getenv('MAX_QUESTIONS_AMOUNT')) 
 COMMAND_PREFIX = os.getenv('COMMAND_PREFIX')
 
 print("DISCORD TOKEN is ", DISCORD_TOKEN)
 print("TIMEOUT IS ", GREYLIST_TIMEOUT)
 
-assert DISCORD_TOKEN is not None, 'environment variable[DISCORD_TOKEN] must be set'
+assert DISCORD_TOKEN is not None, 'DISCORD_TOKEN must be set in .env'
 
 bot = commands.Bot(command_prefix=COMMAND_PREFIX)
 
 limits = {}
 
-questions = []
-
-# Example of how to make a new Question
-question1 = Question("What is the capital of Russia?", ["Moscow","St Louis","New York City","Omsk"])
-print(question1.get_question())
-print(question1.get_anwers())
-
 # Load questions from questions.txt file
 # into Questions list
+questions = []
 f = open("questions.txt", "r")
 while True:
     question = f.readline().strip()

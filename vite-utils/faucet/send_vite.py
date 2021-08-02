@@ -18,20 +18,20 @@ NODE_URL = 'http://127.0.0.1:48132'
 if os.getenv('NODE_URL') != None:
     NODE_URL = os.getenv('NODE_URL')
 
-from_address = os.getenv('FAUCET_ADDRESS')
-from_priv = os.getenv('FAUCET_PRIVATE_KEY')
-tokenId = os.getenv('TOKEN_ID')
-amount = os.getenv('TOKEN_AMOUNT')
+FAUCET_ADDRESS = os.getenv('FAUCET_ADDRESS')
+FAUCET_PRIVATE_KEY = os.getenv('FAUCET_PRIVATE_KEY')
+TOKEN_ID = os.getenv('TOKEN_ID')
+TOKEN_AMOUNT = float(os.getenv('TOKEN_AMOUNT'))
 
-print("From Addres: ", from_address)
-print("Private Key: ", from_priv)
-print("Token ID: ", tokenId)
-print("Amount: ", amount)
+print("FAUCET: ", FAUCET_ADDRESS)
+print("FAUCET PRIVATE KEY: ", FAUCET_PRIVATE_KEY)
+print("TOKEN ID: ", TOKEN_ID)
+print("TOKEN AMOUNT: ", TOKEN_AMOUNT)
 
-assert from_address is not None, 'environment variable[FAUCET_ADDRESS] must be set'
-assert from_priv is not None, 'environment variable[FAUCET_PRIVATE_KEY] must be set'
-assert tokenId is not None, 'environment variable[TOKEN_ID] must be set'
-assert amount is not None, 'environment variable[TOKEN_AMOUNT] must be set'
+assert FAUCET_ADDRESS is not None, 'FAUCET_ADDRESS must be set in .env'
+assert FAUCET_PRIVATE_KEY is not None, 'FAUCET_PRIVATE_KEY must be set in .env'
+assert TOKEN_ID is not None, 'TOKEN_ID must be set in .env'
+assert TOKEN_AMOUNT is not None, 'TOKEN_AMOUNT must be in .env'
 
 def json_rpc(rpc_url, payload, thx=True):
     response = session.post(rpc_url, json=payload, timeout=2).json()
