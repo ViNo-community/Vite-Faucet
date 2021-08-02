@@ -64,38 +64,34 @@ for q in questions:
     i = 1
     for answer in answers:
         print(str(i) + ") " + answer)
-        i = i + 1 # Stupid fucking language doesn't have i++
-
-exit()
-# FUCKING RETARDED LANGUAGE!!!!
+        i = i + 1
 
 @bot.command(
     # Adds this value to the $help ping message.
     help=
-    "Uses come crazy logic to determine if pong is actually the correct value or not.",
+    "Play ping-pong with bot",
     # Adds this value to the $help message.
     brief="Prints pong back to the channel.")
+
 async def ping(ctx):
     # Sends a message to the channel using the Context object.
     await ctx.reply("pong")
-
-
-# Command $print. This takes an in a list of arguments from the user and simply prints the values back to the channel.
-
-
 @bot.command(
-    # Adds this value to the $help print message.
-    help="!send vite_xxxx",
-    # Adds this value to the $help message.
-    brief="get test vite token from faucet bot.")
-async def send(ctx, *args):
+    help="!question <vite address>",
+    brief="Displays a randomly chosen question.")
+async def question(ctx, *args):
     response = ""
 
+    # Validate that address is correct
     if len(args) != 1:
-        await ctx.reply("error vite address")
+        await ctx.reply("Incorrect vite address. Use: !question <vite address>")
         return
     vite_address = args[0]
+    if(vite_address.startswith("!vite") == False):
+        await ctx.reply("Please only use vite addresses.")
+        return
 
+    # Check if this address is grey-listed
     if vite_address in limits:
         if limits[vite_address] > int(time.time()):
             await ctx.reply("You are greylisted for another" +
@@ -107,8 +103,7 @@ async def send(ctx, *args):
     # Grab a random trivia question and ask him
     index = random.randint(0,len(questions))
 
-   # await ctx.reply(questions[index].get_question())
-   # await ctx.reply(questions[index].get_answers())
+    await ctx.reply(questions[index].get_question())
 
 
 if not DISCORD_TOKEN.isspace():
