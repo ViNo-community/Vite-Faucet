@@ -106,7 +106,7 @@ async def question(ctx, *args):
     response = question + "\n"
     i = 1
     for answer in answers:
-        response = str(i) + ") " + answer + "\n"
+        response += str(i) + ") " + answer + "\n"
         i = i + 1
     await ctx.reply(response)
 
