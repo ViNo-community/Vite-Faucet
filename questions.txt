@@ -4,10 +4,10 @@ St Petersburg
 Cairo
 Omsk
 
-What element has the symbol S?
-Sulphur
+What element has the symbol K?
+Potassium
 Silicon
-Selenium
+Nitrogren
 Cobalt
 
 What does Science mean in Latin?
@@ -105,3 +105,59 @@ Send
 Receive
 Open an account
 Close an account
+
+When was Banano created?
+2018
+2016
+2017
+2020
+
+What is Banano?
+A token on the Nano blockchain
+A fork of Nano
+A standalone coin
+An Erc-20 token
+
+What is the total supply of Banano?
+2.9 Billion
+2.8 Billion
+2.5 Billion
+3 Billion
+
+Banano Hodlers statistically have more _____ in their bodies?
+Beta-Carotene
+Potassium
+Protein
+Epic sauce
+
+What is the purpose of Banano?
+Memes
+Decentralisation of bananas
+Fast transactions
+All of the above
+
+Where were the 1996 Summer Games held?
+Atlanta
+Los Angeles
+Beijing
+Tokyo
+
+What country was the first to accept Bitcoin as legal tender?
+San Marino
+El Salvador
+Tuvalu
+All of the above
+
+Which of the following is not a Banano wallet?
+Kalium
+Discord Tip Bot
+Banano Vault
+Exodus
+
+What does DEX mean?
+PokeDex
+Decentralised Exchange
+dEXTRAMONEY
+All of the above
+
+
