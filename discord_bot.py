@@ -119,7 +119,8 @@ async def question(ctx, *args):
         for answer in answers:
             response += str(i) + ") " + answer + "\n"
             i = i + 1
-        await ctx.reply(response)
+        await ctx.message.author.send(response)
+        #await ctx.reply(response)
     except Exception as e:
         raise Exception(f"Error processing question request", e)  
 
