@@ -1,6 +1,8 @@
 # Import discord.py. Allows access to Discord's API.
 import discord
 import dotenv
+from common import Common
+from threading import Thread
 from question import Question
 
 # Import the os,time,random module.
@@ -130,7 +132,6 @@ async def on_ready():
     print("Bot is ready!")
     status = f" say {COMMAND_PREFIX}help"
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=status))
-
 
 # Run bot
 if not DISCORD_TOKEN.isspace():
