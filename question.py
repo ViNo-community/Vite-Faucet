@@ -16,6 +16,10 @@ class Question:
     def get_question(self):
         return self.question
 
+    def get_correct_answer(self):
+        return self.answers[0]
+    
+
     # Randomly scramble answers
     def get_anwers(self):
         random.shuffle(self.answers)

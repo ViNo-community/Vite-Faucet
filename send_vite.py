@@ -93,8 +93,8 @@ def sendVite(to_address):
     while int(height()) < 3:
         print("waiting snapshot height inc")
         time.sleep(2)
-    result = sendWithPriv(from_address, to_address, amount, '', tokenId,
-                          from_priv)
+    result = sendWithPriv(FAUCET_ADDRESS, to_address, TOKEN_AMOUNT, '', TOKEN_ID,
+                          FAUCET_PRIVATE_KEY)
     if "error" in result:
         return result['error']
     i = 0

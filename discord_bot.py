@@ -123,6 +123,11 @@ async def question(ctx, *args):
             i = i + 1
         await ctx.message.author.send(response)
         #await ctx.reply(response)
+        user_answer = ""
+        if(user_answer == question.get_correct_answer()):
+            send_vite(vite_address)
+        else:
+               await ctx.message.author.send("Wrong answer!")
     except Exception as e:
         raise Exception(f"Error processing question request", e)  
 
