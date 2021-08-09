@@ -34,12 +34,13 @@ assert TOKEN_ID is not None, 'TOKEN_ID must be set in .env'
 assert TOKEN_AMOUNT is not None, 'TOKEN_AMOUNT must be in .env'
 
 def json_rpc(rpc_url, payload, thx=True):
-    response = session.post(rpc_url, json=payload, timeout=2).json()
-    print(json.dumps(payload), json.dumps(response))
-    if thx:
-        assert "error" not in response
-        assert "Error" not in response
-    return response
+    print("Sending json: " + payload)
+   # response = session.post(rpc_url, json=payload, timeout=2).json()
+    #print(json.dumps(payload), json.dumps(response))
+    #if thx:
+    #    assert "error" not in response
+    #    assert "Error" not in response
+    #return response
 
 
 def height():
