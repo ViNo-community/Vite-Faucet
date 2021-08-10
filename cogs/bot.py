@@ -11,7 +11,7 @@ class BotCog(commands.Cog, name="Bot"):
     async def set_prefix(self, ctx, new_prefix=""):
         # Check that new prefix is valid
         if(new_prefix == ""):
-            await ctx.send(f"Usage: {self.bot.command_prefix}set_prefix <new_prefix>")
+            await ctx.reply(f"Usage: {self.bot.command_prefix}set_prefix <new_prefix>")
             return
         try:
             # Update command prefix
@@ -21,21 +21,23 @@ class BotCog(commands.Cog, name="Bot"):
             # Update the bot status
             await self.bot.update_status()
             # Alert user of successful command prefix update
-            await ctx.send(f"Set new command prefix to \"{new_prefix}\"")
+            await ctx.reply(f"Set new command prefix to \"{new_prefix}\"")
         except Exception as e:
             raise Exception(f"Could not change command prefix to \"{new_prefix}\"", e)  
 
     # Shows all current bot settings
-    @commands.command(name='show_all', help="Show all bot settings")
-    async def show_all(self,ctx):
+    @commands.command(name='show_config', aliases=['config','botconfig','bot_config'], help="Show the current bot config")
+    async def show_config(self,ctx):
         try:
             # Show ALL information
-            response = f"Command prefix: {self.bot.command_prefix}" + \
-                f"\nLogging Level: {Common.logger.level}" + \
-                f"\nGreylist Time Period: {self.bot.greylist_timeout}" + \
-                f"\nToken Amount Per Correct Answer: {self.bot.token_amount}" + \
-                f"\nMax Questions Per Time Period: {self.bot.max_questions_amount}"
-            await ctx.send(response)
+            response = f"**Command Prefix:** {self.bot.command_prefix}" + \
+                f"\n**Logging Level:** {Common.logger.level}" + \
+                f"\n**Faucet Address:** {self.bot.faucet_address}" + \
+                f"\n**Greylist Time Period:** {self.bot.greylist_timeout}" + \
+                f"\n**Token Type ID (TTI):** {self.bot.token_id}" + \
+                f"\n**Token Amount Per Correct Answer:** {self.bot.token_amount}" + \
+                f"\n**Max Questions Per Time Period:** {self.bot.max_questions_amount}"
+            await ctx.reply(response)
         except Exception as e:
             raise Exception("Exception showing info summary", e)   
 
@@ -49,7 +51,7 @@ class BotCog(commands.Cog, name="Bot"):
             # Save in .env file
             dotenv.set_key(".env","logging_level", new_level)
             # Report successful logging level update to user
-            await ctx.send(f"Set logging level to {new_logging_level}")
+            await ctx.reply(f"Set logging level to {new_logging_level}")
         except Exception as e:
             raise Exception(f"Could not change logging level to {new_logging_level}", e)    
 

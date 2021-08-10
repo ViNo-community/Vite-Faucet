@@ -16,7 +16,7 @@ class GameCog(commands.Cog, name="Game"):
     async def start(self, ctx, vite_address=""):
         # Check that vite_address is not blank
         if(vite_address == ""):
-            await ctx.send(f"Usage: {self.bot.command_prefix}start <new_prefix>")
+            await ctx.reply(f"Usage: {self.bot.command_prefix}start <new_prefix>")
             return    
         # Make sure that address is for vite
         if(vite_address.startswith("vite_") == False):
