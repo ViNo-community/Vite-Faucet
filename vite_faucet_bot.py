@@ -25,6 +25,7 @@ class ViteFaucetBot(commands.Bot):
     initialized = False
     online = True
     discord_token = ""
+    logging_level = 0
     greylist_timeout = 0.0
     token_amount = 0
     token_id = ""
@@ -46,6 +47,7 @@ class ViteFaucetBot(commands.Bot):
         # Grab the API token from the .env file.
         self.faucet_address = os.getenv('faucet_address')
         self.faucet_private_key = os.getenv('faucet_private_key')
+        self.logging_level = os.getenv("logging_level")
         self.discord_token = os.getenv('discord_token')
         self.greylist_timeout = float(os.getenv('greylist_timeout') or 0.0)
         self.token_amount = float(os.getenv('token_amount'))

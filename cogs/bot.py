@@ -31,7 +31,7 @@ class BotCog(commands.Cog, name="Bot"):
         try:
             # Show ALL information
             response = f"**Command Prefix:** {self.bot.command_prefix}" + \
-                f"\n**Logging Level:** {Common.logger.level}" + \
+                f"\n**Logging Level:** {self.bot.logging_level}" + \
                 f"\n**Faucet Address:** {self.bot.faucet_address}" + \
                 f"\n**Greylist Time Period:** {self.bot.greylist_timeout}" + \
                 f"\n**Token Type ID (TTI):** {self.bot.token_id}" + \
@@ -48,6 +48,7 @@ class BotCog(commands.Cog, name="Bot"):
             new_logging_level = int(new_level)
             # Update logging level
             Common.logger.setLevel(new_logging_level)
+            self.bot.logging_level = new_logging_level
             # Save in .env file
             dotenv.set_key(".env","logging_level", new_level)
             # Report successful logging level update to user
