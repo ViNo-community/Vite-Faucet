@@ -27,6 +27,9 @@ class ViteFaucetBot(commands.Bot):
     discord_token = ""
     greylist_timeout = 0.0
     token_amount = 0
+    token_id = ""
+    faucet_address = ""
+    faucet_private_key = ""
     max_questions_amount = 0.0
     rpc_url = ""
     command_prefix = "!"
@@ -41,11 +44,14 @@ class ViteFaucetBot(commands.Bot):
         # Loads the .env file that resides on the same level as the script.
         load_dotenv()
         # Grab the API token from the .env file.
-        self.discord_token = os.getenv('DISCORD_TOKEN')
-        self.greylist_timeout = float(os.getenv('GREYLIST_TIMEOUT') or 0.0)
-        self.token_amount = float(os.getenv('TOKEN_AMOUNT'))
-        self.max_questions_amount = float(os.getenv('MAX_QUESTIONS_AMOUNT') or 0.0) 
-        self.command_prefix = os.getenv('COMMAND_PREFIX') or "!"
+        self.faucet_address = os.getenv('faucet_address')
+        self.faucet_private_key = os.getenv('faucet_private_key')
+        self.discord_token = os.getenv('discord_token')
+        self.greylist_timeout = float(os.getenv('greylist_timeout') or 0.0)
+        self.token_amount = float(os.getenv('token_amount'))
+        self.token_id = os.getenv('token_id')
+        self.max_questions_amount = float(os.getenv('max_questions_amount') or 0.0) 
+        self.command_prefix = os.getenv('command_prefix') or "!"
         # Assert that DISCORD_TOKEN is not blank
         assert self.discord_token is not None, 'DISCORD_TOKEN must be set in .env.'
         assert not self.discord_token.isspace(), 'DISCORD_TOKEN must not be blank in .env.'
@@ -125,13 +131,13 @@ class ViteFaucetBot(commands.Bot):
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
             Common.logger.error(f"{ctx.message.author} tried unknown command \"{ctx.invoked_with}\" Error: {error}", exc_info=True)
-            await ctx.send(f"I do not know what \"{ctx.invoked_with}\" means.")
+            await ctx.reply(f"I do not know what \"{ctx.invoked_with}\" means.")
         elif isinstance(error, ConnectionError):
             Common.logger.error(f"Connection Error: {error}", exc_info=True)
-            await ctx.send(f"Connection Error executing command \"{ctx.invoked_with}\". Please check logs")
+            await ctx.reply(f"Connection Error executing command \"{ctx.invoked_with}\". Please check logs")
         else:
             Common.logger.error(f"Error: {error}", exc_info=True)
-            await ctx.send(f"Error executing command \"{ctx.invoked_with}\". Please check logs.")
+            await ctx.reply(f"Error executing command \"{ctx.invoked_with}\". Please check logs.")
 
     # This is called when the bot disconnects
     async def on_disconnect(self):
