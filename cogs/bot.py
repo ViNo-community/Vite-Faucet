@@ -30,7 +30,12 @@ class BotCog(commands.Cog, name="Bot"):
     async def show_all(self,ctx):
         try:
             # Show ALL information
-            await ctx.send("Current command prefix: " + self.command_prefix)
+            response = f"Command prefix: {self.bot.command_prefix}" + \
+                f"\nLogging Level: {Common.logger.level}" + \
+                f"\nGreylist Time Period: {self.bot.greylist_timeout}" + \
+                f"\nToken Amount Per Correct Answer: {self.bot.token_amount}" + \
+                f"\nMax Questions Per Time Period: {self.bot.max_questions_amount}"
+            await ctx.send(response)
         except Exception as e:
             raise Exception("Exception showing info summary", e)   
 
