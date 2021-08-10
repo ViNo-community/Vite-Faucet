@@ -3,6 +3,8 @@ import discord
 import dotenv
 from common import Common
 from question import Question
+import traceback
+import sys
 
 # Import the os,time,random module.
 import os
@@ -15,7 +17,7 @@ from dotenv import load_dotenv
 # Import commands from the discord.ext module.
 from discord.ext import commands
 
-import send_vite
+#import send_vite
 
 class ViteFaucetBot(commands.Bot):
 
@@ -51,6 +53,16 @@ class ViteFaucetBot(commands.Bot):
         self.load_questions("questions.txt")
         # Init set command prefix and description
         commands.Bot.__init__(self, command_prefix=self.command_prefix,description="Vite Faucet Bot")
+        # Automatically load cogs
+        for file in os.listdir('./cogs'):
+            if file.endswith(".py"):
+                try:
+                    self.load_extension(f"cogs.{file[:-3]}")
+                    Common.log(f"Loaded Cog: {file}")
+                    print(f"Loaded: {file}")
+                except Exception as e:
+                    Common.log_error(f"Could not load Cog: {file}: {e}")
+                    print(f"Could not load: {file}:", e)
 
     def load_questions(self, questions_file):    
         # Load questions from questions_file file
@@ -78,6 +90,7 @@ class ViteFaucetBot(commands.Bot):
         # Randomly shuffle questions
         random.shuffle(self.questions)
         # Show questions [for debugging - will remove before release]
+        '''
         for q in self.questions:
             question = q.get_question()
             answers = q.get_anwers()
@@ -87,75 +100,11 @@ class ViteFaucetBot(commands.Bot):
             for answer in answers:
                 print(str(i) + ") " + answer)
                 i = i + 1 
+        '''
 
     def run(self):
         # Run bot
         super().run(self.discord_token)        
-
-    @commands.command(name='set_prefix', help='Set bot prefix')
-    async def set_prefix(self, ctx, *args):
-        try:
-            # Validate that the user entered a new prefix
-            if len(args) != 1:
-                await ctx.reply("Incorrect prefix. Usage: !set_prefix <new_prefix>")
-                return
-            # Grab the new prefix
-            new_prefix = args[0]
-            # Update the .env file
-            dotenv.set_key(".env","command_prefix", new_prefix)
-            # Update the internal bot prefix
-            self.command_prefix = new_prefix
-            # Update the bot status
-            await self.bot.update_status()
-            # Alert user of successful command prefix update
-            await ctx.send(f"Set new command prefix to \"{new_prefix}\"")
-        except Exception as e:
-            raise Exception(f"Could not change command prefix to \"{new_prefix}\"", e)  
-
-    @commands.command(name='question', help="!question <vite address>", brief="Displays a randomly chosen question.")
-    async def question(self, ctx, *args):
-        # Validate that address is correct
-        if len(args) != 1:
-            await ctx.reply("Incorrect vite address. Usage: !question <vite address>")
-            return
-        vite_address = args[0]
-        if(vite_address.startswith("vite_") == False):
-            await ctx.reply("Please only use vite addresses. Usage: !question <vite address>")
-            return
-        try:
-            # Check if this address is grey-listed
-            if vite_address in self.limits:
-                if self.limits[vite_address] > int(time.time()):
-                    await ctx.reply("You are greylisted for another " +
-                        str(int((self.limits[vite_address] - time.time()) /
-                            self.greylist_timeout)) + " minutes.")
-                    return
-            self.limits[vite_address] = time.time() + 60 * self.greylist_timeout
-            # Grab a random trivia question 
-            index = random.randint(0,len(self.questions))
-            q = self.questions[index]
-            # Print out question as multiple-choice
-            question = q.get_question()
-            answers = q.get_anwers()
-            # Randomly shuffle answers
-            random.shuffle(answers)
-            response = question + "\n"
-            i = 1
-            for answer in answers:
-                label = str(i) + ") " + answer
-                response += label + "\n"
-                i = i + 1
-            await ctx.message.author.send(response)
-            # TODO: Grab users answer, check it against correct answer
-            # If correct send_vite else next questions
-            # Grab users answer
-            user_answer = ""
-            if(user_answer == question.get_correct_answer()):
-                send_vite(vite_address)
-            else:
-                await ctx.message.author.send("Wrong answer!")
-        except Exception as e:
-            raise Exception(f"Error processing question request", e)  
 
     # This is called when the bot has logged on and set everything up
     async def on_ready(self):
@@ -198,5 +147,7 @@ if __name__=='__main__':
         # Run the bot loop
         bot.run()
     except Exception as ex:
-        print(f"ERROR: {ex}")
+        Common.logger.error(f"Error starting program: {ex}", exc_info=True)
+        print(traceback.format_exc(), file=sys.stderr)
+        print(f"Error starting program: {ex}")
         exit(0)

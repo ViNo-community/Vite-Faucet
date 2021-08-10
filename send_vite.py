@@ -23,11 +23,6 @@ FAUCET_PRIVATE_KEY = os.getenv('FAUCET_PRIVATE_KEY')
 TOKEN_ID = os.getenv('TOKEN_ID')
 TOKEN_AMOUNT = float(os.getenv('TOKEN_AMOUNT'))
 
-print("FAUCET: ", FAUCET_ADDRESS)
-print("FAUCET PRIVATE KEY: ", FAUCET_PRIVATE_KEY)
-print("TOKEN ID: ", TOKEN_ID)
-print("TOKEN AMOUNT: ", TOKEN_AMOUNT)
-
 assert FAUCET_ADDRESS is not None, 'FAUCET_ADDRESS must be set in .env'
 assert FAUCET_PRIVATE_KEY is not None, 'FAUCET_PRIVATE_KEY must be set in .env'
 assert TOKEN_ID is not None, 'TOKEN_ID must be set in .env'
