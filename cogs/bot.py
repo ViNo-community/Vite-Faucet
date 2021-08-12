@@ -7,7 +7,8 @@ class BotCog(commands.Cog, name="Bot"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='set_prefix', help='Set bot prefix')
+    @commands.command(name='set_prefix', help='Set bot prefix [Admin Only]')
+    @commands.has_any_role('Core','Dev')
     async def set_prefix(self, ctx, new_prefix=""):
         # Check that new prefix is valid
         if(new_prefix == ""):
@@ -30,7 +31,8 @@ class BotCog(commands.Cog, name="Bot"):
     async def show_config(self,ctx):
         try:
             # Show ALL information
-            response = f"**Command Prefix:** {self.bot.command_prefix}" + \
+            response = f"**Disabled:** {self.bot.disabled}" + \
+                f"\n**Command Prefix:** {self.bot.command_prefix}" + \
                 f"\n**Logging Level:** {self.bot.logging_level}" + \
                 f"\n**Faucet Address:** {self.bot.faucet_address}" + \
                 f"\n**Greylist Time Period:** {self.bot.greylist_timeout}" + \
@@ -42,7 +44,8 @@ class BotCog(commands.Cog, name="Bot"):
             raise Exception("Exception showing info summary", e)   
 
     # Set logging level for the bot
-    @commands.command(name='set_logging', help="Set logging level")
+    @commands.command(name='set_logging', help="Set logging level [Admin Only]")
+    @commands.has_any_role('Core','Dev')
     async def set_logging(self,ctx,new_level):
         try:
             new_logging_level = int(new_level)
@@ -55,6 +58,25 @@ class BotCog(commands.Cog, name="Bot"):
             await ctx.reply(f"Set logging level to {new_logging_level}")
         except Exception as e:
             raise Exception(f"Could not change logging level to {new_logging_level}", e)    
+
+    # Start the bot
+    @commands.command(name='start', help="Start the bot [Admin Only]")
+    @commands.has_any_role('Core','Dev')
+    async def start(self,ctx):
+        self.bot.disabled = False
+        await ctx.reply("Trivia game has been enabled")
+
+    # Start the bot
+    @commands.command(name='stop', help="Stop the bot [Admin Only]")
+    @commands.has_any_role('Core','Dev')
+    async def stop(self,ctx):
+        self.bot.disabled = True     
+        await ctx.reply(f"Trivia game has been disabled") 
+
+
+
+
+
 
 # Plug-in function to add cog
 def setup(bot):

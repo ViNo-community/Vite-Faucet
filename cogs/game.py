@@ -1,3 +1,4 @@
+import asyncio
 from discord.ext import commands
 import dotenv
 from common import Common
@@ -12,8 +13,11 @@ class GameCog(commands.Cog, name="Game"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='start', help="Start the trivia game")
-    async def start(self, ctx, vite_address=""):
+    @commands.command(name='play', help="Play the trivia game")
+    async def play(self, ctx, vite_address=""):
+        if(self.bot.disabled):
+            await ctx.reply("The trivia bot is currently disabled.")
+            return
         # Check that vite_address is not blank
         if(vite_address == ""):
             await ctx.reply(f"Usage: {self.bot.command_prefix}start <new_prefix>")
@@ -24,16 +28,16 @@ class GameCog(commands.Cog, name="Game"):
             return
         try:
             # Check if this address is grey-listed
-            if vite_address in self.limits:
-                if self.limits[vite_address] > int(time.time()):
+            if vite_address in self.bot.limits:
+                if self.bot.limits[vite_address] > int(time.time()):
                     await ctx.reply("You are greylisted for another " +
-                        str(int((self.limits[vite_address] - time.time()) /
-                            self.greylist_timeout)) + " minutes.")
+                        str(int((self.bot.limits[vite_address] - time.time()) /
+                            self.bot.greylist_timeout)) + " minutes.")
                     return
-            self.limits[vite_address] = time.time() + 60 * self.greylist_timeout
+            self.bot.limits[vite_address] = time.time() + 60 * self.bot.greylist_timeout
             # Grab a random trivia question 
-            index = random.randint(0,len(self.questions))
-            q = self.questions[index]
+            index = random.randint(0,len(self.bot.questions))
+            q = self.bot.questions[index]
             # Print out question as multiple-choice
             question = q.get_question()
             answers = q.get_anwers()
@@ -46,11 +50,13 @@ class GameCog(commands.Cog, name="Game"):
                 response += label + "\n"
                 i = i + 1
             await ctx.message.author.send(response)
+
+
             # TODO: Grab users answer, check it against correct answer
             # If correct send_vite else next questions
             # Grab users answer
             user_answer = ""
-            if(user_answer == question.get_correct_answer()):
+            if(user_answer == q.get_correct_answer()):
                 print("Sending to " + vite_address)
                 #send_vite(vite_address)
             else:

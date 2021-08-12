@@ -1,4 +1,5 @@
 # Import discord.py. Allows access to Discord's API.
+import asyncio
 import discord
 import dotenv
 from common import Common
@@ -36,6 +37,8 @@ class ViteFaucetBot(commands.Bot):
     command_prefix = "!"
     permission = 0
     timeout = 5.0
+    # Disabled or not
+    disabled = False
     # List of questions
     questions = []
     # List of greylisted accounts
@@ -97,18 +100,6 @@ class ViteFaucetBot(commands.Bot):
             self.questions.append(Question(question,answers))
         # Randomly shuffle questions
         random.shuffle(self.questions)
-        # Show questions [for debugging - will remove before release]
-        '''
-        for q in self.questions:
-            question = q.get_question()
-            answers = q.get_anwers()
-            random.shuffle(answers)
-            print(question)
-            i = 1
-            for answer in answers:
-                print(str(i) + ") " + answer)
-                i = i + 1 
-        '''
 
     def run(self):
         # Run bot
@@ -145,7 +136,7 @@ class ViteFaucetBot(commands.Bot):
     async def on_disconnect(self):
         print("Bot disconnected")
         # Log successful connection
-        Common.log_error(f"{self.user.name} disconnected.")            
+        Common.log_error(f"{self.user.name} disconnected.")   
 
 if __name__=='__main__':
     # Initiate Discord bot
