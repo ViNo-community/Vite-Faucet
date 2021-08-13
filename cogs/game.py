@@ -51,16 +51,24 @@ class GameCog(commands.Cog, name="Game"):
                 i = i + 1
             await ctx.message.author.send(response)
 
+            answer = q.get_correct_answer()
+            def check(message):
+                print(f"Message: {message.content.strip()}")
+                if(message.content.strip() == answer):
+                    return True
+                else:
+                    return False
 
-            # TODO: Grab users answer, check it against correct answer
-            # If correct send_vite else next questions
-            # Grab users answer
-            user_answer = ""
-            if(user_answer == q.get_correct_answer()):
-                print("Sending to " + vite_address)
-                #send_vite(vite_address)
-            else:
-                await ctx.message.author.send("Wrong answer!")
+            try:
+                correct = await self.bot.wait_for("message", timeout=20.0, check=check)
+                if(correct):
+                    await ctx.message.author.send("Correct. Congratulations!")
+                    #send_vite(vite_address)
+                else:
+                    await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct answer was {answer}")
+            except asyncio.TimeoutError:
+                await ctx.message.author.send(f"Sorry, you took too much time to answer! The correct answer was {answer}")
+
         except Exception as e:
             raise Exception(f"Error processing question request", e)          
 
