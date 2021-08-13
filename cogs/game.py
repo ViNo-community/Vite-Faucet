@@ -40,24 +40,38 @@ class GameCog(commands.Cog, name="Game"):
             q = self.bot.questions[index]
             # Print out question as multiple-choice
             question = q.get_question()
-            answers = q.get_anwers()
+            answer = q.get_correct_answer()
+            answers = q.get_answers().copy()
             # Randomly shuffle answers
+            print("Correct answer " + q.get_correct_answer())
             random.shuffle(answers)
+            correct = 0
+            print("Correct answer " + q.get_correct_answer())
             response = question + "\n"
             i = 1
             for answer in answers:
+                if(answer == q.get_correct_answer()):
+                    correct = i
+                    print(f"Corret answer is {correct}")
                 label = str(i) + ") " + answer
                 response += label + "\n"
                 i = i + 1
             await ctx.message.author.send(response)
 
-            answer = q.get_correct_answer()
             def check(message):
                 print(f"Message: {message.content.strip()}")
+                # Check by text answer
                 if(message.content.strip() == answer):
                     return True
                 else:
-                    return False
+                    # Check by index
+                    try: 
+                        index = int(message.content)
+                        if(index == correct):
+                            return True
+                    except ValueError:
+                        return False
+                return False
 
             try:
                 correct = await self.bot.wait_for("message", timeout=20.0, check=check)

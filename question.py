@@ -20,6 +20,5 @@ class Question:
         return self.answers[0]
     
     # Randomly scramble answers
-    def get_anwers(self):
-        random.shuffle(self.answers)
+    def get_answers(self):
         return self.answers
