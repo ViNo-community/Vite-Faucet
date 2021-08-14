@@ -14,30 +14,17 @@ session.trust_env = False
 # Loads the .env file that resides on the same level as the script.
 load_dotenv()
 
-NODE_URL = 'http://127.0.0.1:48132'
-if os.getenv('NODE_URL') != None:
-    NODE_URL = os.getenv('NODE_URL')
+rpc_url = os.getenv('rpc_url')
 
-FAUCET_ADDRESS = os.getenv('FAUCET_ADDRESS')
-FAUCET_PRIVATE_KEY = os.getenv('FAUCET_PRIVATE_KEY')
-TOKEN_ID = os.getenv('TOKEN_ID')
-TOKEN_AMOUNT = float(os.getenv('TOKEN_AMOUNT'))
+print (f"RPC_URL is {rpc_url}")
 
-assert FAUCET_ADDRESS is not None, 'FAUCET_ADDRESS must be set in .env'
-assert FAUCET_PRIVATE_KEY is not None, 'FAUCET_PRIVATE_KEY must be set in .env'
-assert TOKEN_ID is not None, 'TOKEN_ID must be set in .env'
-assert TOKEN_AMOUNT is not None, 'TOKEN_AMOUNT must be in .env'
+def json_rpc(rpc_url, payload):
+    print(f"Sending json: {payload}")
+    response = session.post(rpc_url, json=payload, timeout=2).json()
+    print(json.dumps(payload), json.dumps(response))
+    return response
 
-def json_rpc(rpc_url, payload, thx=True):
-    print("Sending json: " + payload)
-   # response = session.post(rpc_url, json=payload, timeout=2).json()
-    #print(json.dumps(payload), json.dumps(response))
-    #if thx:
-    #    assert "error" not in response
-    #    assert "Error" not in response
-    #return response
-
-
+# Grabs current ledger snapshot height
 def height():
     payload = {
         "jsonrpc": "2.0",
@@ -45,18 +32,17 @@ def height():
         "method": "ledger_getSnapshotChainHeight",
         "params": []
     }
-    result = json_rpc(NODE_URL, payload)
+    result = json_rpc(rpc_url, payload)
     return result['result']
 
-
-def confirmedNum(blockHash):
+def confirmed_num(blockHash):
     payload = {
         "jsonrpc": "2.0",
         "id": 1,
         "method": "ledger_getAccountBlockByHash",
         "params": [blockHash]
     }
-    result = json_rpc(NODE_URL, payload)
+    result = json_rpc(rpc_url, payload)
     if result['result']['confirmations'] == None:
         return 0
     else:
@@ -65,6 +51,11 @@ def confirmedNum(blockHash):
 
 # _send_vite function with private key
 def _send_vite(from_address, to_address, amount, data, tokenId, priv):
+
+    while int(height()) < 3:
+        print("waiting snapshot height inc")
+        time.sleep(2)
+
     payload = {
         "jsonrpc":
         "2.0",
@@ -82,17 +73,24 @@ def _send_vite(from_address, to_address, amount, data, tokenId, priv):
             "blockType": 2
         }]
     }
-    print(f"Payload: {payload}")
-   # result = json_rpc(NODE_URL, payload, False)
-    #return result
 
+    print(f"in _send_vite Payload: {payload}")
+    result = json_rpc(rpc_url, payload)
 
+    if "error" in result:
+        return result['error']
+
+    i = 0
+    block = result['result']
+    while int(confirmed_num(block['hash'])) < 3 and i < 3:
+        i = i + 1
+        print("waiting " + block['hash'] + ",confirm")
+        time.sleep(2)
+    return block['hash']
+
+'''
 def send_vite(to_address):
     print(f"send_vite to {to_address}")
-
-    while int(height()) < 3:
-        print("waiting snapshot height inc")
-        time.sleep(2)
 
     result = _send_vite(FAUCET_ADDRESS, to_address, TOKEN_AMOUNT, '', TOKEN_ID,
                           FAUCET_PRIVATE_KEY)
@@ -106,3 +104,4 @@ def send_vite(to_address):
         print("waiting " + block['hash'] + ",confirm")
         time.sleep(2)
     return block['hash']
+'''

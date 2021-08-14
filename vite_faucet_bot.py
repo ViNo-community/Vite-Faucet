@@ -161,14 +161,22 @@ class ViteFaucetBot(commands.Bot):
 
     # Helper function to send tokens to the address
     def send_vite(self,to_address):
-        print(f"send_vite to {to_address}")
 
-        #_send_vite(self.faucet_address, 
-        #    to_address, 
-        #    self.bot.token_amount, 
-        #    '', 
-        #    self.bot.token_id,
-        #    self.bot.faucet_private_key)
+        try:
+            print(f"send_vite to {to_address}")
+            Common.log(f"Sending {self.token_amount} tokens to {to_address}")
+
+            _send_vite(self.faucet_address, 
+                to_address, 
+                self.token_amount, 
+                '', 
+                self.token_id,
+                self.faucet_private_key)
+
+        except Exception as ex:
+            Common.logger.error(f"Error in send_vite: {ex}", exc_info=True)
+            print(traceback.format_exc(), file=sys.stderr)
+            print(f"Error in send_vite {ex}")
 
 
 if __name__=='__main__':
