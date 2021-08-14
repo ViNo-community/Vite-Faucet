@@ -107,6 +107,7 @@ class ViteFaucetBot(commands.Bot):
         # Randomly shuffle questions
         random.shuffle(self.questions)
         # Show questions for debugging
+        '''
         for q in self.questions:
             question = q.get_question()
             answers = q.get_answers()
@@ -116,6 +117,7 @@ class ViteFaucetBot(commands.Bot):
                 print(str(i) + ") " + answer)
                 i = i + 1 
             print("Correct answer: " + q.get_correct_answer())
+        '''
 
     def run(self):
         # Run bot
@@ -157,16 +159,16 @@ class ViteFaucetBot(commands.Bot):
         # Log successful connection
         Common.log_error(f"{self.user.name} disconnected.")   
 
-# Helper function to send tokens to the address
-def send_vite(self,to_address):
-    print(f"send_vite to {to_address}")
+    # Helper function to send tokens to the address
+    def send_vite(self,to_address):
+        print(f"send_vite to {to_address}")
 
-    _send_vite(self.faucet_address, 
-        to_address, 
-        self.bot.token_amount, 
-        '', 
-        self.bot.token_id,
-        self.bot.faucet_private_key)
+        #_send_vite(self.faucet_address, 
+        #    to_address, 
+        #    self.bot.token_amount, 
+        #    '', 
+        #    self.bot.token_id,
+        #    self.bot.faucet_private_key)
 
 
 if __name__=='__main__':

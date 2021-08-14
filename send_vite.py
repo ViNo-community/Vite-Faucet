@@ -63,7 +63,8 @@ def confirmedNum(blockHash):
         return int(result['result']['confirmations'])
 
 
-def sendWithPriv(from_address, to_address, amount, data, tokenId, priv):
+# _send_vite function with private key
+def _send_vite(from_address, to_address, amount, data, tokenId, priv):
     payload = {
         "jsonrpc":
         "2.0",
@@ -81,18 +82,23 @@ def sendWithPriv(from_address, to_address, amount, data, tokenId, priv):
             "blockType": 2
         }]
     }
-    result = json_rpc(NODE_URL, payload, False)
-    return result
+    print(f"Payload: {payload}")
+   # result = json_rpc(NODE_URL, payload, False)
+    #return result
 
 
-def sendVite(to_address):
+def send_vite(to_address):
+    print(f"send_vite to {to_address}")
+
     while int(height()) < 3:
         print("waiting snapshot height inc")
         time.sleep(2)
-    result = sendWithPriv(FAUCET_ADDRESS, to_address, TOKEN_AMOUNT, '', TOKEN_ID,
+
+    result = _send_vite(FAUCET_ADDRESS, to_address, TOKEN_AMOUNT, '', TOKEN_ID,
                           FAUCET_PRIVATE_KEY)
     if "error" in result:
         return result['error']
+
     i = 0
     block = result['result']
     while int(confirmedNum(block['hash'])) < 3 and i < 3:

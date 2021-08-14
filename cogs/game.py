@@ -13,7 +13,7 @@ class GameCog(commands.Cog, name="Game"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='play', help="Play the trivia game")
+    @commands.command(name='play', help="Play the trivia game. Private message f!play [vite address] to the bot.")
     async def play(self, ctx, vite_address=""):
         if(self.bot.disabled):
             await ctx.reply("The trivia bot is currently disabled.")
@@ -42,17 +42,13 @@ class GameCog(commands.Cog, name="Game"):
             correct_answer = q.get_correct_answer().strip()
             answers = q.get_answers().copy()
             # Randomly shuffle answers
-            print("Correct answer " + q.get_correct_answer())
             random.shuffle(answers)
             correct_index = 0
-            print("Correct answer " + q.get_correct_answer())
-            response = question + "\n"
+            response = "**" + question + "**\n"
             i = 1
             for answer in answers:
-                if(answer == q.get_correct_answer()):
-                    correct_index = i
-                    print(f"Corret answer is {correct_index}")
-                label = str(i) + ") " + answer
+                if(answer == q.get_correct_answer()): correct_index = i
+                label = "**" + str(i) + ")** " + answer
                 response += label + "\n"
                 i = i + 1
             await ctx.message.author.send(response)
@@ -65,22 +61,21 @@ class GameCog(commands.Cog, name="Game"):
                 msg = await self.bot.wait_for("message", timeout=self.bot.answer_timeout, check=check)
                 correct = False
                 # Check by text answer
-                print(f"{msg.content.strip()} == {correct_answer} ?")
                 if(msg.content.strip() == correct_answer):
                     correct = True
                 else:
                     # Check by index
                     try: 
                         index = int(msg.content)
-                        print(f"{index} == {correct_index}")
                         if(index == correct_index):
                             correct = True
                     except ValueError:
                         correct = False
                 # If correct send vite
                 if(correct):
-                    await ctx.message.author.send(f"Correct. Congratulations! The correct answer was {correct_answer}")
-                    #send_vite(vite_address)
+                    await ctx.message.author.send(f"Correct. Congratulations! The correct answer was {correct_answer}.\n" + 
+                        f"Sending {self.bot.token_amount} vite to {vite_address}.")
+                    self.bot.send_vite(vite_address)
                 else:
                     await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct answer was {correct_answer}")
             except asyncio.TimeoutError:
