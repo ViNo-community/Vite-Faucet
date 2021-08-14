@@ -7,6 +7,7 @@ import time
 import os
 from dotenv.main import load_dotenv
 import requests
+from common import Common
 
 session = requests.Session()
 session.trust_env = False
@@ -21,7 +22,10 @@ print (f"RPC_URL is {rpc_url}")
 def json_rpc(rpc_url, payload):
     print(f"Sending json: {payload}")
     response = session.post(rpc_url, json=payload, timeout=2).json()
-    print(json.dumps(payload), json.dumps(response))
+    print("Payload:")
+    print(json.dumps(payload))
+    print("Response:")
+    print(json.dumps(response))
     return response
 
 # Grabs current ledger snapshot height
@@ -53,6 +57,7 @@ def confirmed_num(blockHash):
 def _send_vite(from_address, to_address, amount, data, tokenId, priv):
 
     while int(height()) < 3:
+        print(f"Heigh is currently {height}")
         print("waiting snapshot height inc")
         time.sleep(2)
 
@@ -68,7 +73,7 @@ def _send_vite(from_address, to_address, amount, data, tokenId, priv):
             "toAddr": to_address,
             "tokenTypeId": tokenId,
             "privateKey": priv,
-            "amount": amount,
+            "amount": "1000000000000000000",
             "data": data,
             "blockType": 2
         }]

@@ -55,6 +55,11 @@ class Common():
     def rawToVite(raw):
         return raw / 1e18   
 
+    # Convert units vite to raw. Vite is divisible by 18.
+    @staticmethod
+    def viteToRaw(vite):
+        return vite * 1000000000000000000      
+
     @staticmethod
     def log_error(msg):
         Common.logger.error(msg)
