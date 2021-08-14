@@ -36,8 +36,7 @@ class GameCog(commands.Cog, name="Game"):
                     return
             self.bot.limits[vite_address] = time.time() + 60 * self.bot.greylist_timeout
             # Grab a random trivia question 
-            index = random.randint(0,len(self.bot.questions))
-            q = self.bot.questions[index]
+            q = random.choice(self.bot.questions)
             # Print out question as multiple-choice
             question = q.get_question()
             answer = q.get_correct_answer()
