@@ -34,6 +34,7 @@ class BotCog(commands.Cog, name="Bot"):
             response = f"**Disabled:** {self.bot.disabled}" + \
                 f"\n**Command Prefix:** {self.bot.command_prefix}" + \
                 f"\n**Logging Level:** {self.bot.logging_level}" + \
+                f"\n**RPC URL:** {self.bot.rpc_url}" + \
                 f"\n**Faucet Address:** {self.bot.faucet_address}" + \
                 f"\n**Answer Timeout:** {self.bot.answer_timeout}" + \
                 f"\n**Greylist Time Period:** {self.bot.greylist_timeout}" + \

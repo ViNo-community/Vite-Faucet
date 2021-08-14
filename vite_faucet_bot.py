@@ -15,6 +15,7 @@ import traceback
 
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
+from send_vite import _send_vite
 
 # Import commands from the discord.ext module.
 from discord.ext import commands
@@ -27,6 +28,7 @@ class ViteFaucetBot(commands.Bot):
     initialized = False
     online = True
     discord_token = ""
+    rpc_url = ""
     logging_level = 0
     greylist_timeout = 0.0
     answer_timeout = 20.0
@@ -50,6 +52,7 @@ class ViteFaucetBot(commands.Bot):
         # Loads the .env file that resides on the same level as the script.
         load_dotenv()
         # Grab the API token from the .env file.
+        self.rpc_url = os.getenv('rpc_url')
         self.faucet_address = os.getenv('faucet_address')
         self.faucet_private_key = os.getenv('faucet_private_key')
         self.logging_level = os.getenv("logging_level")
@@ -153,6 +156,18 @@ class ViteFaucetBot(commands.Bot):
         print("Bot disconnected")
         # Log successful connection
         Common.log_error(f"{self.user.name} disconnected.")   
+
+# Helper function to send tokens to the address
+def send_vite(self,to_address):
+    print(f"send_vite to {to_address}")
+
+    _send_vite(self.faucet_address, 
+        to_address, 
+        self.bot.token_amount, 
+        '', 
+        self.bot.token_id,
+        self.bot.faucet_private_key)
+
 
 if __name__=='__main__':
     # Initiate Discord bot

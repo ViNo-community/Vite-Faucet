@@ -64,5 +64,3 @@ class Common():
     @staticmethod
     def logit(ctx):
         Common.logger.info(f"-> {ctx.message.author} : {ctx.command}")
-        
-
