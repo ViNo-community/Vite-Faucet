@@ -59,19 +59,22 @@ class GameCog(commands.Cog, name="Game"):
             await ctx.message.author.send(response)
 
             def check(message):
-                print(f"Message: {message.content.strip()}")
-                # Check by text answer
-                if(message.content.strip() == answer):
-                    return True
-                else:
-                    # Check by index
-                    try: 
-                        index = int(message.content)
-                        if(index == correct):
-                            return True
-                    except ValueError:
+                print(f"Author: {message.author.name} Ctx.author: {ctx.author.name}")
+                # Check that the message is from the right user
+                if(message.author.name == ctx.author.name):
+                    print(f"Message: {message.content.strip()} Answer: {answer}")
+                    # Check by text answer
+                    if(message.content.strip() == answer):
+                        return True
+                    else:
+                        # Check by index
+                        try: 
+                            index = int(message.content)
+                            if(index == correct):
+                                return True
+                        except ValueError:
+                            return False
                         return False
-                    return False
 
             try:
                 correct = await self.bot.wait_for("message", timeout=self.bot.answer_timeout, check=check)
