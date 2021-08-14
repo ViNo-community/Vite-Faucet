@@ -47,16 +47,17 @@ Markov Chains
 Turing Machines
 
 What Nano's original name?
+RaiBlocks
 SpeedCoin
 NanoCoin
-RaiBlocks
 EnviroToken
 
 When was Nano released?
+2015
 2010
 2018
 2019
-2015
+
 
 What is the max supply of Nano?
 133,248,297
@@ -71,28 +72,29 @@ How much energy does a Nano transaction use?
 0.004535 kWh
 
 What is the total supply of Vite?
-3,897,467,289
 1,018,621,598
+3,897,467,289
 7,928,819,896
 867,637
 
 What year was the ViteX decentralized exchange launched?
+2019
 2020
 2021
-2019
 2017
 
 Which of following is ViteX not?
+All of these
 A pizza company
 A clubhouse clone
 A company that makes Rubiks cubes
-All of the above
+
 
 What does DeFi mean?
-Decentralized Exchange
 Decentralized Finance
+Decentralized Exchange
 Decentralized Fiberglass
-All of the above
+Decentralized Fi
 
 In Nano, a block has _____ transaction(s)
 One
@@ -101,10 +103,11 @@ One
 1024
 
 Which of the following is NOT a type of Nano transaction ?
+Close an account
 Send
 Receive
 Open an account
-Close an account
+
 
 When was Banano created?
 2018
@@ -113,8 +116,8 @@ When was Banano created?
 2020
 
 What is Banano?
-A token on the Nano blockchain
 A fork of Nano
+A token on the Nano blockchain
 A standalone coin
 An Erc-20 token
 
@@ -125,16 +128,17 @@ What is the total supply of Banano?
 3 Billion
 
 Banano Hodlers statistically have more _____ in their bodies?
-Beta-Carotene
 Potassium
+Beta-Carotene
 Protein
 Epic sauce
 
 What is the purpose of Banano?
+All of the options available
 Memes
 Decentralisation of bananas
 Fast transactions
-All of the above
+
 
 Where were the 1996 Summer Games held?
 Atlanta
@@ -143,21 +147,22 @@ Beijing
 Tokyo
 
 What country was the first to accept Bitcoin as legal tender?
-San Marino
 El Salvador
+San Marino
 Tuvalu
-All of the above
+Iran
 
 Which of the following is not a Banano wallet?
+Exodus
 Kalium
 Discord Tip Bot
 Banano Vault
-Exodus
+
 
 What does DEX mean?
-PokeDex
 Decentralised Exchange
+PokeDex
 dEXTRAMONEY
-All of the above
+Decentralised EX
 
 
