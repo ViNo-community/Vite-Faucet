@@ -39,7 +39,7 @@ class GameCog(commands.Cog, name="Game"):
             q = random.choice(self.bot.questions)
             # Print out question as multiple-choice
             question = q.get_question()
-            answer = q.get_correct_answer()
+            correct_answer = q.get_correct_answer().strip()
             answers = q.get_answers().copy()
             # Randomly shuffle answers
             print("Correct answer " + q.get_correct_answer())
@@ -65,8 +65,8 @@ class GameCog(commands.Cog, name="Game"):
                 msg = await self.bot.wait_for("message", timeout=self.bot.answer_timeout, check=check)
                 correct = False
                 # Check by text answer
-                print(f"Msg: {msg.content} == {answer}")
-                if(msg.content.strip() == answer):
+                print(f"{msg.content.strip()} == {correct_answer} ?")
+                if(msg.content.strip() == correct_answer):
                     correct = True
                 else:
                     # Check by index
@@ -79,12 +79,12 @@ class GameCog(commands.Cog, name="Game"):
                         correct = False
                     # If correct send vite
                     if(correct):
-                        await ctx.message.author.send("Correct. Congratulations!")
+                        await ctx.message.author.send(f"Correct. Congratulations! The correct answer was {correct_answer}")
                         #send_vite(vite_address)
                     else:
-                        await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct answer was {answer}")
+                        await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct answer was {correct_answer}")
             except asyncio.TimeoutError:
-                await ctx.message.author.send(f"Sorry, you took too much time to answer! The correct answer was {answer}")
+                await ctx.message.author.send(f"Sorry, you took too much time to answer! The correct answer was {correct_answer}")
 
         except Exception as e:
             raise Exception(f"Error processing question request", e)          
