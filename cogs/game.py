@@ -71,10 +71,10 @@ class GameCog(commands.Cog, name="Game"):
                             return True
                     except ValueError:
                         return False
-                return False
+                    return False
 
             try:
-                correct = await self.bot.wait_for("message", timeout=20.0, check=check)
+                correct = await self.bot.wait_for("message", timeout=self.bot.answer_timeout, check=check)
                 if(correct):
                     await ctx.message.author.send("Correct. Congratulations!")
                     #send_vite(vite_address)

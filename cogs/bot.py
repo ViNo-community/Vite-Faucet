@@ -35,6 +35,7 @@ class BotCog(commands.Cog, name="Bot"):
                 f"\n**Command Prefix:** {self.bot.command_prefix}" + \
                 f"\n**Logging Level:** {self.bot.logging_level}" + \
                 f"\n**Faucet Address:** {self.bot.faucet_address}" + \
+                f"\n**Answer Timeout:** {self.bot.answer_timeout}" + \
                 f"\n**Greylist Time Period:** {self.bot.greylist_timeout}" + \
                 f"\n**Token Type ID (TTI):** {self.bot.token_id}" + \
                 f"\n**Token Amount Per Correct Answer:** {self.bot.token_amount}" + \

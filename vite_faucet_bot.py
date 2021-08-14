@@ -28,6 +28,7 @@ class ViteFaucetBot(commands.Bot):
     discord_token = ""
     logging_level = 0
     greylist_timeout = 0.0
+    answer_timeout = 20.0
     token_amount = 0
     token_id = ""
     faucet_address = ""
@@ -53,6 +54,7 @@ class ViteFaucetBot(commands.Bot):
         self.logging_level = os.getenv("logging_level")
         self.discord_token = os.getenv('discord_token')
         self.greylist_timeout = float(os.getenv('greylist_timeout') or 0.0)
+        self.answer_timeout = float(os.getenv('answer_timeout') or 20.0)
         self.token_amount = float(os.getenv('token_amount'))
         self.token_id = os.getenv('token_id')
         self.max_questions_amount = float(os.getenv('max_questions_amount') or 0.0) 
