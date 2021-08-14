@@ -8,7 +8,7 @@ class UserData:
     discord_name = ""
 
     # Number of questions asked in this current period
-    question_count = 0
+    question_count = 1
     # The time when the greylist period began
     greylist_start = 0
 
@@ -33,6 +33,7 @@ class UserData:
 
     def next_question_count(self):
         self.question_count = self.question_count + 1
+        print(f"Incrementing account to {self.question_count}")
 
     def start_greylist(self):
         greylist_start = time.time()

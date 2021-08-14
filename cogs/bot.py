@@ -40,7 +40,7 @@ class BotCog(commands.Cog, name="Bot"):
                 f"\n**Greylist Time Period:** {self.bot.greylist_timeout}" + \
                 f"\n**Token Type ID (TTI):** {self.bot.token_id}" + \
                 f"\n**Token Amount Per Correct Answer:** {self.bot.token_amount}" + \
-                f"\n**Max Questions Per Time Period:** {self.bot.max_questions_amount}"
+                f"\n**Max Rewards Per Time Period:** {self.bot.max_rewards_amount}"
             await ctx.reply(response)
         except Exception as e:
             raise Exception("Exception showing info summary", e)   
@@ -74,11 +74,6 @@ class BotCog(commands.Cog, name="Bot"):
     async def stop(self,ctx):
         self.bot.disabled = True     
         await ctx.reply(f"Trivia game has been disabled") 
-
-
-
-
-
 
 # Plug-in function to add cog
 def setup(bot):

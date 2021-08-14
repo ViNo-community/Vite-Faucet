@@ -36,19 +36,18 @@ class GameCog(commands.Cog, name="Game"):
                 # Grab the entry
                 my_user_data = self.bot.user_data[vite_address]
                 print(f"Grabbing entry for {vite_address}")
-                # Increment quesetion count
-                my_user_data.next_question_count()
                 question_number = my_user_data.get_question_count()
-                print(f"Question # {question_number}")
             else:
                 # Create an entry in the user_data dictionary
                 print(f"Creating new UserData with {ctx.message.author} and address {vite_address}")
                 my_user_data = UserData(ctx.message.author,vite_address)
                 self.bot.user_data[vite_address] = my_user_data
 
+            print(f"Question # {question_number}")
             # Check if we are maxxing out at questions per this user
-            if question_number >= self.bot.max_questions_amount:
-                await ctx.reply(f"You have reached the maximum number of questions you can answer per time period.")
+            if question_number > self.bot.max_rewards_amount:
+                await ctx.reply(f"You have reached the maximum number of rewards " + \
+                    f"per time period [{self.bot.max_rewards_amount}]")
                 return
 
             # Grab a random trivia question 
@@ -60,7 +59,7 @@ class GameCog(commands.Cog, name="Game"):
             # Randomly shuffle answers
             random.shuffle(answers)
             correct_index = 0
-            response = f"**{question_number}) {question}**\n"
+            response = f"**{question_number}] {question}**\n"
             i = 1
             for answer in answers:
                 if(answer == q.get_correct_answer()): correct_index = i
@@ -91,6 +90,8 @@ class GameCog(commands.Cog, name="Game"):
                 if(correct):
                     await ctx.message.author.send(f"Correct. Congratulations! The correct answer was {correct_answer}.\n" + 
                         f"Sending {self.bot.token_amount} vite to {vite_address}.")
+                    # Increment quesetion count
+                    my_user_data.next_question_count()
                     self.bot.send_vite(vite_address)
                 else:
                     await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct answer was {correct_answer}")

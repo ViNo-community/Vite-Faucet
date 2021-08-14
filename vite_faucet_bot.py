@@ -36,7 +36,7 @@ class ViteFaucetBot(commands.Bot):
     token_id = ""
     faucet_address = ""
     faucet_private_key = ""
-    max_questions_amount = 0.0
+    max_rewards_amount = 0.0
     rpc_url = ""
     command_prefix = "!"
     permission = 0
@@ -64,7 +64,7 @@ class ViteFaucetBot(commands.Bot):
         self.answer_timeout = float(os.getenv('answer_timeout') or 20.0)
         self.token_amount = float(os.getenv('token_amount'))
         self.token_id = os.getenv('token_id')
-        self.max_questions_amount = float(os.getenv('max_questions_amount') or 0.0) 
+        self.max_rewards_amount = float(os.getenv('max_rewards_amount') or 0.0) 
         self.command_prefix = os.getenv('command_prefix') or "!"
         # Assert that DISCORD_TOKEN is not blank
         assert self.discord_token is not None, 'DISCORD_TOKEN must be set in .env.'
