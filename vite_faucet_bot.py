@@ -11,6 +11,7 @@ import sys
 import os
 import time
 import random
+import traceback
 
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
@@ -130,8 +131,11 @@ class ViteFaucetBot(commands.Bot):
         elif isinstance(error, ConnectionError):
             Common.logger.error(f"Connection Error: {error}", exc_info=True)
             await ctx.reply(f"Connection Error executing command \"{ctx.invoked_with}\". Please check logs")
+        elif isinstance(error, commands.CheckFailure):
+            Common.logger.error(f"Check Failure Error: {error} {error.args}", exc_info=True)
+            await ctx.reply(f"Sorry, you do not have permission to execute \"{ctx.invoked_with}\".")      
         else:
-            Common.logger.error(f"Error: {error}", exc_info=True)
+            Common.logger.error(f"Error: {error} {error.args}", exc_info=True)
             await ctx.reply(f"Error executing command \"{ctx.invoked_with}\". Please check logs.")
 
     # This is called when the bot disconnects
