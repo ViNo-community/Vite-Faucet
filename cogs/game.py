@@ -77,12 +77,12 @@ class GameCog(commands.Cog, name="Game"):
                             correct = True
                     except ValueError:
                         correct = False
-                    # If correct send vite
-                    if(correct):
-                        await ctx.message.author.send(f"Correct. Congratulations! The correct answer was {correct_answer}")
-                        #send_vite(vite_address)
-                    else:
-                        await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct answer was {correct_answer}")
+                # If correct send vite
+                if(correct):
+                    await ctx.message.author.send(f"Correct. Congratulations! The correct answer was {correct_answer}")
+                    #send_vite(vite_address)
+                else:
+                    await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct answer was {correct_answer}")
             except asyncio.TimeoutError:
                 await ctx.message.author.send(f"Sorry, you took too much time to answer! The correct answer was {correct_answer}")
 
