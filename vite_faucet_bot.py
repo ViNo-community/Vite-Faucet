@@ -103,6 +103,16 @@ class ViteFaucetBot(commands.Bot):
             self.questions.append(Question(question,answers))
         # Randomly shuffle questions
         random.shuffle(self.questions)
+        # Show questions for debugging
+        for q in self.questions:
+            question = q.get_question()
+            answers = q.get_answers()
+            print(question)
+            i = 1
+            for answer in answers:
+                print(str(i) + ") " + answer)
+                i = i + 1 
+            print("Correct answer: " + q.get_correct_answer())
 
     def run(self):
         # Run bot
