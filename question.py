@@ -12,14 +12,14 @@ class Question:
         self.answers = answers
         self.correct_answer = answers[0]
 
-    def answer(self, my_answer):
-        return my_answer.strip() == self.correct_answer
-
+    # Get the question asked
     def get_question(self):
         return self.question
 
+    # Get the correct answer
     def get_correct_answer(self):
         return self.correct_answer
     
+    # Get the array of answers
     def get_answers(self):
         return self.answers

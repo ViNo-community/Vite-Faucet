@@ -1,4 +1,5 @@
 import asyncio
+from userData import UserData
 from discord.ext import commands
 import dotenv
 from common import Common
@@ -23,18 +24,33 @@ class GameCog(commands.Cog, name="Game"):
             await ctx.reply(f"Usage: {self.bot.command_prefix}start <new_prefix>")
             return    
         # Make sure that address is for vite
-        if(vite_address.startswith("vite_") == False):
+        if(vite_address.startswith("vite") == False):
             await ctx.reply(f"Please only use vite addresses. Usage: {self.bot.command_prefix}start <vite address>")
             return
         try:
-            # Check if this address is grey-listed
-            if vite_address in self.bot.limits:
-                if self.bot.limits[vite_address] > int(time.time()):
-                    await ctx.reply("You are greylisted for another " +
-                        str(int((self.bot.limits[vite_address] - time.time()) /
-                            self.bot.greylist_timeout)) + " minutes.")
-                    return
-            self.bot.limits[vite_address] = time.time() + 60 * self.bot.greylist_timeout
+        
+            question_number = 1
+
+            # Check if we have an entry yet
+            if vite_address in self.bot.user_data:
+                # Grab the entry
+                my_user_data = self.bot.user_data[vite_address]
+                print(f"Grabbing entry for {vite_address}")
+                # Increment quesetion count
+                my_user_data.next_question_count()
+                question_number = my_user_data.get_question_count()
+                print(f"Question # {question_number}")
+            else:
+                # Create an entry in the user_data dictionary
+                print(f"Creating new UserData with {ctx.message.author} and address {vite_address}")
+                my_user_data = UserData(ctx.message.author,vite_address)
+                self.bot.user_data[vite_address] = my_user_data
+
+            # Check if we are maxxing out at questions per this user
+            if question_number >= self.bot.max_questions_amount:
+                await ctx.reply(f"You have reached the maximum number of questions you can answer per time period.")
+                return
+
             # Grab a random trivia question 
             q = random.choice(self.bot.questions)
             # Print out question as multiple-choice
@@ -44,7 +60,7 @@ class GameCog(commands.Cog, name="Game"):
             # Randomly shuffle answers
             random.shuffle(answers)
             correct_index = 0
-            response = "**" + question + "**\n"
+            response = f"**{question_number}) {question}**\n"
             i = 1
             for answer in answers:
                 if(answer == q.get_correct_answer()): correct_index = i
@@ -82,7 +98,9 @@ class GameCog(commands.Cog, name="Game"):
                 await ctx.message.author.send(f"Sorry, you took too much time to answer! The correct answer was {correct_answer}")
 
         except Exception as e:
-            raise Exception(f"Error processing question request", e)          
+            Common.logger.error(f"Error in game: {e}", exc_info=True)      
+            raise Exception(f"Error processing question request", e)   
+                    
 
 # Plug-in function to add cog
 def setup(bot):

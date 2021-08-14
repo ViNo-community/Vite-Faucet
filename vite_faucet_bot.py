@@ -45,8 +45,11 @@ class ViteFaucetBot(commands.Bot):
     disabled = False
     # List of questions
     questions = []
+    # Data tracked per user [vite address]
+    user_data = {}
     # List of greylisted accounts
-    limits = {}
+    greylist = {}
+   
 
     def __init__(self):
         # Loads the .env file that resides on the same level as the script.
