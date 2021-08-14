@@ -73,7 +73,7 @@ def _send_vite(from_address, to_address, amount, data, tokenId, priv):
             "toAddr": to_address,
             "tokenTypeId": tokenId,
             "privateKey": priv,
-            "amount": "1000000000000000000",
+            "amount": str(int(round(Common.viteToRaw(amount)))),
             "data": data,
             "blockType": 2
         }]
