@@ -59,13 +59,13 @@ class GameCog(commands.Cog, name="Game"):
             # Randomly shuffle answers
             random.shuffle(answers)
             correct_index = 0
-            response = f"**{question_number}] {question}**\n"
-            i = 1
+            response = f"**{question_number}) {question}**\n"
+            i = 'A'
             for answer in answers:
-                if(answer == q.get_correct_answer()): correct_index = i
+                if(answer == q.get_correct_answer()): correct_index = ord(i) - ord('A') + 1
                 label = "**" + str(i) + ")** " + answer
                 response += label + "\n"
-                i = i + 1
+                i = chr(ord(i) + 1)
             await ctx.message.author.send(response)
 
             # Check that the message is from the right user and on the right channel
@@ -81,7 +81,7 @@ class GameCog(commands.Cog, name="Game"):
                 else:
                     # Check by index
                     try: 
-                        index = int(msg.content)
+                        index = ord(msg.content) - ord('A') + 1
                         if(index == correct_index):
                             correct = True
                     except ValueError:
