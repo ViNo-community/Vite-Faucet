@@ -6,8 +6,8 @@ class UserData:
 
     discord_name = ""
 
-    # Number of questions asked in this current period
-    question_count = 1
+    # Total amount of rewards 
+    total_rewards = 0
     # The time when the greylist period began
     greylist_start = 0
 
@@ -29,8 +29,16 @@ class UserData:
     def set_balance(self,new_balance):
         self.balance = new_balance
 
-    def get_question_count(self):
-        return self.question_count
+    # Rewards earned in a 24H period
+    def get_total_rewards(self):
+        return self.total_rewards
+
+    def add_total_rewards(self, amount):
+        self.total_rewards = self.total_rewards + amount
+
+    # Clear rewards amount for 24H period
+    def clear_total_rewards(self):
+        self.total_rewards = 0
 
     def add_win_to_score(self):
         self.right_answers = self.right_answers + 1
@@ -43,10 +51,6 @@ class UserData:
 
     def add_loss_to_score(self):
         self.wrong_answers = self.wrong_answers + 1
-
-    def next_question_count(self):
-        self.question_count = self.question_count + 1
-        print(f"Incrementing account to {self.question_count}")
 
     def start_greylist(self):
         greylist_start = time.time()

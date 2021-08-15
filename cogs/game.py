@@ -21,14 +21,16 @@ class GameCog(commands.Cog, name="Game"):
             if ctx.message.author in self.bot.user_data:
                 # Grab the entry
                 my_user_data = self.bot.user_data[ctx.message.author]
-                reward_count = my_user_data.get_question_count()
+                reward_count = my_user_data.get_total_rewards()
                 right_answers = my_user_data.get_right_answers()
                 wrong_answers = my_user_data.get_wrong_answers()
                 total_answers = right_answers + wrong_answers
                 balance = my_user_data.get_balance()
+                right_pct = (float)(right_answers / total_answers) * 100
+                wrong_pct = (float)(wrong_answers / total_answers) * 100
                 # Show ALL information
-                response = f"**Right Answers:** {right_answers}/{total_answers}" + \
-                    f"\n**Wrong Answers:** {wrong_answers}/{total_answers}" + \
+                response = f"**Right Answers:** {right_answers}/{total_answers}\t{right_pct}%" + \
+                    f"\n**Wrong Answers:** {wrong_answers}/{total_answers}\t{wrong_pct}%" + \
                     f"\n**Balance:** {balance}" + \
                     f"\n**Reward Count:** {reward_count} / {self.bot.max_rewards_amount}"
                 await ctx.reply(response)
@@ -72,25 +74,22 @@ class GameCog(commands.Cog, name="Game"):
     async def play(self, ctx):
 
         try:
-        
-            question_number = 1
-
+            total_rewards = 0
             # Check if we have an entry yet
             if ctx.message.author in self.bot.user_data:
                 # Grab the entry
                 my_user_data = self.bot.user_data[ctx.message.author]
-                question_number = my_user_data.get_question_count()
+                total_rewards = my_user_data.get_total_rewards()
             else:
                 # Create an entry in the user_data dictionary
                 print(f"Creating new UserData with {ctx.message.author}")
                 my_user_data = UserData(ctx.message.author)
                 self.bot.user_data[ctx.message.author] = my_user_data
 
-            print(f"Question # {question_number}")
             # Check if we are maxxing out at questions per this user
-            if question_number > self.bot.max_rewards_amount:
-                await ctx.reply(f"You have reached the maximum number of rewards " + \
-                    f"per time period [{self.bot.max_rewards_amount}]")
+            if total_rewards > self.bot.max_rewards_amount:
+                await ctx.reply(f"You have reached the maximum amount of rewards " + \
+                    f"per time period [{self.bot.max_rewards_amount}]. Please wait ")
                 return
 
             # Grab a random trivia question 
@@ -101,14 +100,15 @@ class GameCog(commands.Cog, name="Game"):
             answers = q.get_answers().copy()
             # Randomly shuffle answers
             random.shuffle(answers)
+
             correct_index = 0
-            response = f"**{question_number}) {question}**\n"
-            i = 'A'
+            response = f"**{question}**\n"
+            i = 1
             for answer in answers:
-                if(answer == q.get_correct_answer()): correct_index = ord(i) - ord('A') + 1
+                if(answer == q.get_correct_answer()): correct_index = i
                 label = "**" + str(i) + ")** " + answer
                 response += label + "\n"
-                i = chr(ord(i) + 1)
+                i = i + 1
             await ctx.message.author.send(response)
 
             # Check that the message is from the right user and on the right channel
@@ -124,18 +124,16 @@ class GameCog(commands.Cog, name="Game"):
                 else:
                     # Check by index
                     try: 
-                        index = ord(msg.content) - ord('A') + 1
-
+                        index = int(msg.content)
                         if(index == correct_index):
                             correct = True
                     except ValueError:
                         correct = False
                 # If correct send vite
                 if(correct):
-                    # Increment quesetion count
-                    my_user_data.next_question_count()
                     my_user_data.add_win_to_score()
                     my_user_data.set_balance(my_user_data.get_balance() + self.bot.token_amount)
+                    my_user_data.add_total_rewards(self.bot.token_amount)
                     await ctx.message.author.send(f"Correct. Congratulations! Your balance is now {my_user_data.get_balance()}")
                 else:
                     my_user_data.add_loss_to_score()
