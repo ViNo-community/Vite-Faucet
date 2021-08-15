@@ -92,7 +92,7 @@ What does DeFi mean?
 Decentralized Finance
 Decentralized Exchange
 Decentralized Fiberglass
-Decentralized Fi
+Decentralized Fitness
 
 In Nano, a block has _____ transaction(s)
 One
@@ -267,3 +267,45 @@ Distributed computing project aiming to simulate protein folding
 An origami tutorial
 An AI deepfake generator
 An online community for people who love folding towels
+
+What is a DAO?
+Decentralized Autonomous Organization
+Deep AI Object
+Discrete Automata On-Chain
+Deterministic Abstract Oracle
+
+What of the following is NOT true about DAOs (Decentralized Autonomous Organization) ?
+DAOs can only exist on the Ethereum blockchain
+DAOs are global with no central authority
+Decisions are made bottom-up 
+DAOs operate using rules encoded by smart contracts
+
+What does Vite mean in French?
+Fast
+Free
+Powerful
+Life
+
+All of the following have fee-less transactions, EXCEPT
+Ethereum
+Vite
+Nano
+Banano
+
+One Bitcoin transaction uses as much energy as _________
+6,000,000 Nano transactions
+60 Nano transactions
+6,000 Nano transactions
+100,000 Nano transactions
+
+The emoji most associated with Nano is _______
+Broccoli 
+Eggplant
+Pickle
+Peanut
+
+What is Natricon?
+A visual representation of your unique Nano address in the form of a cartoon face
+Nano's version of crypto-punk NFTs
+A heavy metal band that sings about Nano
+A popular Japanese anime
