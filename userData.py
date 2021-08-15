@@ -4,7 +4,6 @@ import time
 
 class UserData:
 
-    vite_address = ""
     discord_name = ""
 
     # Number of questions asked in this current period
@@ -19,17 +18,31 @@ class UserData:
     right_answers = 0
     wrong_answers = 0
 
-    def __init__(self, discord_name, vite_address):
+    def __init__(self, discord_name):
         print("In init function")
         self.discord_name = discord_name
-        self.vite_address = vite_address
         self.balance = 0
 
     def get_balance(self):
         return self.balance
 
+    def set_balance(self,new_balance):
+        self.balance = new_balance
+
     def get_question_count(self):
         return self.question_count
+
+    def add_win_to_score(self):
+        self.right_answers = self.right_answers + 1
+
+    def get_right_answers(self):
+        return self.right_answers
+
+    def get_wrong_answers(self):
+        return self.wrong_answers
+
+    def add_loss_to_score(self):
+        self.wrong_answers = self.wrong_answers + 1
 
     def next_question_count(self):
         self.question_count = self.question_count + 1
