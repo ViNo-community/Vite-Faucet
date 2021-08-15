@@ -51,6 +51,22 @@ class GameCog(commands.Cog, name="Game"):
         if(vite_address.startswith("vite") == False):
             await ctx.reply(f"Please only use vite addresses. Usage: {self.bot.command_prefix}start <vite address>")
             return
+        try:
+            # Check if we have an entry yet
+            if ctx.message.author in self.bot.user_data:
+                # Grab the entry
+                my_user_data = self.bot.user_data[ctx.message.author]
+                balance = my_user_data.get_balance()
+            else:
+                response = f"No score information yet for {ctx.message.author}"
+                await ctx.reply(response)
+                return
+            # Deposit the balance to the vite address
+            self.bot.send_vite(vite_address,balance)
+            # Subtract from balance
+            my_user_data.set_balance(0)
+        except Exception as e:
+            raise Exception(f"Exception depositing vite to {vite_address}", e)   
 
     @commands.command(name='play', help="Play the trivia game.")
     async def play(self, ctx):
@@ -121,13 +137,14 @@ class GameCog(commands.Cog, name="Game"):
                     my_user_data.add_win_to_score()
                     my_user_data.set_balance(my_user_data.get_balance() + self.bot.token_amount)
                     await ctx.message.author.send(f"Correct. Congratulations! Your balance is now {my_user_data.get_balance()}")
-                   # self.bot.send_vite(vite_address)
                 else:
                     my_user_data.add_loss_to_score()
-                    await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct answer was {correct_answer}")
+                    await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct " + 
+                         f"answer was \"{correct_answer}\"")
             except asyncio.TimeoutError:
                 my_user_data.add_loss_to_score()
-                await ctx.message.author.send(f"Sorry, you took too much time to answer! The correct answer was {correct_answer}")
+                await ctx.message.author.send(f"Sorry, you took too much time to answer! The correct answer " +
+                    f"was \"{correct_answer}\"")
 
         except Exception as e:
             Common.logger.error(f"Error in game: {e}", exc_info=True)      

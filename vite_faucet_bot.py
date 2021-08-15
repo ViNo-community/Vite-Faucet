@@ -163,15 +163,15 @@ class ViteFaucetBot(commands.Bot):
         Common.log_error(f"{self.user.name} disconnected.")   
 
     # Helper function to send tokens to the address
-    def send_vite(self,to_address):
+    def send_vite(self,to_address,balance):
 
         try:
             print(f"send_vite to {to_address}")
-            Common.log(f"Sending {self.token_amount} tokens to {to_address}")
+            Common.log(f"Sending {balance} tokens to {to_address}")
 
             _send_vite(self.faucet_address, 
                 to_address, 
-                self.token_amount, 
+                balance, 
                 '', 
                 self.token_id,
                 self.faucet_private_key)

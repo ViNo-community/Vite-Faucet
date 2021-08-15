@@ -20,12 +20,12 @@ rpc_url = os.getenv('rpc_url')
 print (f"RPC_URL is {rpc_url}")
 
 def json_rpc(rpc_url, payload):
-    print(f"Sending json: {payload}")
+   # print(f"Sending json: {payload}")
     response = session.post(rpc_url, json=payload, timeout=2).json()
-    print("Payload:")
-    print(json.dumps(payload))
-    print("Response:")
-    print(json.dumps(response))
+    #print("Payload:")
+    ##print(json.dumps(payload))
+   # print("Response:")
+    #print(json.dumps(response))
     return response
 
 # Grabs current ledger snapshot height
@@ -57,8 +57,8 @@ def confirmed_num(blockHash):
 def _send_vite(from_address, to_address, amount, data, tokenId, priv):
 
     while int(height()) < 3:
-        print(f"Heigh is currently {height}")
-        print("waiting snapshot height inc")
+        #print(f"Heigh is currently {height}")
+       # print("waiting snapshot height inc")
         time.sleep(2)
 
     payload = {
@@ -79,7 +79,7 @@ def _send_vite(from_address, to_address, amount, data, tokenId, priv):
         }]
     }
 
-    print(f"in _send_vite Payload: {payload}")
+   # print(f"in _send_vite Payload: {payload}")
     result = json_rpc(rpc_url, payload)
 
     if "error" in result:
@@ -89,7 +89,6 @@ def _send_vite(from_address, to_address, amount, data, tokenId, priv):
     block = result['result']
     while int(confirmed_num(block['hash'])) < 3 and i < 3:
         i = i + 1
-        print("waiting " + block['hash'] + ",confirm")
         time.sleep(2)
     return block['hash']
 
