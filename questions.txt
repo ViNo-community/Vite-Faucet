@@ -177,3 +177,51 @@ Currency
 NFT
 Smart Contract
 DEX
+
+What is the meaning of NFT?
+Non-Fungible Token
+Non-Fiat Technology
+New Federal Trade
+Near Future Trajectory 
+
+Which is these is NOT a difference between Nano and Vite?
+Nano transactions are free but Vite transactions cost money
+Vite supports smart contracts while Nano does not
+You can stake Vite but you cannot stake Nano
+You gain rewards for running Vite nodes but not for running Nano nodes
+
+Vite gives you daily rewards for running a _________
+Full Node
+Refigerator 
+DEX
+Smart Contract
+
+In order to execute transactions on Vite, you 
+Earn quota by temporarily staking Vite, or solve a small PoW puzzle
+Pay gas fees
+Solve a captcha
+Upload a photo of your cat
+
+To issue a new token on Vite, you must _______
+Send a mintage transaction on the DEX
+Deploy a smart contract
+It is impossible to issue new tokens on Vite
+Mint a NFT
+
+Vite smart contracts are written in:
+Solidity++
+C#
+Solidity
+Plutus
+
+Nano smart contracts are written in:
+Nano does not have smart contracts
+Solidity
+Javascript
+C++
+
+Why is it bad to keep your crypto on exchanges?
+All of these are true
+An exchange could exit scam and steal all your crypto
+It increases centralization
+Exchanges can be hacked 
