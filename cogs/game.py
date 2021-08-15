@@ -14,12 +14,36 @@ class GameCog(commands.Cog, name="Game"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='play', help="Play the trivia game. Private message f!play [vite address] to the bot.")
-    async def play(self, ctx, vite_address=""):
+    @commands.command(name='score', help="Show your current score and account balance.")
+    async def score(self, ctx):
+        try:
+            # Check if we have an entry yet
+            if ctx.message.author in self.bot.user_data:
+                # Grab the entry
+                my_user_data = self.bot.user_data[ctx.message.author]
+                reward_count = my_user_data.get_question_count()
+                right_answers = my_user_data.get_right_answers()
+                wrong_answers = my_user_data.get_wrong_answers()
+                total_answers = right_answers + wrong_answers
+                balance = my_user_data.get_balance()
+                # Show ALL information
+                response = f"**Right Answers:** {right_answers}/{total_answers}" + \
+                    f"\n**Wrong Answers:** {wrong_answers}/{total_answers}" + \
+                    f"\n**Balance:** {balance}" + \
+                    f"\n**Reward Count:** {reward_count} / {self.bot.max_rewards_amount}"
+                await ctx.reply(response)
+            else:
+                response = f"No score information yet for {ctx.message.author}"
+                await ctx.reply(response)
+        except Exception as e:
+            raise Exception("Exception showing score", e)       
+
+    @commands.command(name='deposit', help="Deposit your balance to a vite account.")
+    async def deposit(self, ctx, vite_address=""):
         if(self.bot.disabled):
             await ctx.reply("The trivia bot is currently disabled.")
             return
-        # Check that vite_address is not blank
+         # Check that vite_address is not blank
         if(vite_address == ""):
             await ctx.reply(f"Usage: {self.bot.command_prefix}start <new_prefix>")
             return    
@@ -27,6 +51,10 @@ class GameCog(commands.Cog, name="Game"):
         if(vite_address.startswith("vite") == False):
             await ctx.reply(f"Please only use vite addresses. Usage: {self.bot.command_prefix}start <vite address>")
             return
+
+    @commands.command(name='play', help="Play the trivia game.")
+    async def play(self, ctx):
+
         try:
         
             question_number = 1
@@ -35,12 +63,11 @@ class GameCog(commands.Cog, name="Game"):
             if ctx.message.author in self.bot.user_data:
                 # Grab the entry
                 my_user_data = self.bot.user_data[ctx.message.author]
-                print(f"Grabbing entry for {vite_address}")
                 question_number = my_user_data.get_question_count()
             else:
                 # Create an entry in the user_data dictionary
-                print(f"Creating new UserData with {ctx.message.author} and address {vite_address}")
-                my_user_data = UserData(ctx.message.author,vite_address)
+                print(f"Creating new UserData with {ctx.message.author}")
+                my_user_data = UserData(ctx.message.author)
                 self.bot.user_data[ctx.message.author] = my_user_data
 
             print(f"Question # {question_number}")
@@ -89,14 +116,17 @@ class GameCog(commands.Cog, name="Game"):
                         correct = False
                 # If correct send vite
                 if(correct):
-                    await ctx.message.author.send(f"Correct. Congratulations! The correct answer was {correct_answer}.\n" + 
-                        f"Sending {self.bot.token_amount} vite to {vite_address}.")
                     # Increment quesetion count
                     my_user_data.next_question_count()
-                    self.bot.send_vite(vite_address)
+                    my_user_data.add_win_to_score()
+                    my_user_data.set_balance(my_user_data.get_balance() + self.bot.token_amount)
+                    await ctx.message.author.send(f"Correct. Congratulations! Your balance is now {my_user_data.get_balance()}")
+                   # self.bot.send_vite(vite_address)
                 else:
+                    my_user_data.add_loss_to_score()
                     await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct answer was {correct_answer}")
             except asyncio.TimeoutError:
+                my_user_data.add_loss_to_score()
                 await ctx.message.author.send(f"Sorry, you took too much time to answer! The correct answer was {correct_answer}")
 
         except Exception as e:
