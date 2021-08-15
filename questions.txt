@@ -225,3 +225,45 @@ All of these are true
 An exchange could exit scam and steal all your crypto
 It increases centralization
 Exchanges can be hacked 
+
+Who invented Bitcoin?
+Satoshi Nakomoto
+Elon Musk
+Homer Simpson
+Al Gore
+
+When was Bitcoin released?
+2009
+2011
+2001
+1988
+
+VCP (Vite Community Points) are used for:
+Buying merch on the online store
+Voting on company wide decisions
+Mining rewards
+Paying transaction fees
+
+What are Oracles in the context of smart contracts?
+Oracles provide information from the outside world to the smart contract
+Oracles are people who write smart contracts
+Oracles produce new blocks to be used on the blockchain
+Oracles are a database 
+
+Nano uses PoW to:
+Deter spam attacks 
+Purposely slow down the network when traffic is heavy
+Because puzzles are fun
+Analyze network data
+
+An advantage of Nano over Bitcoin is
+All of these are true
+Much lower energy usage per transaction
+Instant transactions
+No transaction fees
+
+You can earn free Banano by running Folding@Home on your computer. Folding@Home is a _______
+Distributed computing project aiming to simulate protein folding
+An origami tutorial
+An AI deepfake generator
+An online community for people who love folding towels

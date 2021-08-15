@@ -32,16 +32,16 @@ class GameCog(commands.Cog, name="Game"):
             question_number = 1
 
             # Check if we have an entry yet
-            if vite_address in self.bot.user_data:
+            if ctx.message.author in self.bot.user_data:
                 # Grab the entry
-                my_user_data = self.bot.user_data[vite_address]
+                my_user_data = self.bot.user_data[ctx.message.author]
                 print(f"Grabbing entry for {vite_address}")
                 question_number = my_user_data.get_question_count()
             else:
                 # Create an entry in the user_data dictionary
                 print(f"Creating new UserData with {ctx.message.author} and address {vite_address}")
                 my_user_data = UserData(ctx.message.author,vite_address)
-                self.bot.user_data[vite_address] = my_user_data
+                self.bot.user_data[ctx.message.author] = my_user_data
 
             print(f"Question # {question_number}")
             # Check if we are maxxing out at questions per this user
@@ -82,6 +82,7 @@ class GameCog(commands.Cog, name="Game"):
                     # Check by index
                     try: 
                         index = ord(msg.content) - ord('A') + 1
+
                         if(index == correct_index):
                             correct = True
                     except ValueError:
