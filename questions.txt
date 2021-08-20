@@ -10,24 +10,6 @@ Silicon
 Nitrogren
 Cobalt
 
-What does Science mean in Latin?
-Knowing
-Seeing
-Measuring
-Arrogance
-
-What color has the highest frequency?
-Violet
-Red
-Orange
-Blue
-
-Light from the Sun takes eight _____ to reach Earth?
-minutes
-seconds
-hours
-days
-
 The total fee for a nano transaction is:
 Nothing
 0.00025 
@@ -369,3 +351,33 @@ January 16, 2020
 July 16, 2020
 February 23, 2021
 March 3, 2021
+
+What is an Airdrop?
+Free tokens are distributed to a pre-selected list of wallets as a marketting stunt
+Bitcoins are released by hot air balloons onto a crowd below
+A website you can go to that will give you free crypto for solving captchas
+Another term for flatulence 
+
+What is a dApp (Distributed Application) ?
+An application built on a decentralized network that combines a smart contract and a frontend user interface. 
+An application that sits on a central server. 
+A new type of blockchain
+A token used for proof of collateral
+
+What is a NFT (Non-Fungible Token) ? 
+Proof of ownership of a digital asset like a piece of art that is stored on a blockchain
+A virtual reality game
+An application built on a decentralized network that combines a smart contract and a frontend user interface. 
+A website you can go to that will give you free crypto for solving captchas
+
+What is NOT a valid example of a NFT?
+Currency
+A JPG artwork by your favorite artist
+Trading cards
+Virtual reality real-estate
+
+What is the definition of fungibility?
+The ability to be replaced by another identical item; mutually interchangeable.
+The availability of liquid assets to a market or company.
+A measure of how much fun using a certain cryptocurrency is.
+Related to fungi. 
