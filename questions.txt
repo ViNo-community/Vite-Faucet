@@ -98,7 +98,7 @@ What is Banano?
 A fork of Nano
 A token on the Nano blockchain
 A standalone coin
-An Erc-20 token
+An ERC-20 token
 
 What is the total supply of Banano?
 2.9 Billion
@@ -113,7 +113,7 @@ Protein
 Epic sauce
 
 What is the purpose of Banano?
-All of the options available
+All of these
 Memes
 Decentralisation of bananas
 Fast transactions
@@ -140,7 +140,7 @@ What does DEX mean?
 Decentralised Exchange
 PokeDex
 dEXTRAMONEY
-Decentralised EX
+Decentralised Ex-Girlfriends
 
 Who is the inventor of Nano?
 Colin LeMahieu
@@ -174,11 +174,11 @@ You gain rewards for running Vite nodes but not for running Nano nodes
 
 Vite gives you daily rewards for running a _________
 Full Node
-Refigerator 
+Refrigerator
 DEX
 Smart Contract
 
-In order to execute transactions on Vite, you 
+In order to execute transactions on Vite, you must _________
 Earn quota by temporarily staking Vite, or solve a small PoW puzzle
 Pay gas fees
 Solve a captcha
@@ -381,3 +381,51 @@ The ability to be replaced by another identical item; mutually interchangeable.
 The availability of liquid assets to a market or company.
 A measure of how much fun using a certain cryptocurrency is.
 Related to fungi. 
+
+ERC-721 and ERC-1155 are standards for:
+Non-Fungible Tokens (NFTs)
+Custom tokens on the ETH network
+Smart contracts
+Meme coins
+
+What is the purpose of the Vite Canary Network (VCN)?
+To provide a testing network with tokens that have real value
+Oracles for the Vite network
+A layer 2 network that supports faster transactions
+To provide cute canary pets to DAG enthusiasts
+
+Vite uses the following emoji:
+Running person
+Turtle
+Pickle
+Panda
+
+Which of the following is a Centralized Exchange (CEX):
+Coinbase
+ViteX
+Uniswap
+Pancake Swap
+
+Which of the following is a De-Centralized Exchange (DEX):
+ViteX
+Coinbase
+Kraken
+Binance
+
+What is an AMM?
+Automated Market Maker
+Automated Money Market
+After Market Manipulation
+Annoying Moody Maximalists
+
+How much quota is needed for one send transaction with no memo in Vite?
+1 UT
+5 UT
+10 UT
+Depends on how busy the network currently is
+
+What is Hummingbot?
+An open source crypto trading bot 
+A hummingbird simulator
+A decentralized NFT marketplace
+A Discord bot that responds "Hmmmm..." to everything
