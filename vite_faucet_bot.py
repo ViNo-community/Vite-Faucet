@@ -12,6 +12,7 @@ import os
 import time
 import random
 import traceback
+import datetime
 
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
@@ -28,6 +29,7 @@ class ViteFaucetBot(commands.Bot):
     initialized = False
     online = True
     discord_token = ""
+    client_id = ""
     rpc_url = ""
     logging_level = 0
     greylist_timeout = 0.0
@@ -60,6 +62,7 @@ class ViteFaucetBot(commands.Bot):
         self.faucet_private_key = os.getenv('faucet_private_key')
         self.logging_level = os.getenv("logging_level")
         self.discord_token = os.getenv('discord_token')
+        self.client_id = os.getenv('client_id')
         self.greylist_timeout = float(os.getenv('greylist_timeout') or 0.0)
         self.answer_timeout = float(os.getenv('answer_timeout') or 20.0)
         self.token_amount = float(os.getenv('token_amount'))
@@ -160,7 +163,10 @@ class ViteFaucetBot(commands.Bot):
     async def on_disconnect(self):
         print("Bot disconnected")
         # Log successful connection
-        Common.log_error(f"{self.user.name} disconnected.")   
+        Common.log_error(f"{self.user.name} disconnected.")  
+
+    def get_client_id(self):
+        return self.client_id 
 
     # Helper function to send tokens to the address
     def send_vite(self,to_address,balance):
@@ -181,6 +187,28 @@ class ViteFaucetBot(commands.Bot):
             print(traceback.format_exc(), file=sys.stderr)
             print(f"Error in send_vite {ex}")
 
+    # Export transactions data to a CSV file
+    def export_to_csv(self,export_file=""):
+        # If no filename specified create one called YYYYMMDD_transactions.csv
+        print(f"Exporting to CSV")
+        if(export_file == ""):
+            filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
+        else:
+            filename = export_file
+        csvdir = os.path(__file__).resolve().parent / "csv" 
+        # Make directory if it doesn't already exist
+        if not os.path.exists(csvdir):
+            try:
+                os.makedirs(csvdir)
+            except OSError as e:
+                print(f"Error creating {csvdir} :", e)
+                exit()
+        # Generate transactions file
+        transactions_file = open(filename, "a")
+        for users in self.user_data:
+            my_user_data = self.user_data[users]
+            print(f"Data for {my_user_data.discord_name}")
+        transactions_file.close()
 
 if __name__=='__main__':
     # Initiate Discord bot
