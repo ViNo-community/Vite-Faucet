@@ -84,7 +84,7 @@ class GameCog(commands.Cog, name="Game"):
                 self.bot.user_data[ctx.message.author] = my_user_data
 
             # Check if we are maxxing out at questions per this user
-            if day_rewards > self.bot.max_rewards_amount:
+            if day_rewards >= self.bot.max_rewards_amount:
                 Common.log(f"{ctx.message.author} has maxxed out with daily rewards of {day_rewards}")
                 await ctx.reply(f"You have reached the maximum rewards [{day_rewards:.2f}] allowed for per " + \
                     f"{self.bot.greylist_timeout} minute period.")
@@ -92,17 +92,19 @@ class GameCog(commands.Cog, name="Game"):
                 if(my_user_data.get_greylist() == 0):
                     # Greylist. Record future time greylist_timeout minutes in the future
                     my_user_data.set_greylist(self.bot.greylist_timeout)
+                    minutes_left = (my_user_data.get_greylist_future() - time.time()) / 60.0
+                    await ctx.reply(f"You are greylisted for another {minutes_left} minutes.")
                     return
                 elif(my_user_data.get_greylist() > int(time.time())):
                     # If greylist is still in future
-                    wait_period = str(int((my_user_data.get_greylist_future() - time.time()) /
-                            self.bot.greylist_timeout)) + " minutes."
-                    await ctx.reply(f"You are greylisted for another {wait_period}")
+                    minutes_left = (my_user_data.get_greylist_future() - time.time()) / 60.0
+                    await ctx.reply(f"You are greylisted for another {minutes_left} minutes.")
                     return
                 else:
                     # Time is past greylist. Clear greylist
                     my_user_data.clear_daily_rewards()
                     my_user_data.clear_greylist()
+                    await ctx.reply(f"You are no longer greylist.")
 
             # Grab a random trivia question 
             q = random.choice(self.bot.questions)
