@@ -309,3 +309,63 @@ A visual representation of your unique Nano address in the form of a cartoon fac
 Nano's version of crypto-punk NFTs
 A heavy metal band that sings about Nano
 A popular Japanese anime
+
+Which currency uses a Quota system?
+$VITE
+$BTC
+$NANO
+$BAN
+
+What does SBP stand for?
+Snapshot Block Producer
+Simulated Blockchain Processor
+Small Blue Pill
+Simple Block Photographer
+
+When was $NANO first traded on ViteX?
+July 14, 2021
+July 4, 2021
+August 12, 2021
+July 15, 2021
+
+What is ViteX?
+An order book DEX
+A stock exchange
+An AMM
+A CEX
+
+How do you mine VX?
+All of the options listed
+Trade on ViteX
+Market Making on ViteX
+Stake VITE on ViteX
+
+When did Vite launch its main net?
+September 25, 2019
+August 3, 2019
+July 4, 2019
+October 1, 2019
+
+How do you get Quota?
+Lock $VITE
+Lock $NANO
+Lock $BAN
+Lock $BTC
+
+How much $VITE is required to mint a token on the Vite Chain?
+1,000
+1
+1 million
+10
+
+What are super nodes called on the Vite chain?
+SBPs
+Operators 
+Gateways
+Quota 
+
+When was $BAN first listed on ViteX?
+January 16, 2020 
+July 16, 2020
+February 23, 2021
+March 3, 2021
