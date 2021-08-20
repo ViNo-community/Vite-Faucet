@@ -40,7 +40,7 @@ class GameCog(commands.Cog, name="Game"):
         except Exception as e:
             raise Exception("Exception showing score", e)       
 
-    @commands.command(name='deposit', help="Deposit your balance to a vite account.")
+    @commands.command(name='withdraw', help="Withdraw your balance to an external vite wallet.")
     async def deposit(self, ctx, vite_address=""):
         if(self.bot.disabled):
             await ctx.reply("The trivia bot is currently disabled.")
@@ -67,8 +67,10 @@ class GameCog(commands.Cog, name="Game"):
             self.bot.send_vite(vite_address,balance)
             # Subtract from balance
             my_user_data.set_balance(0)
+            # Alert user of successful withdraw
+            await ctx.reply(f"Your withdrawal was processed!")
         except Exception as e:
-            raise Exception(f"Exception depositing vite to {vite_address}", e)   
+            raise Exception(f"Exception with withdrawal to {vite_address}", e)   
 
     @commands.command(name='play', help="Play the trivia game.")
     async def play(self, ctx):
@@ -88,9 +90,23 @@ class GameCog(commands.Cog, name="Game"):
 
             # Check if we are maxxing out at questions per this user
             if total_rewards > self.bot.max_rewards_amount:
-                await ctx.reply(f"You have reached the maximum amount of rewards " + \
-                    f"per time period [{self.bot.max_rewards_amount}]. Please wait ")
-                return
+                await ctx.reply(f"You have reached the maximum number of rewards " + \
+                    f"per time period [{self.bot.max_rewards_amount}]")
+                # If not greylisted yet
+                if(my_user_data.get_greylist_future() == 0):
+                    # Greylist. Record future time greylist_timeout minutes in the future
+                    my_user_data.start_greylist(self.bot.greylist_timeout)
+                    return
+                # If greylist is still in future
+                elif(my_user_data.get_greylist_future() > int(time.time())):
+                    wait_period = str(int((my_user_data.get_greylist_future() - time.time()) /
+                            self.bot.greylist_timeout)) + " minutes."
+                    await ctx.reply(f"You are greylisted for another {wait_period}")
+                    return
+                # Time is past greylist. Clear greylist
+                else:
+                    my_user_data.clear_total_rewards()
+                    my_user_data.clear_greylist()
 
             # Grab a random trivia question 
             q = random.choice(self.bot.questions)
