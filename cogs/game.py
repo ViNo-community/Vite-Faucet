@@ -77,6 +77,8 @@ class GameCog(commands.Cog, name="Game"):
                 my_user_data = self.bot.user_data[ctx.message.author]
                 # Grab daily rewards
                 day_rewards = my_user_data.get_daily_balance()
+                # User data found
+                Common.log(f"Found user data {my_user_data}")
             else:
                 # Create an entry in the user_data dictionary
                 Common.log(f"Creating new UserData entry with {ctx.message.author}")
@@ -84,23 +86,31 @@ class GameCog(commands.Cog, name="Game"):
                 self.bot.user_data[ctx.message.author] = my_user_data
 
             # Check if we are maxxing out at questions per this user
-            if day_rewards >= self.bot.max_rewards_amount:
+            print(f"Day Rewards: {round(day_rewards,2)} Max: {round(self.bot.max_rewards_amount,2)}")
+            if round(day_rewards,2) >= round(self.bot.max_rewards_amount,2):
                 Common.log(f"{ctx.message.author} has maxxed out with daily rewards of {day_rewards}")
-                await ctx.reply(f"You have reached the maximum rewards [{day_rewards:.2f}] allowed for per " + \
-                    f"{self.bot.greylist_timeout} minute period.")
+                response = f"You have reached the maximum rewards [{day_rewards:.2f}] allowed for per " + \
+                    f"{self.bot.greylist_timeout} minute period."
+               # await ctx.reply(f"You have reached the maximum rewards [{day_rewards:.2f}] allowed for per " + \
+                #    f"{self.bot.greylist_timeout} minute period.")
                 # If not greylisted yet
                 if(my_user_data.get_greylist() == 0):
+                    Common.log(f"No greylist detected")
                     # Greylist. Record future time greylist_timeout minutes in the future
                     my_user_data.set_greylist(self.bot.greylist_timeout)
-                    minutes_left = (my_user_data.get_greylist_future() - time.time()) / 60.0
-                    await ctx.reply(f"You are greylisted for another {minutes_left} minutes.")
+                    minutes_left = (my_user_data.get_greylist() - time.time()) / 60.0
+                    response = response + f" You have been added to the greylist for a period of {minutes_left:.4f} minutes."
+                    await ctx.send(response)
                     return
                 elif(my_user_data.get_greylist() > int(time.time())):
                     # If greylist is still in future
-                    minutes_left = (my_user_data.get_greylist_future() - time.time()) / 60.0
-                    await ctx.reply(f"You are greylisted for another {minutes_left} minutes.")
+                    Common.log(f"Greylist is in future : {my_user_data.get_greylist()}")
+                    minutes_left = (my_user_data.get_greylist() - time.time()) / 60.0
+                    response = response + f" You are greylisted for another {minutes_left:.4f} minutes."
+                    await ctx.send(response)
                     return
                 else:
+                    Common.log(f"Past greylist. Clear")
                     # Time is past greylist. Clear greylist
                     my_user_data.clear_daily_rewards()
                     my_user_data.clear_greylist()

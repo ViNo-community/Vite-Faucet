@@ -67,17 +67,25 @@ class UserData:
 
     # Set greylist to minutes minutes in the future
     def set_greylist(self,minutes):
-        self.greylist_future = time.time() + 60 * minutes
-        Common.log(f"{self.discord_name} has greylist set to {self.greylist_future}")
+        self.greylist = time.time() + 60 * minutes
+        Common.log(f"{self.discord_name} has greylist set to {self.greylist}")
 
     # Clear the greylist timeout
     def clear_greylist(self):
-        self.greylist_future = 0
+        self.greylist = 0
         Common.log(f"{self.discord_name} has greylist cleared")
 
     def __str__(self):
+        greylist_string = ""
+        print(f"Grey list is {self.greylist}")
+        if self.greylist == 0:
+            greylist_string = "Not Set"
+        else:
+            minutes_left = (self.greylist - time.time()) / 60.0
+            greylist_string = f"{minutes_left:.4f} minutes left."
+
         return f"**Discord Name:** {self.discord_name}\n" + \
             f"**Daily Balance:** {self.daily_balance:.2f}\t**Max Daily:** {self.max_daily_rewards}\n" + \
             f"**Total Balance:** {self.total_balance:.2f}\n" + \
             f"**Correct Answers:** {self.right_answers} / {self.total_answers}\t**Score:** {self.score * 100:.2f}%\n" + \
-            f"**Greylist:** {self.greylist}"
+            f"**Greylist:** {greylist_string}"
