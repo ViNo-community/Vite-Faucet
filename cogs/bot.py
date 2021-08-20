@@ -22,7 +22,7 @@ class BotCog(commands.Cog, name="Bot"):
             # Update the bot status
             await self.bot.update_status()
             # Alert user of successful command prefix update
-            await ctx.reply(f"Set new command prefix to \"{new_prefix}\"")
+            await ctx.send(f"Set new command prefix to \"{new_prefix}\"")
         except Exception as e:
             raise Exception(f"Could not change command prefix to \"{new_prefix}\"", e)  
 
@@ -41,7 +41,7 @@ class BotCog(commands.Cog, name="Bot"):
                 f"\n**Token Type ID (TTI):** {self.bot.token_id}" + \
                 f"\n**Token Amount Per Correct Answer:** {self.bot.token_amount}" + \
                 f"\n**Max Rewards Per Time Period:** {self.bot.max_rewards_amount}"
-            await ctx.reply(response)
+            await ctx.send(response)
         except Exception as e:
             raise Exception("Exception showing info summary", e)   
 

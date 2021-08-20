@@ -177,6 +177,30 @@ class GameCog(commands.Cog, name="Game"):
             Common.logger.error(f"Error in game: {e}", exc_info=True)      
             raise Exception(f"Error processing question request", e)   
                     
+    @commands.command(name='export', help="Export score data to a CSV file.")
+    @commands.has_any_role('Core','Dev')
+    async def export(self, ctx, output_file=""):
+        self.bot.export_to_csv()
+
+
+    @commands.command(name='scoreboard', alias=['scores','board'], help="Show the trivia game scoreboard")
+    async def scoreboard(self, ctx):
+        try: 
+            response = "**Score Board - Top Players**\n"
+            # For each player
+            for key in self.bot.user_data:
+                userinfo = self.bot.user_data[key]
+                score = userinfo.score * 100
+                name = userinfo.discord_name
+                daily_balance = userinfo.get_daily_balance()
+                total_balance = userinfo.get_total_balance()
+                # Show user name - score - daily balance - total balance
+                response = response + f"{name} : {score:.4}%\t{daily_balance:.2f}\t{total_balance:.2f}\n"   
+            await ctx.send(response)       
+
+        except Exception as e:
+            Common.logger.error(f"Error generating scoreboard: {e}", exc_info=True)      
+            raise Exception(f"Error generating scoreboard ", e)   
 
 # Plug-in function to add cog
 def setup(bot):
