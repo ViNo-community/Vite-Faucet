@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 
 import discord
 from userData import UserData
@@ -177,11 +178,19 @@ class GameCog(commands.Cog, name="Game"):
             Common.logger.error(f"Error in game: {e}", exc_info=True)      
             raise Exception(f"Error processing question request", e)   
                     
-    @commands.command(name='export', help="Export score data to a CSV file.")
+    @commands.command(name='export', help="Export score data to a CSV file. [Admin Only]")
     @commands.has_any_role('Core','Dev')
     async def export(self, ctx, output_file=""):
-        self.bot.export_to_csv()
-
+        try:
+            filename = output_file
+            # Auto-generate file name YYYYMMDD_transactions.csv
+            if(output_file == ""):
+                filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
+            self.bot.export_to_csv(filename)
+            await ctx.send(f"Successfully exported score data to {filename}")
+        except Exception as e:
+            Common.logger.error(f"Error generating output file: {e}", exc_info=True)      
+            raise Exception(f"Error generating output file ", e)   
 
     @commands.command(name='scoreboard', alias=['scores','board'], help="Show the trivia game scoreboard")
     async def scoreboard(self, ctx):

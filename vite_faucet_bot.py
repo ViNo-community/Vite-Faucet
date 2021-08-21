@@ -188,27 +188,26 @@ class ViteFaucetBot(commands.Bot):
             print(f"Error in send_vite {ex}")
 
     # Export transactions data to a CSV file
-    def export_to_csv(self,export_file=""):
-        # If no filename specified create one called YYYYMMDD_transactions.csv
-        print(f"Exporting to CSV")
-        if(export_file == ""):
-            filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
-        else:
-            filename = export_file
-        csvdir = os.path(__file__).resolve().parent / "csv" 
-        # Make directory if it doesn't already exist
-        if not os.path.exists(csvdir):
-            try:
-                os.makedirs(csvdir)
-            except OSError as e:
-                print(f"Error creating {csvdir} :", e)
-                exit()
-        # Generate transactions file
-        transactions_file = open(filename, "a")
-        for users in self.user_data:
-            my_user_data = self.user_data[users]
-            print(f"Data for {my_user_data.discord_name}")
-        transactions_file.close()
+    def export_to_csv(self,filename):
+        try:
+            # Generate transactions file
+            transactions_file = open(filename, "w")
+            # Header
+            transactions_file.write(f"\"Name\",\"Score\",\"Daily Balance\",\"Total Balance\"\n")
+            # For each player
+            for key in self.user_data:
+                userinfo = self.user_data[key]
+                score = userinfo.score * 100
+                name = userinfo.discord_name
+                daily_balance = userinfo.get_daily_balance()
+                total_balance = userinfo.get_total_balance()
+                # Show user name - score - daily balance - total balance
+                transactions_file.write(f"{name},{score:.4}%,{daily_balance:.2f},{total_balance:.2f}\n")
+            transactions_file.close()
+        except Exception as ex:
+            Common.logger.error(f"Error in export CSV file: {ex}", exc_info=True)
+            print(traceback.format_exc(), file=sys.stderr)
+            print(f"Error in export to CSV file {ex}")    
 
 if __name__=='__main__':
     # Initiate Discord bot
