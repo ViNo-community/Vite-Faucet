@@ -17,6 +17,8 @@ class Player:
     points = 0
     # Balance of the account
     balance = 0
+    # Balance during this quiz period
+    unsent_balance = 0
     # Rewards won during this "day" 
     # To be counted against max_rewards_amount
     daily_total = 0
@@ -45,7 +47,7 @@ class Player:
 
     def get_name(self):
         return self.name
-        
+
     # Get points
     def get_points(self):
         return self.points
@@ -53,16 +55,16 @@ class Player:
     # Grab user balance
     def get_balance(self):
         return self.balance
-    # GOD DAMN STUPID PIECE OF SHIT LANGUAGE!!
-    def get_daily_balance(self):
-        return self.balance
+    def get_unsent_balance(self):
+        return self.unsent_balance
     # Add to balance
     def add_balance(self,amount):
         self.balance = self.balance + amount
+        self.unsent_balance = self.unsent_balance + amount
         self.daily_total = self.daily_total + amount
     # Clear balance
-    def clear_balance(self):
-        self.balance = 0
+    def clear_unsent_balance(self):
+        self.unsent_balance = 0
 
     # Handle answering correctly
     def add_win(self):
@@ -108,6 +110,6 @@ class Player:
     # To string. Used for debugging purposes
     def __str__(self):
         return f"**Player Name:** {self.name} **Points:**: {self.points}\n" + \
-            f"**Balance:** {self.balance:.2f}\n" + \
+            f"**Balance:** {self.balance:.2f} **Unsent Balance:** {self.unsent_balance:.2f}\n" + \
             f"**Correct Answers:** {self.right_answers}\t**Total Questions:** {self.total_answers}\t**Score:** {self.score}%\n" + \
             f"**Greylist:** {self.get_greylist_as_string()}"

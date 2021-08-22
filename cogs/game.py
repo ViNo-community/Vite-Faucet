@@ -28,11 +28,12 @@ class GameCog(commands.Cog, name="Game"):
                 embed=discord.Embed(title="Score Data", color=discord.Color.dark_blue())
                 embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
                 embed.add_field(name="Points", value=my_player_data.get_points(), inline=True)
-                embed.add_field(name="Balance", value=round(my_player_data.get_balance(),2), inline=False)
+                embed.add_field(name="Balance", value=round(my_player_data.get_balance(),2), inline=True)
+                embed.add_field(name="Unsent Balance", value=round(my_player_data.get_unsent_balance(),2), inline=True)
                 embed.add_field(name="Right Answers", value=my_player_data.get_right_answers(), inline=True)
                 embed.add_field(name="Total Answers", value=my_player_data.get_total_answers(), inline=True)
                 embed.add_field(name="Score", value=str(round(my_player_data.get_score(),2)) + "%", inline=True)
-                embed.add_field(name="Greylist", value=my_player_data.get_greylist_as_string(), inline=False)
+                embed.add_field(name="Greylist", value=my_player_data.get_greylist_as_string(), inline=True)
                 await ctx.send(embed=embed)
             else:
                 response = f"No player information yet for {ctx.message.author}"
@@ -43,11 +44,12 @@ class GameCog(commands.Cog, name="Game"):
 
     @commands.command(name='withdraw', help="Withdraw your balance to an external vite wallet.")
     async def deposit(self, ctx, vite_address=""):
+        # Check the bot is not disabled
         if(self.bot.disabled):
             Common.log(f"Cannot process withdraw. Bot is currently disabled")
             await ctx.send(f"Trivia game has been temporarily disabled") 
             return
-         # Check that vite_address is not blank
+        # Check that vite_address is not blank
         if(vite_address == ""):
             await ctx.send(f"Usage: {self.bot.command_prefix}start <new_prefix>")
             return    
@@ -60,21 +62,23 @@ class GameCog(commands.Cog, name="Game"):
             if ctx.message.author in self.bot.player_data:
                 # Grab the entry
                 my_player_data = self.bot.player_data[ctx.message.author]
-                balance = my_player_data.get_balance()
-                if(balance == 0):
-                    response = f"Your balance is empty"
+                send_balance = my_player_data.get_unsent_balance()
+                if(send_balance == 0):
+                    Common.log(f"Could not withdraw because empty unsent balance for {ctx.message.author}") 
+                    response = f"Your unsent balance is empty"
                     await ctx.send(response)
                     return
             else:
+                Common.log(f"Could not withdraw because no info for {ctx.message.author}")
                 response = f"No score information yet for {ctx.message.author}"
                 await ctx.send(response)
                 return
             # Deposit the balance to the vite address
-            self.bot.send_vite(vite_address,balance)
+            self.bot.send_vite(vite_address,send_balance)
             # Clear the balance
-            my_player_data.clear_balance()
+            my_player_data.clear_unsent_balance()
             # Alert user of successful withdraw
-            await ctx.send(f"You have successfully sent {balance} tokens to {vite_address}")
+            await ctx.send(f"You have successfully sent {send_balance} tokens to {vite_address}")
         except Exception as e:
             Common.logger.error(f"Error withdrawing funds: {e}", exc_info=True)   
             raise Exception(f"Exception with withdrawal to {vite_address}", e)   
