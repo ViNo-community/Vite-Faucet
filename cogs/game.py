@@ -91,14 +91,12 @@ class GameCog(commands.Cog, name="Game"):
             if round(day_rewards,2) >= round(self.bot.max_rewards_amount,2):
                 Common.log(f"{ctx.message.author} has maxxed out with daily rewards of {day_rewards}")
                 response = f"You have reached the maximum rewards [{day_rewards:.2f}] allowed for per " + \
-                    f"{self.bot.greylist_timeout} minute period."
-               # await ctx.reply(f"You have reached the maximum rewards [{day_rewards:.2f}] allowed for per " + \
-                #    f"{self.bot.greylist_timeout} minute period.")
+                    f"{self.bot.greylist_duration} minute period."
                 # If not greylisted yet
                 if(my_user_data.get_greylist() == 0):
                     Common.log(f"No greylist detected")
                     # Greylist. Record future time greylist_timeout minutes in the future
-                    my_user_data.set_greylist(self.bot.greylist_timeout)
+                    my_user_data.set_greylist(self.bot.greylist_duration)
                     minutes_left = (my_user_data.get_greylist() - time.time()) / 60.0
                     response = response + f" You have been added to the greylist for a period of {minutes_left:.4f} minutes."
                     await ctx.send(response)
@@ -146,9 +144,6 @@ class GameCog(commands.Cog, name="Game"):
                 # Check by text answer
                 if(msg.content == (self.bot.command_prefix + "play")):
                     print("Next question pls")
-                    return
-                elif(msg.content.startswith(self.bot.command_prefix)):
-                    print("It is a command. Skipping")
                     return
 
                 if(msg.content.strip() == correct_answer):

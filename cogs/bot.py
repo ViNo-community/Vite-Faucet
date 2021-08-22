@@ -37,7 +37,7 @@ class BotCog(commands.Cog, name="Bot"):
                 f"\n**RPC URL:** {self.bot.rpc_url}" + \
                 f"\n**Faucet Address:** {self.bot.faucet_address}" + \
                 f"\n**Answer Timeout:** {self.bot.answer_timeout}" + \
-                f"\n**Greylist Time Period:** {self.bot.greylist_timeout}" + \
+                f"\n**Greylist Duration in Minutes:** {self.bot.greylist_duration}" + \
                 f"\n**Token Type ID (TTI):** {self.bot.token_id}" + \
                 f"\n**Token Amount Per Correct Answer:** {self.bot.token_amount}" + \
                 f"\n**Max Rewards Per Time Period:** {self.bot.max_rewards_amount}"
@@ -60,6 +60,69 @@ class BotCog(commands.Cog, name="Bot"):
             await ctx.reply(f"Set logging level to {new_logging_level}")
         except Exception as e:
             raise Exception(f"Could not change logging level to {new_logging_level}", e)    
+
+    @commands.command(name='set_greylist', help='Set greylist time period in minutes [Admin Only]')
+    @commands.has_any_role('Core','Dev')
+    async def set_greylist(self, ctx, param=""):
+        try:
+            new_greylist = float(param)
+            if(new_greylist < 0):
+                await ctx.reply(f"Greylist duration must be positive")
+                return
+            self.bot.greylist_duration = new_greylist
+            # Save in .env file
+            dotenv.set_key(".env","greylist_duration", param)
+            await ctx.reply(f"Greylist time period has been updated to {self.bot.greylist_duration} minutes")
+        except ValueError:
+            await ctx.reply(f"Greylist duration must be a valid number")
+            return
+        except Exception as e:
+            Common.logger.error(f"Error in set_greylist {e}", exc_info=True)   
+            raise Exception(f"Exception in set_greylist", e)   
+
+    @commands.command(name='set_token_reward', help='Set reward size for one correct answer [Admin Only]')
+    @commands.has_any_role('Core','Dev')
+    async def set_token_reward(self, ctx, param=""):
+        try:
+            new_token_amount = float(param)
+            if(new_token_amount < 0):
+                await ctx.reply(f"Token reward must be positive")
+                return
+            if(new_token_amount >= self.bot.max_rewards_amount):
+                await ctx.reply(f"Max_rewards amount must be greater than token_reward amount")
+                return
+            self.bot.token_amount = new_token_amount
+            # Save in .env file
+            dotenv.set_key(".env","token_amount", param)
+            await ctx.reply(f"Token reward has been updated to {self.bot.token_amount}")
+        except ValueError:
+            await ctx.reply(f"Token reward be a valid number")
+            return
+        except Exception as e:
+            Common.logger.error(f"Error in set_token_reward {e}", exc_info=True)   
+            raise Exception(f"Exception in set_token_reward", e)   
+
+    @commands.command(name='set_max_reward', help='Set max rewards allowed per time period [Admin Only]')
+    @commands.has_any_role('Core','Dev')
+    async def set_max_reward(self, ctx, param=""):
+        try:
+            amount = float(param)
+            if(amount < 0):
+                await ctx.reply(f"Max rewards amount must be positive")
+                return
+            if(amount <= self.bot.token_amount):
+                await ctx.reply(f"Max_rewards amount must be greater than token_reward amount")
+                return
+            self.bot.max_rewards_amount = amount
+            # Save in .env file
+            dotenv.set_key(".env","max_rewards_amount",param)
+            await ctx.reply(f"Max rewards amount has been updated to {self.bot.max_rewards_amount}")
+        except ValueError:
+            await ctx.reply(f"Maximum reward amount must be a valid number")
+            return
+        except Exception as e:
+            Common.logger.error(f"Error in set_max_reward {e}", exc_info=True)   
+            raise Exception(f"Exception in set_max_reward", e)   
 
     # Start the bot
     @commands.command(name='start', help="Start the bot [Admin Only]")
