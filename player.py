@@ -43,6 +43,10 @@ class Player:
         self.score = score
         self.greylist = greylist
 
+    # Get points
+    def get_points(self):
+        return self.points
+
     # Grab user balance
     def get_balance(self):
         return self.balance
@@ -80,6 +84,15 @@ class Player:
     # Get greylist timer [0 = none set] when greylist limit will clear
     def get_greylist(self):
         return self.greylist
+    # Get greylist info as human readable
+    def get_greylist_as_string(self):
+        greylist_string = ""
+        if self.greylist <= 0:
+            greylist_string = "Not Set"
+        else:
+            minutes_left = (self.greylist - time.time()) / 60.0
+            greylist_string = f"{minutes_left:.4f} minutes left."
+        return greylist_string
     # Set greylist to minutes minutes in the future
     def set_greylist(self,minutes):
         self.greylist = time.time() + 60 * minutes
@@ -91,15 +104,7 @@ class Player:
 
     # To string. Used for debugging purposes
     def __str__(self):
-        greylist_string = ""
-        print(f"Grey list is {self.greylist}")
-        if self.greylist <= 0:
-            greylist_string = "Not Set"
-        else:
-            minutes_left = (self.greylist - time.time()) / 60.0
-            greylist_string = f"{minutes_left:.4f} minutes left."
-
         return f"**Player Name:** {self.name} **Points:**: {self.points}\n" + \
             f"**Balance:** {self.balance:.2f}\n" + \
             f"**Correct Answers:** {self.right_answers}\t**Total Questions:** {self.total_answers}\t**Score:** {self.score}%\n" + \
-            f"**Greylist:** {greylist_string}"
+            f"**Greylist:** {self.get_greylist_as_string()}"

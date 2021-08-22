@@ -24,9 +24,16 @@ class GameCog(commands.Cog, name="Game"):
             if ctx.message.author in self.bot.player_data:
                 # Grab the entry
                 my_player_data = self.bot.player_data[ctx.message.author]
-                # Show user data information
-                response = str(my_player_data)
-                await ctx.send(response)
+                # Shower user info as embed
+                embed=discord.Embed(title="Score Data", color=discord.Color.dark_blue())
+                embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+                embed.add_field(name="Points", value=my_player_data.get_points(), inline=True)
+                embed.add_field(name="Balance", value=round(my_player_data.get_balance(),2), inline=False)
+                embed.add_field(name="Right Answers", value=my_player_data.get_right_answers(), inline=True)
+                embed.add_field(name="Total Answers", value=my_player_data.get_total_answers(), inline=True)
+                embed.add_field(name="Score", value=str(round(my_player_data.get_score(),2)) + "%", inline=True)
+                embed.add_field(name="Greylist", value=my_player_data.get_greylist_as_string(), inline=False)
+                await ctx.send(embed=embed)
             else:
                 response = f"No player information yet for {ctx.message.author}"
                 await ctx.send(response)
@@ -94,11 +101,9 @@ class GameCog(commands.Cog, name="Game"):
                 self.bot.player_data[ctx.message.author] = my_player_data
 
             # Check if we are maxxing out at questions per this user
-            print(f"Day Rewards: {round(day_rewards,2)} Max: {round(self.bot.max_rewards_amount,2)}")
             if round(day_rewards,2) >= round(self.bot.max_rewards_amount,2):
-                Common.log(f"{ctx.message.author} has maxxed out with daily rewards of {day_rewards}")
-                response = f"You have reached the maximum rewards [{day_rewards:.2f}] allowed for per " + \
-                    f"{self.bot.greylist_duration} minute period."
+                Common.log(f"{ctx.message.author} has maxxed out with daily rewards of {day_rewards:.2f}")
+                response = f"You have reached the maximum rewards [{day_rewards:.2f}] allowed for this time period."
                 # If not greylisted yet
                 if(my_player_data.get_greylist() == 0):
                     Common.log(f"No greylist detected")
@@ -150,7 +155,6 @@ class GameCog(commands.Cog, name="Game"):
                 correct = False
                 # Check by text answer
                 if(msg.content == (self.bot.command_prefix + "play")):
-                    print("Next question pls")
                     return
 
                 if(msg.content.strip() == correct_answer):
