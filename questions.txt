@@ -429,3 +429,15 @@ An open source crypto trading bot
 A hummingbird simulator
 A decentralized NFT marketplace
 A Discord bot that responds "Hmmmm..." to everything
+
+Vitamin Coin is ________
+A meme coin on the Vite chain
+A way for your doctor to bribe you to take your vitamins
+The official currency of Tongo
+Vitamins in the shape of coins 
+
+Which of the following are advantages of Vite?
+All of the above
+Decentralized exchange - ViteX
+Asynchronouns transactions
+Fee-less transaction model
