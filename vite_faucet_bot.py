@@ -13,6 +13,7 @@ import time
 import random
 import traceback
 import datetime
+from pathlib import Path
 
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
@@ -51,7 +52,9 @@ class ViteFaucetBot(commands.Bot):
     player_data = {}
     # List of greylisted accounts
     greylist = {}
-   
+    # Transactions file
+    transactions_filename = ""
+    transactions_file = ""
 
     def __init__(self):
         # Loads the .env file that resides on the same level as the script.
@@ -72,6 +75,30 @@ class ViteFaucetBot(commands.Bot):
         # Assert that DISCORD_TOKEN is not blank
         assert self.discord_token is not None, 'DISCORD_TOKEN must be set in .env.'
         assert not self.discord_token.isspace(), 'DISCORD_TOKEN must not be blank in .env.'
+        # Make transaction directory if it doesn't already exist
+        transdir = Path(__file__).parent / "transactions"
+        if not os.path.exists(transdir):
+            Common.log(f"Transactions directory does not exist. Creating new directory: {transdir}")
+            try:
+                os.makedirs(transdir)
+            except Exception as e:
+                print(f"Error creating {transdir} :", e)
+                Common.logger.error(f"Error creating transactions directory: {e}", exc_info=True)   
+                return
+        # Open or create todays transactions CSV file - YYYYMMDD_transactions.csv
+        filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
+        self.transactions_filename = transdir / filename
+        # Create file if it does not exist
+        if not os.path.exists(self.transactions_filename):
+            Common.log(f"Transactions file does not exist. Creating new file: {self.transactions_filename}")
+            # Open transactions file
+            self.transactions_file = open(self.transactions_filename, "w")
+            # Write header
+            self.transactions_file.write(f"\"Name\",\"Vite Address\",\"Amount\",\n")
+        else:
+            Common.log(f"Transactions file does exist. Opening file in append mode: {self.transactions_filename}")
+            # File exists. Open in append mode
+            self.transactions_file = open(self.transactions_filename, "a")
         # Load questions from questions.txt
         self.load_questions("questions.txt")
         # Init set command prefix and description
@@ -169,45 +196,43 @@ class ViteFaucetBot(commands.Bot):
         return self.client_id 
 
     # Helper function to send tokens to the address
-    def send_vite(self,to_address,balance):
+    def send_vite(self,account_name,vite_address,amount):
 
         try:
-            print(f"send_vite to {to_address}")
-            Common.log(f"Sending {balance} tokens to {to_address}")
+            Common.log(f"Sending {amount} to {account_name} wallet: {vite_address}")
 
             _send_vite(self.faucet_address, 
-                to_address, 
-                balance, 
+                vite_address, 
+                amount, 
                 '', 
                 self.token_id,
                 self.faucet_private_key)
+
+            # Check date if we need to move to a transaction file
+            transdir = Path(__file__).parent / "transactions"
+            filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
+            full_filename = transdir / filename
+            print(f"Transactions file: {self.transactions_filename} vs us {full_filename}")
+            if(full_filename != self.transactions_filename):
+                print(f"Need to generate new file")
+                Common.log(f"Closing transactions file {self.transactions_filename}")
+                # Close old file
+                self.transactions_file.close()
+                # Open new file
+                self.transactions_file = open(self.transactions_filename, "w")
+            # Record transaction in spreadsheet
+            self.transactions_file.write(f"\"{account_name}\",\"{vite_address}\",{amount:.2f}\n")
+
+        except Exception as ex:
+            Common.logger.error(f"Error in export CSV file: {ex}", exc_info=True)
+            print(traceback.format_exc(), file=sys.stderr)
+            print(f"Error in export to CSV file {ex}")    
 
         except Exception as ex:
             Common.logger.error(f"Error in send_vite: {ex}", exc_info=True)
             print(traceback.format_exc(), file=sys.stderr)
             print(f"Error in send_vite {ex}")
 
-    # Export transactions data to a CSV file
-    def export_to_csv(self,filename):
-        try:
-            # Generate transactions file
-            transactions_file = open(filename, "w")
-            # Header
-            transactions_file.write(f"\"Name\",\"Score\",\"Daily Balance\",\"Total Balance\"\n")
-            # For each player
-            for key in self.player_data:
-                userinfo = self.player_data[key]
-                score = userinfo.score * 100
-                name = userinfo.discord_name
-                daily_balance = userinfo.get_daily_balance()
-                total_balance = userinfo.get_total_balance()
-                # Show user name - score - daily balance - total balance
-                transactions_file.write(f"{name},{score:.4}%,{daily_balance:.2f},{total_balance:.2f}\n")
-            transactions_file.close()
-        except Exception as ex:
-            Common.logger.error(f"Error in export CSV file: {ex}", exc_info=True)
-            print(traceback.format_exc(), file=sys.stderr)
-            print(f"Error in export to CSV file {ex}")    
 
 if __name__=='__main__':
     # Initiate Discord bot

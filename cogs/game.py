@@ -33,7 +33,7 @@ class GameCog(commands.Cog, name="Game"):
                 embed=discord.Embed(title="Score Data", color=discord.Color.dark_blue())
                 embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
                 embed.add_field(name="Points", value=my_player_data.get_points(), inline=True)
-                embed.add_field(name="Balance", value=round(my_player_data.get_balance(),2), inline=True)
+                embed.add_field(name="Total User Balance", value=round(my_player_data.get_balance(),2), inline=True)
                 embed.add_field(name="Unsent Balance", value=round(my_player_data.get_unsent_balance(),2), inline=True)
                 embed.add_field(name="Sent Balance", value=round(my_player_data.get_sent_balance(),2), inline=True)
                 embed.add_field(name="Period Total", value=round(my_player_data.get_daily_limit(),2), inline=True)
@@ -88,7 +88,7 @@ class GameCog(commands.Cog, name="Game"):
             return
         try:
             # Deposit the balance to the vite address
-            self.bot.send_vite(vite_address,send_balance)
+            self.bot.send_vite(ctx.message.author,vite_address,send_balance)
             # Clear the balance
             my_player_data.clear_unsent_balance()
             # Grab wallet address of user for future reference
