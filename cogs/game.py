@@ -27,9 +27,13 @@ class GameCog(commands.Cog, name="Game"):
                 # Shower user info as embed
                 embed=discord.Embed(title="Score Data", color=discord.Color.dark_blue())
                 embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+                embed.add_field(name="Wallet Address", value=my_player_data.get_wallet_address(), inline=True)
                 embed.add_field(name="Points", value=my_player_data.get_points(), inline=True)
                 embed.add_field(name="Balance", value=round(my_player_data.get_balance(),2), inline=True)
                 embed.add_field(name="Unsent Balance", value=round(my_player_data.get_unsent_balance(),2), inline=True)
+                embed.add_field(name="Sent Balance", value=round(my_player_data.get_sent_balance(),2), inline=True)
+                embed.add_field(name="Period Total", value=round(my_player_data.get_daily_limit(),2), inline=True)
+                embed.add_field(name="Period Limit", value=round(self.bot.max_rewards_amount,2), inline=True)
                 embed.add_field(name="Right Answers", value=my_player_data.get_right_answers(), inline=True)
                 embed.add_field(name="Total Answers", value=my_player_data.get_total_answers(), inline=True)
                 embed.add_field(name="Score", value=str(round(my_player_data.get_score(),2)) + "%", inline=True)
@@ -49,36 +53,44 @@ class GameCog(commands.Cog, name="Game"):
             Common.log(f"Cannot process withdraw. Bot is currently disabled")
             await ctx.send(f"Trivia game has been temporarily disabled") 
             return
+            
+        # Check if we have an entry yet
+        if ctx.message.author in self.bot.player_data:
+            # Grab the entry
+            my_player_data = self.bot.player_data[ctx.message.author]
+            send_balance = my_player_data.get_unsent_balance()
+            if(send_balance == 0):
+                Common.log(f"Could not withdraw because empty unsent balance for {ctx.message.author}") 
+                response = f"Your unsent balance is empty"
+                await ctx.send(response)
+                return
+        else:
+            Common.log(f"Could not withdraw because no info for {ctx.message.author}")
+            response = f"No score information yet for {ctx.message.author}"
+            await ctx.send(response)
+            return
         # Check that vite_address is not blank
         if(vite_address == ""):
-            await ctx.send(f"Usage: {self.bot.command_prefix}start <new_prefix>")
-            return    
+            # See if a wallet address is saved in our player data
+            if(my_player_data.get_wallet_address() != ""):
+                vite_address = my_player_data.get_wallet_address()
+            else:
+                await ctx.send(f"Usage: {self.bot.command_prefix}withdraw [vite address]")
+                return    
         # Make sure that address is for vite
         if(vite_address.startswith("vite") == False):
             await ctx.send(f"Please only use vite addresses. Usage: {self.bot.command_prefix}start <vite address>")
             return
         try:
-            # Check if we have an entry yet
-            if ctx.message.author in self.bot.player_data:
-                # Grab the entry
-                my_player_data = self.bot.player_data[ctx.message.author]
-                send_balance = my_player_data.get_unsent_balance()
-                if(send_balance == 0):
-                    Common.log(f"Could not withdraw because empty unsent balance for {ctx.message.author}") 
-                    response = f"Your unsent balance is empty"
-                    await ctx.send(response)
-                    return
-            else:
-                Common.log(f"Could not withdraw because no info for {ctx.message.author}")
-                response = f"No score information yet for {ctx.message.author}"
-                await ctx.send(response)
-                return
             # Deposit the balance to the vite address
             self.bot.send_vite(vite_address,send_balance)
             # Clear the balance
             my_player_data.clear_unsent_balance()
+            # Grab wallet address of user for future reference
+            my_player_data.set_wallet_address(vite_address)
             # Alert user of successful withdraw
             await ctx.send(f"You have successfully sent {send_balance} tokens to {vite_address}")
+            my_player_data.add_sent_balance(send_balance)
         except Exception as e:
             Common.logger.error(f"Error withdrawing funds: {e}", exc_info=True)   
             raise Exception(f"Exception with withdrawal to {vite_address}", e)   
@@ -93,13 +105,13 @@ class GameCog(commands.Cog, name="Game"):
             return
 
         try:
-            day_rewards = 0
+            day_limit = 0
             # Check if we have an entry yet
             if ctx.message.author in self.bot.player_data:
                 # Grab the entry
                 my_player_data = self.bot.player_data[ctx.message.author]
-                # Grab daily rewards
-                day_rewards = my_player_data.get_balance()
+                # Grab daily total to check against max reward
+                day_limit = my_player_data.get_daily_limit()
                 # User data found
                 Common.log(f"Found user data {my_player_data}")
             else:
@@ -109,9 +121,9 @@ class GameCog(commands.Cog, name="Game"):
                 self.bot.player_data[ctx.message.author] = my_player_data
 
             # Check if we are maxxing out at questions per this user
-            if round(day_rewards,2) >= round(self.bot.max_rewards_amount,2):
-                Common.log(f"{ctx.message.author} has maxxed out with daily rewards of {day_rewards:.2f}")
-                response = f"You have reached the maximum rewards [{day_rewards:.2f}] allowed for this time period."
+            if round(day_limit,2) >= round(self.bot.max_rewards_amount,2):
+                Common.log(f"{ctx.message.author} has maxxed out with daily rewards of {day_limit:.2f}")
+                response = f"You have reached the maximum rewards [{day_limit:.2f}] allowed for this time period."
                 # If not greylisted yet
                 if(my_player_data.get_greylist() == 0):
                     Common.log(f"No greylist detected")
@@ -131,7 +143,7 @@ class GameCog(commands.Cog, name="Game"):
                 else:
                     Common.log(f"Clear greylist for {ctx.message.author}")
                     # Time is past greylist. Clear greylist
-                    my_player_data.clear_daily_balance()
+                    my_player_data.clear_daily_limit()
                     my_player_data.clear_greylist()
 
             # Grab a random trivia question 

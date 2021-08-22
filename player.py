@@ -9,6 +9,8 @@ class Player:
 
     # Username on Discord
     name = ""
+    # Wallet address
+    wallet_address = ""
 
     # Number of questions answered correctly
     right_answers = 0
@@ -19,9 +21,11 @@ class Player:
     balance = 0
     # Balance during this quiz period
     unsent_balance = 0
+    # Total balance sent to external wallet
+    sent_balance = 0
     # Rewards won during this "day" 
     # To be counted against max_rewards_amount
-    daily_total = 0
+    daily_limit = 0
 
     # Timestamp of when the greylist period will clear
     greylist = 0
@@ -29,7 +33,7 @@ class Player:
     def __init__(self, name):
         Common.log(f"Making new user data for {name}")
         self.name = name
-        self.balance = 0
+        self.balance = self.unsent_balance = self.sent_balance = 0
         self.right_answers = self.total_answers = 0
         self.score = 0
         self.greylist = 0
@@ -45,8 +49,13 @@ class Player:
         self.score = score
         self.greylist = greylist
 
+    # Get username on Discord
     def get_name(self):
         return self.name
+    def get_wallet_address(self):
+        return self.wallet_address
+    def set_wallet_address(self,address):
+        self.wallet_address = address
 
     # Get points
     def get_points(self):
@@ -57,14 +66,25 @@ class Player:
         return self.balance
     def get_unsent_balance(self):
         return self.unsent_balance
+    def get_sent_balance(self):
+        return self.sent_balance
+    # What to check against max_rewards_amount
+    def get_daily_limit(self):
+        return self.daily_limit
     # Add to balance
     def add_balance(self,amount):
         self.balance = self.balance + amount
         self.unsent_balance = self.unsent_balance + amount
-        self.daily_total = self.daily_total + amount
+        self.daily_limit = self.daily_limit + amount
+    # Track amount sent to external wallet
+    def add_sent_balance(self,amount):
+        self.sent_balance = self.sent_balance + amount
     # Clear balance
     def clear_unsent_balance(self):
         self.unsent_balance = 0
+    # A greylist period is over, so clear daily limits
+    def clear_daily_limit(self):
+        self.daily_limit = 0
 
     # Handle answering correctly
     def add_win(self):
