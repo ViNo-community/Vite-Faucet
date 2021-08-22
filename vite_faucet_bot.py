@@ -53,6 +53,7 @@ class ViteFaucetBot(commands.Bot):
     # List of greylisted accounts
     greylist = {}
     # Transactions file
+    transdir = Path(__file__).parent / "transactions"
     transactions_filename = ""
     transactions_file = ""
 
@@ -76,26 +77,27 @@ class ViteFaucetBot(commands.Bot):
         assert self.discord_token is not None, 'DISCORD_TOKEN must be set in .env.'
         assert not self.discord_token.isspace(), 'DISCORD_TOKEN must not be blank in .env.'
         # Make transaction directory if it doesn't already exist
-        transdir = Path(__file__).parent / "transactions"
-        if not os.path.exists(transdir):
-            Common.log(f"Transactions directory does not exist. Creating new directory: {transdir}")
+        if not os.path.exists(self.transdir):
+            Common.log(f"Transactions directory does not exist. Creating new directory: {self.transdir}")
             try:
-                os.makedirs(transdir)
+                os.makedirs(self.transdir)
             except Exception as e:
-                print(f"Error creating {transdir} :", e)
+                print(f"Error creating {self.transdir} :", e)
                 Common.logger.error(f"Error creating transactions directory: {e}", exc_info=True)   
                 return
         # Open or create todays transactions CSV file - YYYYMMDD_transactions.csv
         filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
-        self.transactions_filename = transdir / filename
+        self.transactions_filename = self.transdir / filename
         # Create file if it does not exist
         if not os.path.exists(self.transactions_filename):
+            print("Does not exist yet")
             Common.log(f"Transactions file does not exist. Creating new file: {self.transactions_filename}")
             # Open transactions file
             self.transactions_file = open(self.transactions_filename, "w")
             # Write header
-            self.transactions_file.write(f"\"Name\",\"Vite Address\",\"Amount\",\n")
+            self.transactions_file.write(f"\"Time\",\"Name\",\"Vite Address\",\"Amount\",\n")
         else:
+            print("It already exists")
             Common.log(f"Transactions file does exist. Opening file in append mode: {self.transactions_filename}")
             # File exists. Open in append mode
             self.transactions_file = open(self.transactions_filename, "a")
@@ -209,9 +211,8 @@ class ViteFaucetBot(commands.Bot):
                 self.faucet_private_key)
 
             # Check date if we need to move to a transaction file
-            transdir = Path(__file__).parent / "transactions"
             filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
-            full_filename = transdir / filename
+            full_filename = self.transdir / filename
             print(f"Transactions file: {self.transactions_filename} vs us {full_filename}")
             if(full_filename != self.transactions_filename):
                 print(f"Need to generate new file")
@@ -221,8 +222,9 @@ class ViteFaucetBot(commands.Bot):
                 # Open new file
                 self.transactions_file = open(self.transactions_filename, "w")
             # Record transaction in spreadsheet
-            self.transactions_file.write(f"\"{account_name}\",\"{vite_address}\",{amount:.2f}\n")
-
+            current_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+            self.transactions_file.write(f"\"{current_time}\",\"{account_name}\",\"{vite_address}\",{amount:.2f}\n")
+            self.transactions_file.flush()
         except Exception as ex:
             Common.logger.error(f"Error in export CSV file: {ex}", exc_info=True)
             print(traceback.format_exc(), file=sys.stderr)

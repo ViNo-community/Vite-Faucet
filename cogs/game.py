@@ -215,18 +215,17 @@ class GameCog(commands.Cog, name="Game"):
             return
            # raise Exception(f"Error processing question request", e)   
                     
-    @commands.command(name='export', help="Export score data to a CSV file. [Admin Only]")
+    @commands.command(name='export', help="Export CSV file to channel. [Admin Only]")
     @commands.has_any_role('Core','Dev')
-    async def export(self, ctx, output_file=""):
+    async def export(self, ctx, date=""):
         try:
-            filename = output_file
-            # Auto-generate file name YYYYMMDD_transactions.csv
-            if(output_file == ""):
-                filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
-            self.bot.export_to_csv(filename)
-            await ctx.send(f"Successfully exported score data to {filename}")
+             # If no date provided use todays date
+            filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
+            if(date != ""):
+                filename = date + "_transactions.csv"
+
         except Exception as e:
-            Common.logger.error(f"Error generating output file: {e}", exc_info=True)      
+            Common.logger.error(f"Error exporting file to channel {e}", exc_info=True)      
             raise Exception(f"Error generating output file ", e)   
 
     @commands.command(name='scoreboard', alias=['scores','board'], help="Show the trivia game scoreboard")
