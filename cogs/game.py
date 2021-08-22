@@ -24,10 +24,14 @@ class GameCog(commands.Cog, name="Game"):
             if ctx.message.author in self.bot.player_data:
                 # Grab the entry
                 my_player_data = self.bot.player_data[ctx.message.author]
+                # Make wallet address something because god damn stupid piece of shit
+                # crashes on empty values
+                wallet_address = "Not Set"
+                if(my_player_data.get_wallet_address() != ""):
+                    wallet_address = my_player_data.get_wallet_address()
                 # Shower user info as embed
                 embed=discord.Embed(title="Score Data", color=discord.Color.dark_blue())
                 embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
-                embed.add_field(name="Wallet Address", value=my_player_data.get_wallet_address(), inline=True)
                 embed.add_field(name="Points", value=my_player_data.get_points(), inline=True)
                 embed.add_field(name="Balance", value=round(my_player_data.get_balance(),2), inline=True)
                 embed.add_field(name="Unsent Balance", value=round(my_player_data.get_unsent_balance(),2), inline=True)
@@ -38,6 +42,7 @@ class GameCog(commands.Cog, name="Game"):
                 embed.add_field(name="Total Answers", value=my_player_data.get_total_answers(), inline=True)
                 embed.add_field(name="Score", value=str(round(my_player_data.get_score(),2)) + "%", inline=True)
                 embed.add_field(name="Greylist", value=my_player_data.get_greylist_as_string(), inline=True)
+                embed.add_field(name="Wallet Address", value=wallet_address, inline=True)
                 await ctx.send(embed=embed)
             else:
                 response = f"No player information yet for {ctx.message.author}"

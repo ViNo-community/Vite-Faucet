@@ -37,6 +37,7 @@ class Player:
         self.right_answers = self.total_answers = 0
         self.score = 0
         self.greylist = 0
+        self.wallet_address = ""
 
     # Load from data
     def load(self, name, balance, right_answers, total_answers, score, greylist):
@@ -112,6 +113,7 @@ class Player:
     # Get greylist info as human readable
     def get_greylist_as_string(self):
         greylist_string = ""
+        print(f"Greylist is {self.greylist}")
         if self.greylist <= 0:
             greylist_string = "Not Set"
         else:
