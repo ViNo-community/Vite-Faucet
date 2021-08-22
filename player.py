@@ -1,6 +1,4 @@
 from common import Common
-import random
-import datetime as dt
 import time
 
 POINTS_PER_ANSWER = 50
@@ -113,7 +111,6 @@ class Player:
     # Get greylist info as human readable
     def get_greylist_as_string(self):
         greylist_string = ""
-        print(f"Greylist is {self.greylist}")
         if self.greylist <= 0:
             greylist_string = "Not Set"
         else:

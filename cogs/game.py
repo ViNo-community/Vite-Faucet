@@ -4,7 +4,6 @@ import datetime
 import discord
 from player import Player
 from discord.ext import commands
-import dotenv
 from common import Common
 
 # Import the os,time,random module.
@@ -118,10 +117,10 @@ class GameCog(commands.Cog, name="Game"):
                 # Grab daily total to check against max reward
                 day_limit = my_player_data.get_daily_limit()
                 # User data found
-                Common.log(f"Found user data {my_player_data}")
+                Common.logger.debug(f"Found user data {my_player_data}")
             else:
                 # Create an entry in the player_data dictionary
-                Common.log(f"Creating new Player entry with {ctx.message.author}")
+                Common.log(f"Creating new Player data entry with {ctx.message.author}")
                 my_player_data = Player(ctx.message.author)
                 self.bot.player_data[ctx.message.author] = my_player_data
 

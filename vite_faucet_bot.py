@@ -1,7 +1,5 @@
 # Import discord.py. Allows access to Discord's API.
-import asyncio
 import discord
-import dotenv
 from common import Common
 from question import Question
 import traceback
@@ -9,7 +7,6 @@ import sys
 
 # Import the os,time,random module.
 import os
-import time
 import random
 import traceback
 import datetime
@@ -21,8 +18,6 @@ from send_vite import _send_vite
 
 # Import commands from the discord.ext module.
 from discord.ext import commands
-
-#import send_vite
 
 class ViteFaucetBot(commands.Bot):
 
@@ -202,7 +197,7 @@ class ViteFaucetBot(commands.Bot):
 
         try:
             Common.log(f"Sending {amount} to {account_name} wallet: {vite_address}")
-
+            # Send vite from faucet to wallet address
             _send_vite(self.faucet_address, 
                 vite_address, 
                 amount, 

@@ -1,6 +1,4 @@
-import random
-
-
+# Holds question and answer data
 class Question:
 
     question = ""
