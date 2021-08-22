@@ -34,6 +34,8 @@ class UserData:
     # Grab user balance
     def get_total_balance(self):
         return self.total_balance
+    def clear_total_balance(self):
+        self.total_balance = 0
 
     # Grab user daily balance ("daily" = within a greylist period)
     def get_daily_balance(self):
@@ -78,7 +80,7 @@ class UserData:
     def __str__(self):
         greylist_string = ""
         print(f"Grey list is {self.greylist}")
-        if self.greylist == 0:
+        if self.greylist <= 0:
             greylist_string = "Not Set"
         else:
             minutes_left = (self.greylist - time.time()) / 60.0

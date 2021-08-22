@@ -52,7 +52,7 @@ class GameCog(commands.Cog, name="Game"):
             if ctx.message.author in self.bot.user_data:
                 # Grab the entry
                 my_user_data = self.bot.user_data[ctx.message.author]
-                balance = my_user_data.get_balance()
+                balance = my_user_data.get_total_balance()
             else:
                 response = f"No score information yet for {ctx.message.author}"
                 await ctx.reply(response)
@@ -60,7 +60,7 @@ class GameCog(commands.Cog, name="Game"):
             # Deposit the balance to the vite address
             self.bot.send_vite(vite_address,balance)
             # Subtract from balance
-            my_user_data.set_balance(0)
+            my_user_data.clear_total_balance()
             # Alert user of successful withdraw
             await ctx.reply(f"Your withdrawal was processed!")
         except Exception as e:
@@ -111,11 +111,10 @@ class GameCog(commands.Cog, name="Game"):
                     await ctx.send(response)
                     return
                 else:
-                    Common.log(f"Past greylist. Clear")
+                    Common.log(f"Clear greylist for {ctx.message.author}")
                     # Time is past greylist. Clear greylist
-                    my_user_data.clear_daily_rewards()
+                    my_user_data.clear_daily_balance()
                     my_user_data.clear_greylist()
-                    await ctx.reply(f"You are no longer greylist.")
 
             # Grab a random trivia question 
             q = random.choice(self.bot.questions)
@@ -139,12 +138,19 @@ class GameCog(commands.Cog, name="Game"):
 
             # Check that the message is from the right user and a DM
             def check(message):
-                return message.author == ctx.message.author and message.guild is None
+                return message.author == ctx.message.author and message.guild is None 
 
             try:
                 msg = await self.bot.wait_for("message", timeout=self.bot.answer_timeout, check=check)
                 correct = False
                 # Check by text answer
+                if(msg.content == (self.bot.command_prefix + "play")):
+                    print("Next question pls")
+                    return
+                elif(msg.content.startswith(self.bot.command_prefix)):
+                    print("It is a command. Skipping")
+                    return
+
                 if(msg.content.strip() == correct_answer):
                     correct = True
                 else:
@@ -170,7 +176,6 @@ class GameCog(commands.Cog, name="Game"):
                          f"answer was \"{correct_answer}\"")
             except asyncio.TimeoutError:
                 # User took too long to answer question
-                my_user_data.add_loss()
                 await ctx.message.author.send(f"Sorry, you took too much time to answer! The correct answer " +
                     f"was \"{correct_answer}\"")
 
