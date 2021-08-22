@@ -60,7 +60,11 @@ class GameCog(commands.Cog, name="Game"):
             if ctx.message.author in self.bot.player_data:
                 # Grab the entry
                 my_player_data = self.bot.player_data[ctx.message.author]
-                balance = my_player_data.get_total_balance()
+                balance = my_player_data.get_balance()
+                if(balance == 0):
+                    response = f"Your balance is empty"
+                    await ctx.send(response)
+                    return
             else:
                 response = f"No score information yet for {ctx.message.author}"
                 await ctx.send(response)
@@ -70,7 +74,7 @@ class GameCog(commands.Cog, name="Game"):
             # Clear the balance
             my_player_data.clear_balance()
             # Alert user of successful withdraw
-            await ctx.send(f"Your withdrawal was processed!")
+            await ctx.send(f"You have successfully sent {balance} tokens to {vite_address}")
         except Exception as e:
             Common.logger.error(f"Error withdrawing funds: {e}", exc_info=True)   
             raise Exception(f"Exception with withdrawal to {vite_address}", e)   
@@ -210,7 +214,7 @@ class GameCog(commands.Cog, name="Game"):
             await ctx.send("No score data yet.")
             return
         try: 
-            # Shower scoreboard info as embed
+            # Show scoreboard info as embed
             embed=discord.Embed(title="Scoreboard", description="Current player scores", color=discord.Color.dark_blue())
             for key in self.bot.player_data:
                 my_player_data = self.bot.player_data[key]
