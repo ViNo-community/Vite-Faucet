@@ -2,7 +2,7 @@ import asyncio
 import datetime
 
 import discord
-from userData import UserData
+from player import Player
 from discord.ext import commands
 import dotenv
 from common import Common
@@ -21,14 +21,14 @@ class GameCog(commands.Cog, name="Game"):
     async def score(self, ctx):
         try:
             # Check if we have an entry yet
-            if ctx.message.author in self.bot.user_data:
+            if ctx.message.author in self.bot.player_data:
                 # Grab the entry
-                my_user_data = self.bot.user_data[ctx.message.author]
+                my_player_data = self.bot.player_data[ctx.message.author]
                 # Show user data information
-                response = str(my_user_data)
+                response = str(my_player_data)
                 await ctx.send(response)
             else:
-                response = f"No score information yet for {ctx.message.author}"
+                response = f"No player information yet for {ctx.message.author}"
                 await ctx.send(response)
         except Exception as e:
             Common.logger.error(f"Error showing scoreboard: {e}", exc_info=True)   
@@ -50,18 +50,18 @@ class GameCog(commands.Cog, name="Game"):
             return
         try:
             # Check if we have an entry yet
-            if ctx.message.author in self.bot.user_data:
+            if ctx.message.author in self.bot.player_data:
                 # Grab the entry
-                my_user_data = self.bot.user_data[ctx.message.author]
-                balance = my_user_data.get_total_balance()
+                my_player_data = self.bot.player_data[ctx.message.author]
+                balance = my_player_data.get_total_balance()
             else:
                 response = f"No score information yet for {ctx.message.author}"
                 await ctx.send(response)
                 return
             # Deposit the balance to the vite address
             self.bot.send_vite(vite_address,balance)
-            # Subtract from balance
-            my_user_data.clear_total_balance()
+            # Clear the balance
+            my_player_data.clear_balance()
             # Alert user of successful withdraw
             await ctx.send(f"Your withdrawal was processed!")
         except Exception as e:
@@ -71,26 +71,27 @@ class GameCog(commands.Cog, name="Game"):
     @commands.command(name='play', help="Play the trivia game.")
     async def play(self, ctx):
 
-        try:
-            if(self.bot.disabled):
-                Common.log(f"Cannot play. Bot is currently disabled")
-                await ctx.send(f"Trivia game has been temporarily disabled") 
-                return
+        # Check if bot is disabled
+        if(self.bot.disabled):
+            Common.log(f"Cannot play. Bot is currently disabled")
+            await ctx.send(f"Trivia game has been temporarily disabled") 
+            return
 
+        try:
             day_rewards = 0
             # Check if we have an entry yet
-            if ctx.message.author in self.bot.user_data:
+            if ctx.message.author in self.bot.player_data:
                 # Grab the entry
-                my_user_data = self.bot.user_data[ctx.message.author]
+                my_player_data = self.bot.player_data[ctx.message.author]
                 # Grab daily rewards
-                day_rewards = my_user_data.get_daily_balance()
+                day_rewards = my_player_data.get_balance()
                 # User data found
-                Common.log(f"Found user data {my_user_data}")
+                Common.log(f"Found user data {my_player_data}")
             else:
-                # Create an entry in the user_data dictionary
-                Common.log(f"Creating new UserData entry with {ctx.message.author}")
-                my_user_data = UserData(ctx.message.author,self.bot.max_rewards_amount)
-                self.bot.user_data[ctx.message.author] = my_user_data
+                # Create an entry in the player_data dictionary
+                Common.log(f"Creating new Player entry with {ctx.message.author}")
+                my_player_data = Player(ctx.message.author)
+                self.bot.player_data[ctx.message.author] = my_player_data
 
             # Check if we are maxxing out at questions per this user
             print(f"Day Rewards: {round(day_rewards,2)} Max: {round(self.bot.max_rewards_amount,2)}")
@@ -99,26 +100,26 @@ class GameCog(commands.Cog, name="Game"):
                 response = f"You have reached the maximum rewards [{day_rewards:.2f}] allowed for per " + \
                     f"{self.bot.greylist_duration} minute period."
                 # If not greylisted yet
-                if(my_user_data.get_greylist() == 0):
+                if(my_player_data.get_greylist() == 0):
                     Common.log(f"No greylist detected")
                     # Greylist. Record future time greylist_timeout minutes in the future
-                    my_user_data.set_greylist(self.bot.greylist_duration)
-                    minutes_left = (my_user_data.get_greylist() - time.time()) / 60.0
+                    my_player_data.set_greylist(self.bot.greylist_duration)
+                    minutes_left = (my_player_data.get_greylist() - time.time()) / 60.0
                     response = response + f" You have been added to the greylist for a period of {minutes_left:.4f} minutes."
                     await ctx.send(response)
                     return
-                elif(my_user_data.get_greylist() > int(time.time())):
+                elif(my_player_data.get_greylist() > int(time.time())):
                     # If greylist is still in future
-                    Common.log(f"Greylist is in future : {my_user_data.get_greylist()}")
-                    minutes_left = (my_user_data.get_greylist() - time.time()) / 60.0
+                    Common.log(f"Greylist is in future : {my_player_data.get_greylist()}")
+                    minutes_left = (my_player_data.get_greylist() - time.time()) / 60.0
                     response = response + f" You are greylisted for another {minutes_left:.4f} minutes."
                     await ctx.send(response)
                     return
                 else:
                     Common.log(f"Clear greylist for {ctx.message.author}")
                     # Time is past greylist. Clear greylist
-                    my_user_data.clear_daily_balance()
-                    my_user_data.clear_greylist()
+                    my_player_data.clear_daily_balance()
+                    my_player_data.clear_greylist()
 
             # Grab a random trivia question 
             q = random.choice(self.bot.questions)
@@ -165,14 +166,14 @@ class GameCog(commands.Cog, name="Game"):
                 # If correct send vite
                 if(correct):
                     # Record win
-                    my_user_data.add_win()
+                    my_player_data.add_win()
                     # Add reward amount to balance
-                    my_user_data.add_daily_balance(self.bot.token_amount)
+                    my_player_data.add_balance(self.bot.token_amount)
                     await ctx.message.author.send(f"Correct. Congratulations! Your balance is now " +
-                        f"{my_user_data.get_daily_balance():.2f}")
+                        f"{my_player_data.get_balance():.2f}")
                 else:
                     # Record loss
-                    my_user_data.add_loss()
+                    my_player_data.add_loss()
                     await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct " + 
                          f"answer was \"{correct_answer}\"")
             except asyncio.TimeoutError:
@@ -182,7 +183,8 @@ class GameCog(commands.Cog, name="Game"):
 
         except Exception as e:
             Common.logger.error(f"Error in game: {e}", exc_info=True)      
-            raise Exception(f"Error processing question request", e)   
+            return
+           # raise Exception(f"Error processing question request", e)   
                     
     @commands.command(name='export', help="Export score data to a CSV file. [Admin Only]")
     @commands.has_any_role('Core','Dev')
@@ -203,14 +205,13 @@ class GameCog(commands.Cog, name="Game"):
         try: 
             response = "**Score Board - Top Players**\n"
             # For each player
-            for key in self.bot.user_data:
-                userinfo = self.bot.user_data[key]
+            for key in self.bot.player_data:
+                userinfo = self.bot.player_data[key]
                 score = userinfo.score * 100
                 name = userinfo.discord_name
-                daily_balance = userinfo.get_daily_balance()
-                total_balance = userinfo.get_total_balance()
+                daily_balance = userinfo.get_balance()
                 # Show user name - score - daily balance - total balance
-                response = response + f"{name} : {score:.4}%\t{daily_balance:.2f}\t{total_balance:.2f}\n"   
+                response = response + f"{name} : {score:.4}%\t{daily_balance:.2f}\n"   
             await ctx.send(response)       
 
         except Exception as e:

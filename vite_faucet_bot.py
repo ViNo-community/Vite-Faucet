@@ -48,7 +48,7 @@ class ViteFaucetBot(commands.Bot):
     # List of questions
     questions = []
     # Data tracked per user [vite address]
-    user_data = {}
+    player_data = {}
     # List of greylisted accounts
     greylist = {}
    
@@ -195,8 +195,8 @@ class ViteFaucetBot(commands.Bot):
             # Header
             transactions_file.write(f"\"Name\",\"Score\",\"Daily Balance\",\"Total Balance\"\n")
             # For each player
-            for key in self.user_data:
-                userinfo = self.user_data[key]
+            for key in self.player_data:
+                userinfo = self.player_data[key]
                 score = userinfo.score * 100
                 name = userinfo.discord_name
                 daily_balance = userinfo.get_daily_balance()
