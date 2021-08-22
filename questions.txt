@@ -341,7 +341,7 @@ How much $VITE is required to mint a token on the Vite Chain?
 10
 
 What are super nodes called on the Vite chain?
-SBPs
+SBPs (Snapshot Block Producers)
 Operators 
 Gateways
 Quota 
@@ -441,3 +441,15 @@ All of the above
 Decentralized exchange - ViteX
 Asynchronouns transactions
 Fee-less transaction model
+
+Which of the following are ViNo projects?
+All of the above
+Adding Nano trading pairs to ViteX
+Trivia bot that gives users free Vite for answering questions correctly
+Discord bots that allow interaction with our Nano and Vite nodes
+
+How did ViNo get its name?
+Vite and Nano = ViNo
+They are wine enthusiasts
+They love vines
+Vino means money in Turkish
