@@ -15,12 +15,13 @@ session.trust_env = False
 load_dotenv()
 
 rpc_url = os.getenv('rpc_url')
+rpc_timeout = float(os.getenv('rpc_timeout'))
 
 print (f"RPC_URL is {rpc_url}")
 
 def json_rpc(rpc_url, payload):
     Common.logger.debug(f"Payload: {json.dumps(payload)}")
-    response = session.post(rpc_url, json=payload, timeout=2).json()
+    response = session.post(rpc_url, json=payload, timeout=rpc_timeout).json()
     Common.logger.debug(f"Response: {json.dumps(response)}")
     return response
 
