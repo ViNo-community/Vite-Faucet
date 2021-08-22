@@ -198,8 +198,8 @@ class GameCog(commands.Cog, name="Game"):
                     my_player_data.add_win()
                     # Add reward amount to balance
                     my_player_data.add_balance(self.bot.token_amount)
-                    await ctx.message.author.send(f"Correct. Congratulations! Your balance is now " +
-                        f"{my_player_data.get_balance():.2f}")
+                    await ctx.message.author.send(f"Correct. Congratulations! Your balance for this quiz period is now " +
+                        f"{my_player_data.get_daily_limit():.2f}")
                 else:
                     # Record loss
                     my_player_data.add_loss()
