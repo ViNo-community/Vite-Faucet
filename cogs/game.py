@@ -220,13 +220,34 @@ class GameCog(commands.Cog, name="Game"):
     async def export(self, ctx, date=""):
         try:
              # If no date provided use todays date
-            filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
-            if(date != ""):
-                filename = date + "_transactions.csv"
-
+            if(date == ""):
+                # Grab current transactions file
+                filename = self.bot.transactions_filename
+                # Date is today
+                date = datetime.datetime.now().strftime("%Y%m%d") 
+            else:
+                # Check that date is in proper format YYYYMMDD
+                try:
+                    newDate = datetime.datetime.strptime(date, "%Y%m%d")
+                    print(f"{date} => {newDate}")
+                except ValueError:
+                    await ctx.send(f"Invalid date \"{date}\". Usage: {self.bot.command_prefix}export YYYYMMDD")
+                    return
+                # Grab file for date provided
+                filename = self.bot.transdir / f"{date}_transactions.csv"
+            # Check if file exists
+            if not os.path.exists(filename):
+                # Alert user data doesn't exist for that day
+                Common.logger.error(f"Could not export transactions file \"{filename}\" for {date} because it doesn't exist")
+                await ctx.send(f"Could not export. Transactions file for {date} do not exist.")
+                return
+            else:
+                # Upload file
+                Common.log(f"Exporting transactions CSV file {filename} for {date} to channel")
+                await ctx.send(file=discord.File(filename))
         except Exception as e:
             Common.logger.error(f"Error exporting file to channel {e}", exc_info=True)      
-            raise Exception(f"Error generating output file ", e)   
+            raise Exception(f"Error exporting file to channel ", e)   
 
     @commands.command(name='scoreboard', alias=['scores','board'], help="Show the trivia game scoreboard")
     async def scoreboard(self, ctx):
