@@ -453,3 +453,27 @@ Vite and Nano = ViNo
 They are wine enthusiasts
 They love vines
 Vino means money in Turkish
+
+When staking $VITE for quota, how long is the $VITE locked up for?
+3 days
+24 hours
+1 week
+This is settable by the user
+
+Who is the CEO of Vite?
+Charles Liu
+Elon Musk
+Brian Armstrong
+Joe Biden
+
+What is the purpose of the Snapshot Chain in Vite?
+To improve security and make ledger more tamper resistant
+To improve transaction speeds
+To provide snapshots of your cute pets
+Cross-chain compatibility 
+
+The emoji associated with Banano is _______
+Banana 
+Grapefruit
+Owl
+Orangess
