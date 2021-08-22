@@ -26,10 +26,10 @@ class GameCog(commands.Cog, name="Game"):
                 my_user_data = self.bot.user_data[ctx.message.author]
                 # Show user data information
                 response = str(my_user_data)
-                await ctx.reply(response)
+                await ctx.send(response)
             else:
                 response = f"No score information yet for {ctx.message.author}"
-                await ctx.reply(response)
+                await ctx.send(response)
         except Exception as e:
             Common.logger.error(f"Error showing scoreboard: {e}", exc_info=True)   
             raise Exception("Exception showing score", e)       
@@ -37,15 +37,16 @@ class GameCog(commands.Cog, name="Game"):
     @commands.command(name='withdraw', help="Withdraw your balance to an external vite wallet.")
     async def deposit(self, ctx, vite_address=""):
         if(self.bot.disabled):
-            await ctx.reply("The trivia bot is currently disabled.")
+            Common.log(f"Cannot process withdraw. Bot is currently disabled")
+            await ctx.send(f"Trivia game has been temporarily disabled") 
             return
          # Check that vite_address is not blank
         if(vite_address == ""):
-            await ctx.reply(f"Usage: {self.bot.command_prefix}start <new_prefix>")
+            await ctx.send(f"Usage: {self.bot.command_prefix}start <new_prefix>")
             return    
         # Make sure that address is for vite
         if(vite_address.startswith("vite") == False):
-            await ctx.reply(f"Please only use vite addresses. Usage: {self.bot.command_prefix}start <vite address>")
+            await ctx.send(f"Please only use vite addresses. Usage: {self.bot.command_prefix}start <vite address>")
             return
         try:
             # Check if we have an entry yet
@@ -55,14 +56,14 @@ class GameCog(commands.Cog, name="Game"):
                 balance = my_user_data.get_total_balance()
             else:
                 response = f"No score information yet for {ctx.message.author}"
-                await ctx.reply(response)
+                await ctx.send(response)
                 return
             # Deposit the balance to the vite address
             self.bot.send_vite(vite_address,balance)
             # Subtract from balance
             my_user_data.clear_total_balance()
             # Alert user of successful withdraw
-            await ctx.reply(f"Your withdrawal was processed!")
+            await ctx.send(f"Your withdrawal was processed!")
         except Exception as e:
             Common.logger.error(f"Error withdrawing funds: {e}", exc_info=True)   
             raise Exception(f"Exception with withdrawal to {vite_address}", e)   
@@ -71,6 +72,11 @@ class GameCog(commands.Cog, name="Game"):
     async def play(self, ctx):
 
         try:
+            if(self.bot.disabled):
+                Common.log(f"Cannot play. Bot is currently disabled")
+                await ctx.send(f"Trivia game has been temporarily disabled") 
+                return
+
             day_rewards = 0
             # Check if we have an entry yet
             if ctx.message.author in self.bot.user_data:
