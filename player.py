@@ -43,6 +43,9 @@ class Player:
         self.score = score
         self.greylist = greylist
 
+    def get_name(self):
+        return self.name
+        
     # Get points
     def get_points(self):
         return self.points

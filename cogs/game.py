@@ -17,7 +17,7 @@ class GameCog(commands.Cog, name="Game"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='score', help="Show your current score and account balance.")
+    @commands.command(name='score', alias=['data','player'], help="Show your current score and account balance.")
     async def score(self, ctx):
         try:
             # Check if we have an entry yet
@@ -206,18 +206,18 @@ class GameCog(commands.Cog, name="Game"):
 
     @commands.command(name='scoreboard', alias=['scores','board'], help="Show the trivia game scoreboard")
     async def scoreboard(self, ctx):
+        if(len(self.bot.player_data) == 0):
+            await ctx.send("No score data yet.")
+            return
         try: 
-            response = "**Score Board - Top Players**\n"
-            # For each player
+            # Shower scoreboard info as embed
+            embed=discord.Embed(title="Scoreboard", description="Current player scores", color=discord.Color.dark_blue())
             for key in self.bot.player_data:
-                userinfo = self.bot.player_data[key]
-                score = userinfo.score * 100
-                name = userinfo.discord_name
-                daily_balance = userinfo.get_balance()
-                # Show user name - score - daily balance - total balance
-                response = response + f"{name} : {score:.4}%\t{daily_balance:.2f}\n"   
-            await ctx.send(response)       
-
+                my_player_data = self.bot.player_data[key]
+                embed.add_field(name="Name", value=my_player_data.get_name(), inline=True)
+                embed.add_field(name="Points", value=my_player_data.get_points(), inline=True)
+                embed.add_field(name="Score", value=str(round(my_player_data.get_score(),2)) + "%", inline=True)
+            await ctx.send(embed=embed)  
         except Exception as e:
             Common.logger.error(f"Error generating scoreboard: {e}", exc_info=True)      
             raise Exception(f"Error generating scoreboard ", e)   
