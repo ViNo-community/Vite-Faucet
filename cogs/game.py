@@ -124,24 +124,14 @@ class GameCog(commands.Cog, name="Game"):
                 my_player_data = Player(ctx.message.author)
                 self.bot.player_data[ctx.message.author] = my_player_data
 
-            # Check if we are maxxing out at questions per this user
-            if round(day_limit,2) >= round(self.bot.max_rewards_amount,2):
-                Common.log(f"{ctx.message.author} has maxxed out with daily rewards of {day_limit:.2f}")
-                response = f"You have reached the maximum rewards [{day_limit:.2f}] allowed for this time period."
-                # If not greylisted yet
-                if(my_player_data.get_greylist() == 0):
-                    Common.log(f"No greylist detected")
-                    # Greylist. Record future time greylist_timeout minutes in the future
-                    my_player_data.set_greylist(self.bot.greylist_duration)
-                    minutes_left = (my_player_data.get_greylist() - time.time()) / 60.0
-                    response = response + f" You have been added to the greylist for a period of {minutes_left:.4f} minutes."
-                    await ctx.send(response)
-                    return
-                elif(my_player_data.get_greylist() > int(time.time())):
+            # Check if user is grey-listed
+            # Then check if grey-list has expired or not
+            if(my_player_data.get_greylist() != 0):
+                if(my_player_data.get_greylist() > int(time.time())):
                     # If greylist is still in future
                     Common.log(f"Greylist is in future : {my_player_data.get_greylist()}")
                     minutes_left = (my_player_data.get_greylist() - time.time()) / 60.0
-                    response = response + f" You are greylisted for another {minutes_left:.4f} minutes."
+                    response = f" You are greylisted for another {minutes_left:.4f} minutes."
                     await ctx.send(response)
                     return
                 else:
@@ -197,13 +187,28 @@ class GameCog(commands.Cog, name="Game"):
                     my_player_data.add_win()
                     # Add reward amount to balance
                     my_player_data.add_balance(self.bot.token_amount)
+                    day_limit = my_player_data.get_daily_limit()
                     await ctx.message.author.send(f"Correct. Congratulations! Your balance for this quiz period is now " +
-                        f"{my_player_data.get_daily_limit():.2f}")
+                        f"{day_limit:.2f}")
+                    
+                    # Check if we are maxxing out at questions per this user
+                    if round(day_limit,2) >= round(self.bot.max_rewards_amount,2):
+                        Common.log(f"{ctx.message.author} has maxxed out with daily rewards of {day_limit:.2f}")
+                        response = f"You have reached the maximum rewards [{day_limit:.2f}] allowed for this time period."
+                        # If not greylisted yet
+                        if(my_player_data.get_greylist() == 0):
+                            Common.log(f"No greylist detected")
+                            # Greylist. Record future time greylist_timeout minutes in the future
+                            my_player_data.set_greylist(self.bot.greylist_duration)
+                            minutes_left = (my_player_data.get_greylist() - time.time()) / 60.0
+                            response = response + f" You have been added to the greylist for a period of {minutes_left:.4f} minutes."
+                            await ctx.send(response)
+                            return
                 else:
                     # Record loss
                     my_player_data.add_loss()
                     await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct " + 
-                         f"answer was \"{correct_answer}\"")
+                        f"answer was \"{correct_answer}\"")
             except asyncio.TimeoutError:
                 # User took too long to answer question
                 await ctx.message.author.send(f"Sorry, you took too much time to answer! The correct answer " +
