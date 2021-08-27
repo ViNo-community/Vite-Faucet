@@ -259,13 +259,23 @@ class GameCog(commands.Cog, name="Game"):
             await ctx.send("No score data yet.")
             return
         try: 
-            # Show scoreboard info as embed
-            embed=discord.Embed(title="Scoreboard", description="Current player scores", color=discord.Color.dark_blue())
+            # For some dumb reason, Discord.py doesn't allow embeds without the name field. 
+            # So, to create a table where the headers only show up on the first row, we need 
+            # to cram all the data into the value of the first row, separated by newlines. 
+            name_string = ""
+            points_string = ""
+            score_string = ""
+            # Generate the data strings from player score data 
             for key in self.bot.player_data:
                 my_player_data = self.bot.player_data[key]
-                embed.add_field(name="Name", value=my_player_data.get_name(), inline=True)
-                embed.add_field(name="Points", value=my_player_data.get_points(), inline=True)
-                embed.add_field(name="Score", value=str(round(my_player_data.get_score(),2)) + "%", inline=True)
+                name_string = name_string + f"{my_player_data.get_name()}\n"
+                points_string = points_string + f"{my_player_data.get_points()}\n"
+                score_string = score_string + f"{str(round(my_player_data.get_score(),2))}%\n"
+            # Construct the table
+            embed=discord.Embed(title="Scoreboard", color=discord.Color.dark_blue())
+            embed.add_field(name="Name", value=name_string, inline=True)
+            embed.add_field(name="Points", value=points_string, inline=True)
+            embed.add_field(name="Score", value=score_string, inline=True)
             await ctx.send(embed=embed)  
         except Exception as e:
             Common.logger.error(f"Error generating scoreboard: {e}", exc_info=True)      
