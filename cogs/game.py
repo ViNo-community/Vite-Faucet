@@ -266,8 +266,8 @@ class GameCog(commands.Cog, name="Game"):
             points_string = ""
             score_string = ""
             # Generate the data strings from player score data 
-            for key in self.bot.player_data:
-                my_player_data = self.bot.player_data[key]
+            for player_name, player in sorted(self.bot.player_data.items(), key=lambda x: x[1].points, reverse = True):
+                my_player_data = self.bot.player_data[player_name]
                 name_string = name_string + f"{my_player_data.get_name()}\n"
                 points_string = points_string + f"{my_player_data.get_points()}\n"
                 score_string = score_string + f"{str(round(my_player_data.get_score(),2))}%\n"
