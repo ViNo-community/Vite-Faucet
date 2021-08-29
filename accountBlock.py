@@ -1,4 +1,21 @@
+import json
+from requests import sessions
 from common import Common
+import os
+from enum import Enum
+
+rpc_url = os.getenv('rpc_url')
+rpc_timeout = float(os.getenv('rpc_timeout'))
+
+# I don't know what this stupid god damn langauge wants...
+class BlockType(Enum):
+    CreateContractRequest = 1
+    TransferRequest = 2
+    ReIssueRequest = 3
+    Response = 4
+    ResponseFail = 5
+    RefundByContractRequest = 6
+    GenesisResponse = 7
 
 class AccountBlock:
 
@@ -12,6 +29,8 @@ class AccountBlock:
     tokenId = ""
     amount = 0
     data = ""
+    privateKey = ""
+    publicKey = ""
     signature = ""
 
     def __init__(self):
@@ -53,8 +72,45 @@ class AccountBlock:
     def setData(self,data):
         self.data = data
 
+    def toJson(self):
+        json = {
+                "blockType": 2,     # Transfer Request
+                "height": self.height,
+                "hash": self.hash,
+                "previousHash": self.previousHash,
+                "address": self.from_address,
+                "publicKey": self.publicKey,
+                "toAddress": self.toAddress,
+                "tokenId": self.tokenID,
+                "amount": self.amount,
+                "fee": "0",
+                "data": "",
+                "signature": "F5VzYwsNSr6ex2sl9hDaX67kP9g4TewMWcw7Tp57VkE1LQZO0i1toYEsXJ3MgcZdsvP67EymXXn1wpwhxnS3CQ=="
+            }
+        return json
+    
     # Converts account block to a hash
+    # For send transactions:
+    # hash = HashFunction(BlockType + PrevHash  + Height + AccountAddress + ToAddress + Amount + TokenId + Data + Fee + LogHash + Nonce + sendBlock + hashList）
     def toHash(self):
 
         hash = ""
         return hash
+
+    def json_rpc(self,rpc_url, payload):
+        Common.logger.debug(f"Payload: {json.dumps(payload)}")
+        response = sessions.post(rpc_url, json=payload, timeout=rpc_timeout).json()
+        Common.logger.debug(f"Response: {json.dumps(response)}")
+        return response
+
+    def get_previous_account_block(self,address):
+        ab = {
+            "jsonrpc": "2.0",
+            "id": 17,
+            "method": "ledger_getLatestAccountBlock",
+            "params": [
+                address
+            ]
+        }
+        # Send request
+        return self.json_rpc(rpc_url, ab)

@@ -2,6 +2,7 @@
 # coding: utf-8
 #
 
+from accountBlock import AccountBlock, BlockType
 import json
 import os
 from dotenv.main import load_dotenv
@@ -48,17 +49,20 @@ def _send_vite(from_address, to_address, amount, data, tokenId, key):
     # Grab height and hash info for previous account block
     result = response['result']
     height = result['height']
-    hash = response['hash'] # Write getAccountBlockHash in python
+    hash = "hash"
+    #hash = response['hash'] # Write getAccountBlockHash in python
     previousHash = response['previousHash']
     print(f"Height: {height} Hash: {hash} Previous Hash: {previousHash}")
 
     # Build account block
+    ab = AccountBlock()
+
     accountBlock = {
         "jsonrpc":"2.0",
         "id":17,
         "method":"ledger_sendRawTransaction",
         "params": [{
-            "blockType": 2,     # Transfer Request
+            "blockType": BlockType.TransferRequest,     # Transfer Request
             "height": height,
             "hash": hash,
             "previousHash": previousHash,
@@ -69,7 +73,7 @@ def _send_vite(from_address, to_address, amount, data, tokenId, key):
             "amount": str(int(round(Common.viteToRaw(amount)))),
             "fee": "0",
             "data": "",
-            "signature": "F5VzYwsNSr6ex2sl9hDaX67kP9g4TewMWcw7Tp57VkE1LQZO0i1toYEsXJ3MgcZdsvP67EymXXn1wpwhxnS3CQ=="
+            "signature": ""
         }]
     }
 
