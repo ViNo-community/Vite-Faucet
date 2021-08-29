@@ -222,17 +222,12 @@ class ViteFaucetBot(commands.Bot):
             # Record transaction in spreadsheet
             current_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
             self.transactions_file.write(f"\"{current_time}\",\"{account_name}\",\"{vite_address}\",{amount:.2f}\n")
-            self.transactions_file.flush()
-        except Exception as ex:
-            Common.logger.error(f"Error in export CSV file: {ex}", exc_info=True)
-            print(traceback.format_exc(), file=sys.stderr)
-            print(f"Error in export to CSV file {ex}")    
-
+            self.transactions_file.flush() 
         except Exception as ex:
             Common.logger.error(f"Error in send_vite: {ex}", exc_info=True)
             print(traceback.format_exc(), file=sys.stderr)
             print(f"Error in send_vite {ex}")
-
+            raise ex
 
 if __name__=='__main__':
     # Initiate Discord bot
