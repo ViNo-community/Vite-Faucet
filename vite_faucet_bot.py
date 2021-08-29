@@ -34,6 +34,7 @@ class ViteFaucetBot(commands.Bot):
     token_id = ""
     faucet_address = ""
     faucet_private_key = ""
+    faucet_public_key = ""
     max_rewards_amount = 0.0
     rpc_url = ""
     command_prefix = "!"
@@ -59,6 +60,7 @@ class ViteFaucetBot(commands.Bot):
         self.rpc_url = os.getenv('rpc_url')
         self.faucet_address = os.getenv('faucet_address')
         self.faucet_private_key = os.getenv('faucet_private_key')
+        self.faucet_public_key = os.getenv('faucet_public_key')
         self.logging_level = os.getenv("logging_level")
         self.discord_token = os.getenv('discord_token')
         self.client_id = os.getenv('client_id')
@@ -203,7 +205,7 @@ class ViteFaucetBot(commands.Bot):
                 amount, 
                 '', 
                 self.token_id,
-                self.faucet_private_key)
+                self.faucet_public_key)
 
             # Check date if we need to move to a transaction file
             new_filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
