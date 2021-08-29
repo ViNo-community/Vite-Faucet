@@ -25,8 +25,27 @@ def json_rpc(rpc_url, payload):
     Common.logger.debug(f"Response: {json.dumps(response)}")
     return response
 
+def get_previous_account_block(address):
+    ab = {
+        "jsonrpc": "2.0",
+        "id": 17,
+        "method": "ledger_getLatestAccountBlock",
+        "params": [
+            address
+        ]
+    }
+    # Send request
+    response = json_rpc(rpc_url, ab)
+    return response
+
 # _send_vite function with private key
 def _send_vite(from_address, to_address, amount, data, tokenId, priv):
+
+    response = get_previous_account_block(to_address)
+
+    #print(f"Height: {response['height']}")
+    ##print(f"Hash: {response['hash']}")
+    #print(f"Previous Hash: {response['previousHash']}")
 
     accountBlock = {
         "jsonrpc":
@@ -46,18 +65,35 @@ def _send_vite(from_address, to_address, amount, data, tokenId, priv):
         }]
     }
 
+    # Send accountBlock
+    result = json_rpc(rpc_url, accountBlock)
+    # If error return error result
+    if "error" in result:
+        return result['error']
+    return
+
+    height = 2
+    hash = ""
+    prevHash = ""
+
     accountBlock = {
         "jsonrpc":"2.0",
         "id":1,
         "method":"ledger_sendRawTransaction",
         "params": [{
-            "selfAddr": from_address,
-            "toAddr": to_address,
-            "tokenTypeId": tokenId,
-            "privateKey": priv,
+            "blockType": 2,     # Transfer Request
+            "height": height,
+            "hash": "67f4d528a5194c46d594221d3d992257a3004ccdee7c5d7b2748d77e06a80caf",
+            "previousHash": "d517e8d4dc9c676876b72ad0cbb4c45890804aa438edd1f171ffc66276202a95",
+            "address": from_address,
+            "publicKey": "WHZinxslscE+WaIqrUjGu2scOvorgD4Q+DQOOcDBv4M=",
+            "toAddress": to_address,
+            "sendBlockHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "tokenId": tokenId,
             "amount": str(int(round(Common.viteToRaw(amount)))),
-            "data": data,
-            "blockType": 2
+            "fee": "0",
+            "data": "jefc/QAAAAAAAAAAAAAAqyTvaLhOZCwN3KBr7sgcmssZd7sA",
+            "signature": "F5VzYwsNSr6ex2sl9hDaX67kP9g4TewMWcw7Tp57VkE1LQZO0i1toYEsXJ3MgcZdsvP67EymXXn1wpwhxnS3CQ=="
         }]
     }
 
