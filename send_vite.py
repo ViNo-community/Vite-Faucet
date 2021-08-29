@@ -37,25 +37,6 @@ def get_previous_account_block(address):
     # Send request
     return json_rpc(rpc_url, ab)
 
-'''
-    accountBlock = {
-        "jsonrpc":
-        "2.0",
-        "id":
-        1,
-        "method":
-        "tx_sendTxWithPrivateKey",
-        "params": [{
-            "selfAddr": from_address,
-            "toAddr": to_address,
-            "tokenTypeId": tokenId,
-            "privateKey": priv,
-            "amount": str(int(round(Common.viteToRaw(amount)))),
-            "data": data,
-            "blockType": 2
-        }]
-    }
-'''
 # _send_vite function with private key
 def _send_vite(from_address, to_address, amount, data, tokenId, key):
 
@@ -97,3 +78,4 @@ def _send_vite(from_address, to_address, amount, data, tokenId, key):
     # If error return error result
     if "error" in result:
         return result['error']
+
