@@ -507,3 +507,87 @@ all the options
 prevent spam 
 transfer faster
 trade faster 
+
+Which one is the founder or inventor of bitcoin ?
+Satoshi Nakamoto
+Peter Thiel
+Warren Buffet
+Max Keiser
+
+In which year was Bitcoin proposed/founded ?
+3 January 2009
+3 January 2008
+3 January 2007
+3 January 2010
+
+Who is Satoshi Nakamoto?
+Anonymous 
+Prof. Satoshi
+Craig White
+Bill Gates
+
+Nano is a ____________ currency
+All the options
+Digital Currency
+Cryptocurrency
+De-centralized
+
+what best describes a blockchain
+a distributed ledger on a peer to peer network
+a centralized Database 
+An exchange 
+A type of Cryptocurrency
+
+What does P2P stand for ?
+Peer to Peer
+product to product
+password to password 
+private key to public key
+
+What is a crypto node ?
+a computer connected to a blockchain network 
+a blockchain server
+a type of cryptocurrency
+an exchange
+
+What makes cryptocurrency secure?
+Mathematics 
+computer Servers 
+electronic banks
+insurance
+
+Where can you buy Cryptocurrencies?
+All listed options
+An Exchange
+Crypto ATM
+Peer to Peer transactions
+
+Where can you store Cryptocurrency ?
+hardware/software wallet
+bank account
+floppy disk
+in your pocket
+
+What is the name of the famous Bitcoin exchange from Japan that collapsed in 2014?
+Mt. Gox
+Bitstamp
+BitFlyer
+Bitconnect
+
+What does the block in the blockchain consist of?
+all of these 
+transaction data
+a hash point
+a timestamp
+
+How many new bitcoins are created everyday ? 
+3600
+2200
+7200
+5000
+
+How many new $nano coins are created everyday?
+0
+133
+5000
+7
