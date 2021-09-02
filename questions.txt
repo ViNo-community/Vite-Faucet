@@ -591,3 +591,88 @@ How many new $nano coins are created everyday?
 133
 5000
 7
+
+What is the total supply of $VX coins in VIteX?
+29,328,807.8
+99,272,786
+133,248,297
+21,000,000
+
+A great deal of financial theory is based on the concept of free markets and in particular the theory of:
+perfect competition
+monopolistic competition
+monopoly
+oligopoly
+
+What will be value of $100 after two years, if the interest rate during this period is 5%?
+$110.25
+$105
+$107.5
+$95
+
+Governments and corporations issue bonds to
+borrow money
+lend money
+both A and B
+none of these
+
+Any economic resource that can produce economic value to the holder is called
+asset
+return
+maturity
+yield
+
+When forward contract is traded on an exchange, it is called
+future contract
+spot contract
+call option
+put option
+
+Consider a world without scarcity of resources. Then what would be the consequences?
+All of the options
+All prices would be zero
+Markets would be unnecessary
+Economics would no longer be a useful subject
+
+Who is considered the founder of modern Macroeconomics?
+John Keynes
+Adam Smith
+Friedrich Hayek
+Milton Friedman
+
+The fundamental concept of Economics about resources is that the resources are
+scarce
+equally distributed
+unequally distributed
+unlimited
+
+The central role of markets is to determine the
+price of goods
+quality of goods
+quantity of goods
+level of income
+
+Taxes are used to discourage __________ of a commodity.
+consumption
+production
+saving
+inflation
+
+0.003 × 0.02 = ?
+0.00006
+0.006
+0.0006
+0.06
+
+What is a cryptocurrency blender?
+service that hides coin origins
+coin wallet attachment
+sweet art blog
+futurama character
+
+which digital currency came before bitcoin?
+All the options
+HashCash
+BitGold
+B-Money
+
