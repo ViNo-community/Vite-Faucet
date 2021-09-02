@@ -676,3 +676,82 @@ HashCash
 BitGold
 B-Money
 
+What is part of a database that holds only one type of information?
+Field
+Report
+Record
+File
+
+Which is a type of Electrically-Erasable Programmable Read-Only Memory?
+Flash
+Flange
+Fury
+FRAM
+
+Who is largely responsible for breaking the German Enigma codes, created a test that provided a foundation for artificial intelligence?
+Alan Turing
+Jeff Bezos
+George Boole
+Charles Babbage
+
+Made from a variety of materials, such as carbon, which inhibits the flow of current...?
+Resistor
+Choke
+Inductor
+Capacitor
+
+Which consists of two plates separated by a dielectric and can store a charge?
+Capacitor
+Inductor
+Transistor
+Relay
+
+How many bits is a byte?
+8
+4
+16
+32
+	
+A coating of dust on a computer's main circuit boards has this probable consequence
+Overheating
+Short circuits
+Slower hard disk
+None
+
+The first graphical browser for the WWW was named:
+Mosaic
+Netscape
+Windows
+Explorer
+
+The earliest form of banking on record was practiced in _____
+Babylon
+Israel
+Assyria
+Phillistine
+
+The early gold, used as currency, was deposited in _____ for safe keeping
+Temples
+Palaces
+Markets
+Banks
+
+The functions of money includes:
+All of these options
+Value determination
+Store of value
+Means of exchange
+
+“Money is what money does.” Who said it ?
+Hartley Withers
+Hawtrey
+Thomas
+Keynes
+
+Which one is included in the secondary function of money ?
+All of these
+To make Deferred Payments
+Store of Value
+Transfer of Value
+
+
