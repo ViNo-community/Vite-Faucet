@@ -51,29 +51,27 @@ def _send_vite(from_address, to_address, amount, data, tokenId, key):
     height = result['height']
     hash = "hash"
     #hash = response['hash'] # Write getAccountBlockHash in python
-    previousHash = response['previousHash']
+    previousHash = result['prevHash']
     print(f"Height: {height} Hash: {hash} Previous Hash: {previousHash}")
 
     # Build account block
     ab = AccountBlock()
 
     accountBlock = {
-        "jsonrpc":"2.0",
-        "id":17,
-        "method":"ledger_sendRawTransaction",
+        "jsonrpc":
+        "2.0",
+        "id":
+        1,
+        "method":
+        "tx_sendTxWithPrivateKey",
         "params": [{
-            "blockType": BlockType.TransferRequest,     # Transfer Request
-            "height": height,
-            "hash": hash,
-            "previousHash": previousHash,
-            "address": from_address,
-            "publicKey": key,
-            "toAddress": to_address,
-            "tokenId": tokenId,
+            "selfAddr": from_address,
+            "toAddr": to_address,
+            "tokenTypeId": tokenId,
+            "privateKey": key,
             "amount": str(int(round(Common.viteToRaw(amount)))),
-            "fee": "0",
-            "data": "",
-            "signature": ""
+            "data": data,
+            "blockType": 2
         }]
     }
 

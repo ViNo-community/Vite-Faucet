@@ -205,7 +205,7 @@ class ViteFaucetBot(commands.Bot):
                 amount, 
                 '', 
                 self.token_id,
-                self.faucet_public_key)
+                self.faucet_private_key)
 
             # Check date if we need to move to a transaction file
             new_filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
