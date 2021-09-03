@@ -206,16 +206,19 @@ class ViteFaucetBot(commands.Bot):
                 self.faucet_private_key)
 
             # Check date if we need to move to a transaction file
-            filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
-            full_filename = self.transdir / filename
-            print(f"Transactions file: {self.transactions_filename} vs us {full_filename}")
-            if(full_filename != self.transactions_filename):
-                print(f"Need to generate new file")
-                Common.log(f"Closing transactions file {self.transactions_filename}")
+            new_filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
+            full_new_filename = self.transdir / new_filename
+            #print(f"Transactions file: {self.transactions_filename} vs us {full_new_filename}")
+            if(full_new_filename != self.transactions_filename):
+                Common.log(f"Closing old transactions file {self.transactions_filename}")
                 # Close old file
                 self.transactions_file.close()
                 # Open new file
+                self.transactions_filename = full_new_filename
                 self.transactions_file = open(self.transactions_filename, "w")
+                # Write header as first line
+                self.transactions_file.write(f"\"Time\",\"Name\",\"Vite Address\",\"Amount\",\n")
+                Common.log(f"Opening new transaction file {self.transactions_filename}")
             # Record transaction in spreadsheet
             current_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
             self.transactions_file.write(f"\"{current_time}\",\"{account_name}\",\"{vite_address}\",{amount:.2f}\n")
