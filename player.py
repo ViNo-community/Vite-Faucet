@@ -103,7 +103,10 @@ class Player:
         return self.total_answers
     # Get score as %
     def get_score(self):
-        return float(self.right_answers / self.total_answers) * 100.0
+        if(self.total_answers != 0):
+            return float(self.right_answers / self.total_answers) * 100.0
+        else:
+            return 0
 
     # Get greylist timer [0 = none set] when greylist limit will clear
     def get_greylist(self):
