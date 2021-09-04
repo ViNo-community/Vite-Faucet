@@ -72,18 +72,21 @@ def _send_vite(from_address, to_address, amount, data, tokenId, key):
 
     balance = get_account_balance(faucet)
     print(f"Account: {faucet} Balance: {balance}")
+    
+    # Make sure that we have enough funds to cover transaction
+    if(amount >= balance):
+        raise Exception(f"Insufficient funds. Balance: {balance} Amount requested: {amount}")
 
     response = get_previous_account_block(to_address)
 
     if "error" in response:
-        raise Exception(f"Error grabbing previous account block: {response}")
-    
+        raise Exception(f"Error grabbing previous account block: {response}")        
+
     # Grab height and hash info for previous account block
     result = response['result']
     height = result['height']
     previousHash = result['prevHash']
     print(f"Height: {height} Previous Hash: {previousHash}")
-
 
     accountBlock = {
         "jsonrpc":
