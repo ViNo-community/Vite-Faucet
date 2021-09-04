@@ -63,12 +63,13 @@ def get_account_balance(address):
     result = response['result']  
     balanceInfo = result['balanceInfoMap']   
     viteInfo = balanceInfo['tti_5649544520544f4b454e6e40']
-    return viteInfo['balance']
+    balance = float(viteInfo['balance'])
+    return Common.rawToVite(balance)
 
 
 # _send_vite function with private key
 def _send_vite(from_address, to_address, amount, data, tokenId, key):
-    
+
     balance = get_account_balance(faucet)
     print(f"Account: {faucet} Balance: {balance}")
 

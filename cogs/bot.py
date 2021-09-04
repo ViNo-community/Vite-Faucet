@@ -3,6 +3,8 @@ from discord.ext import commands
 import dotenv
 from common import Common
 
+from send_vite import get_account_balance
+
 class BotCog(commands.Cog, name="Bot"):
 
     def __init__(self, bot):
@@ -32,6 +34,7 @@ class BotCog(commands.Cog, name="Bot"):
     @commands.command(name='show_config', aliases=['config','botconfig','bot_config'], help="Show the current bot config")
     async def show_config(self,ctx):
         try:
+            balance = get_account_balance(self.bot.faucet_address)
             # Show config info as embed
             embed=discord.Embed(title="Config", description="Current bot configuration", color=discord.Color.orange())
             embed.add_field(name="Disabled", value=self.bot.disabled, inline=True)
@@ -39,6 +42,7 @@ class BotCog(commands.Cog, name="Bot"):
             embed.add_field(name="Logging Level", value=self.bot.logging_level, inline=True)
             embed.add_field(name="RPC URL", value=self.bot.rpc_url, inline=True)
             embed.add_field(name="Faucet Address", value=self.bot.faucet_address, inline=True)
+            embed.add_field(name="Faucet Balance", value=f"{balance:,.4f}", inline=True)
             embed.add_field(name="Token Type ID (TTI)", value=self.bot.token_id, inline=True)
             embed.add_field(name="Token Reward per Correct Answer", value=self.bot.token_amount, inline=True)
             embed.add_field(name="Answer Timeout [Seconds]", value=self.bot.answer_timeout, inline=True)
