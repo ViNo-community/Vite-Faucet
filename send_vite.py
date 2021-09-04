@@ -17,6 +17,8 @@ load_dotenv()
 
 rpc_url = os.getenv('rpc_url')
 rpc_timeout = float(os.getenv('rpc_timeout'))
+faucet = os.getenv('faucet_address')
+token_id = os.getenv('token_id')
 
 print (f"RPC_URL is {rpc_url}")
 
@@ -38,8 +40,37 @@ def get_previous_account_block(address):
     # Send request
     return json_rpc(rpc_url, ab)
 
+
+def get_account_info(address):
+    ab = {
+        "jsonrpc": "2.0",
+        "id": 17,
+        "method": "ledger_getAccountInfoByAddress",
+        "params": [
+            address
+        ]
+    }
+    # Send request
+    return json_rpc(rpc_url, ab)
+
+def get_account_balance(address):
+
+    response = get_account_info(faucet)
+
+    if "error" in response:
+        raise Exception(f"Error grabbing acount info: {response}")
+
+    result = response['result']  
+    balanceInfo = result['balanceInfoMap']   
+    viteInfo = balanceInfo['tti_5649544520544f4b454e6e40']
+    return viteInfo['balance']
+
+
 # _send_vite function with private key
 def _send_vite(from_address, to_address, amount, data, tokenId, key):
+    
+    balance = get_account_balance(faucet)
+    print(f"Account: {faucet} Balance: {balance}")
 
     response = get_previous_account_block(to_address)
 
@@ -49,13 +80,9 @@ def _send_vite(from_address, to_address, amount, data, tokenId, key):
     # Grab height and hash info for previous account block
     result = response['result']
     height = result['height']
-    hash = "hash"
-    #hash = response['hash'] # Write getAccountBlockHash in python
     previousHash = result['prevHash']
-    print(f"Height: {height} Hash: {hash} Previous Hash: {previousHash}")
+    print(f"Height: {height} Previous Hash: {previousHash}")
 
-    # Build account block
-    ab = AccountBlock()
 
     accountBlock = {
         "jsonrpc":
