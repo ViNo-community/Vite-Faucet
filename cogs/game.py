@@ -265,9 +265,20 @@ class GameCog(commands.Cog, name="Game"):
             name_string = ""
             points_string = ""
             score_string = ""
+            i = 0
             # Generate the data strings from player score data 
             for player_name, player in sorted(self.bot.player_data.items(), key=lambda x: x[1].points, reverse = True):
                 my_player_data = self.bot.player_data[player_name]
+                # Show trophy emojis
+                if(i == 0):
+                    name_string = name_string + ":first_place:"
+                    i = i + 1
+                elif(i == 1):
+                    name_string = name_string + ":second_place:"
+                    i = i + 1
+                elif(i == 2):
+                    name_string = name_string + ":third_place:"
+                    i = i + 1
                 name_string = name_string + f"{my_player_data.get_name()}\n"
                 points_string = points_string + f"{my_player_data.get_points()}\n"
                 score_string = score_string + f"{str(round(my_player_data.get_score(),2))}%\n"
