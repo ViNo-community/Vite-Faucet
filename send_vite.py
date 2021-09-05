@@ -17,7 +17,6 @@ load_dotenv()
 
 rpc_url = os.getenv('rpc_url')
 rpc_timeout = float(os.getenv('rpc_timeout'))
-faucet = os.getenv('faucet_address')
 token_id = os.getenv('token_id')
 
 print (f"RPC_URL is {rpc_url}")
@@ -55,7 +54,7 @@ def get_account_info(address):
 
 def get_account_balance(address):
 
-    response = get_account_info(faucet)
+    response = get_account_info(address)
 
     if "error" in response:
         raise Exception(f"Error grabbing acount info: {response}")
@@ -66,12 +65,30 @@ def get_account_balance(address):
     balance = float(viteInfo['balance'])
     return Common.rawToVite(balance)
 
+# Return PoW difficulty for sending transaction
+def get_pow_difficulty(address,toAddress,prevHash,data=""):
+    
+    ab = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "ledger_getPoWDifficulty",
+        "params": [{
+            "address": address,
+            "previousHash": prevHash,
+            "blockType": 2,
+            "toAddress": toAddress,
+            "data":data
+        }]
+    }
+    # Send request
+    return json_rpc(rpc_url, ab)
+
 
 # _send_vite function with private key
 def _send_vite(from_address, to_address, amount, data, tokenId, key):
 
-    balance = get_account_balance(faucet)
-    print(f"Account: {faucet} Balance: {balance}")
+    balance = get_account_balance(from_address)
+    print(f"Account: {from_address} Balance: {balance}")
     
     # Make sure that we have enough funds to cover transaction
     if(amount >= balance):
@@ -83,10 +100,31 @@ def _send_vite(from_address, to_address, amount, data, tokenId, key):
         raise Exception(f"Error grabbing previous account block: {response}")        
 
     # Grab height and hash info for previous account block
+   
     result = response['result']
-    height = result['height']
-    previousHash = result['prevHash']
-    print(f"Height: {height} Previous Hash: {previousHash}")
+
+    if(result is None):
+         print(f"Result is NONE")
+         height = 0
+         prevHash = 0
+    else:
+        height = result['height']
+        prevHash = result['prevHash']
+        print(f"Height: {height} Previous Hash: {prevHash}")
+
+    # Get PoW difficult
+    #response = get_pow_difficulty(from_address, to_address, prevHash)
+
+    # If error return error result
+    #if "error" in result:
+    #    return result['error']
+
+    #result = response['result']
+    #requiredQuota = result['requiredQuota']
+    #difficulty = result['difficulty']
+    #qc = result['qc']
+
+    #print(f"Required: {requiredQuota} Difficult: {difficulty} qc = {qc}")
 
     accountBlock = {
         "jsonrpc":
