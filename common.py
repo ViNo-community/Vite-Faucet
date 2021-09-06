@@ -64,6 +64,10 @@ class Common():
     def log_error(msg):
         Common.logger.error(msg)
 
+    @staticmethod
+    def leftPadZeros(number, len):
+        return str(number).zfill(len)
+        
     # Helper function for logging bot commands
     # <- {User} : {command}
     @staticmethod
