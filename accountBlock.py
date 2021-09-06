@@ -7,7 +7,6 @@ from enum import Enum
 rpc_url = os.getenv('rpc_url')
 rpc_timeout = float(os.getenv('rpc_timeout'))
 
-# I don't know what this stupid god damn langauge wants...
 class BlockType(Enum):
     CreateContractRequest = 1
     TransferRequest = 2
@@ -19,7 +18,7 @@ class BlockType(Enum):
 
 class AccountBlock:
 
-    blockType = 0
+    blockType = BlockType.TransferRequest
     height = 0
     hash = ""
     previousHash = ""
@@ -93,8 +92,12 @@ class AccountBlock:
     # For send transactions:
     # hash = HashFunction(BlockType + PrevHash  + Height + AccountAddress + ToAddress + Amount + TokenId + Data + Fee + LogHash + Nonce + sendBlock + hashList）
     def toHash(self):
-
+        
         hash = ""
+        hash += self.blockType.hex()         # BlockType
+        hash += self.previousHash            # Already hashed
+        hash += self.height.hex()   
+
         return hash
 
     def json_rpc(self,rpc_url, payload):
