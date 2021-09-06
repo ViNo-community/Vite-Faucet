@@ -7,6 +7,11 @@ from enum import Enum
 rpc_url = os.getenv('rpc_url')
 rpc_timeout = float(os.getenv('rpc_timeout'))
 
+ADDR_PREFIX = 'vite_'
+ADDR_SIZE = 20
+ADDR_CHECK_SUM_SIZE = 5
+ADDR_LEN = len(ADDR_PREFIX) + ADDR_SIZE * 2 + ADDR_CHECK_SUM_SIZE * 2
+
 class BlockType(Enum):
     CreateContractRequest = 1
     TransferRequest = 2
@@ -15,6 +20,11 @@ class BlockType(Enum):
     ResponseFail = 5
     RefundByContractRequest = 6
     GenesisResponse = 7
+
+class AddressType(Enum): 
+    Illegal = 0,
+    User = 1,
+    Contract = 2
 
 class AccountBlock:
 
