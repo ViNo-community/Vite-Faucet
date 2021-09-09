@@ -765,9 +765,3 @@ Trade --> Dividends --> Stake
 Trade --> Mining --> Add
 Trade--> Mining --> Market Making
 Trade --> Spot --> Buy
-
-how much $vite does it take to mint a new token? 
-1000
-10000
-100
-9999
