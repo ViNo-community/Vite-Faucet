@@ -35,8 +35,11 @@ class BotCog(commands.Cog, name="Bot"):
     async def show_config(self,ctx):
         try:
             balance = get_account_balance(self.bot.faucet_address)
+            # If disabled, show in Red. If enabled, show in Green
+            showColor = discord.Color.green()
+            if(self.bot.disabled): showColor = discord.Color.red()
             # Show config info as embed
-            embed=discord.Embed(title="Config", description="Current bot configuration", color=discord.Color.orange())
+            embed=discord.Embed(title="Config", description="Current bot configuration", color=showColor)
             embed.add_field(name="Disabled", value=self.bot.disabled, inline=True)
             embed.add_field(name="Command Prefix", value=self.bot.command_prefix, inline=True)
             embed.add_field(name="RPC URL", value=self.bot.rpc_url, inline=True)
