@@ -60,6 +60,11 @@ class Common():
     def viteToRaw(vite):
         return vite * 1000000000000000000      
 
+    # Convert units quota to UT. Divide by 21000
+    @staticmethod
+    def quotaToUT(quota):
+        return quota / 21000  
+
     @staticmethod
     def log_error(msg):
         Common.logger.error(msg)

@@ -67,6 +67,28 @@ def get_account_balance(address):
     balance = float(viteInfo['balance'])
     return Common.rawToVite(balance)
 
+
+def get_account_quota(address):
+
+    ab = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "contract_getQuotaByAccount",
+        "params": [
+            address,
+        ]
+    }
+    # Send request
+    response = json_rpc(rpc_url, ab)
+
+    if "error" in response:
+        raise Exception(f"Error grabbing quota info: {response}")
+
+    result = response['result']  
+    quota = int(result['currentQuota'])
+
+    return Common.quotaToUT(quota)
+
 # Return PoW difficulty for sending transaction
 def get_pow_difficulty(address,toAddress,prevHash,data=""):
     

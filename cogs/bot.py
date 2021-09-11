@@ -3,7 +3,7 @@ from discord.ext import commands
 import dotenv
 from common import Common
 
-from send_vite import get_account_balance
+from send_vite import get_account_balance, get_account_quota
 
 class BotCog(commands.Cog, name="Bot"):
 
@@ -35,6 +35,7 @@ class BotCog(commands.Cog, name="Bot"):
     async def show_config(self,ctx):
         try:
             balance = get_account_balance(self.bot.faucet_address)
+            quota = get_account_quota(self.bot.faucet_address)
             # If disabled, show in Red. If enabled, show in Green
             showColor = discord.Color.green()
             if(self.bot.disabled): showColor = discord.Color.red()
@@ -45,6 +46,7 @@ class BotCog(commands.Cog, name="Bot"):
             embed.add_field(name="RPC URL", value=self.bot.rpc_url, inline=True)
             embed.add_field(name="Faucet Address", value=self.bot.faucet_address, inline=True)
             embed.add_field(name="Faucet Balance", value=f"{balance:,.4f}", inline=True)
+            embed.add_field(name="Faucet Quota", value=f"{quota} UT", inline=True)
             embed.add_field(name="Low Balance Alert", value=self.bot.low_balance_alert, inline=True)
             embed.add_field(name="Token Type ID (TTI)", value=self.bot.token_id, inline=True)
             embed.add_field(name="Token Reward per Correct Answer", value=self.bot.token_amount, inline=True)
