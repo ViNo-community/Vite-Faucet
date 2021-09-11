@@ -2,6 +2,8 @@
 # coding: utf-8
 #
 
+
+
 from accountBlock import AccountBlock, BlockType
 import json
 import os
@@ -94,38 +96,7 @@ def _send_vite(from_address, to_address, amount, data, tokenId, key):
     if(amount >= balance):
         raise Exception(f"Insufficient funds. Balance: {balance} Amount requested: {amount}")
 
-    response = get_previous_account_block(to_address)
-
-    if "error" in response:
-        raise Exception(f"Error grabbing previous account block: {response}")        
-
-    # Grab height and hash info for previous account block
-   
-    result = response['result']
-
-    if(result is None):
-         print(f"Result is NONE")
-         height = 0
-         prevHash = 0
-    else:
-        height = result['height']
-        prevHash = result['prevHash']
-        print(f"Height: {height} Previous Hash: {prevHash}")
-
-    # Get PoW difficult
-    #response = get_pow_difficulty(from_address, to_address, prevHash)
-
-    # If error return error result
-    #if "error" in result:
-    #    return result['error']
-
-    #result = response['result']
-    #requiredQuota = result['requiredQuota']
-    #difficulty = result['difficulty']
-    #qc = result['qc']
-
-    #print(f"Required: {requiredQuota} Difficult: {difficulty} qc = {qc}")
-
+    # Send with tx_sendTxWithPrivateKey
     accountBlock = {
         "jsonrpc":
         "2.0",

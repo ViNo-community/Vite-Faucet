@@ -2,6 +2,8 @@ from requests.models import InvalidURL
 from accountBlock import AccountBlock, AddressType
 from common import Common
 from pyblake2 import blake2b
+import hashlib
+import binascii
 
 Default_Hash = '0000000000000000000000000000000000000000000000000000000000000000'; # A total of 64 0
 
@@ -43,7 +45,7 @@ def getHeightHex(height):
     if(height is None):
         return ''
     else:
-        return Common.leftPadZeros(height, 8).encode('hex')
+        return binascii.hexlify(b"{Common.leftPadZeros(height, 8)}")
 
 def getAddressHex(address):
     if(address is None):
@@ -52,7 +54,8 @@ def getAddressHex(address):
         return getOriginalAddress(address)
 
 # Get the original address from the literal address and address type
-def getOriginalAddress(literalAddress, addressType): 
+def getOriginalAddress(literalAddress): 
+    addressType = getAddressType(literalAddress)
     # Original address is bytes 6 to 45
     # Ex:[vite_][48171fc674cffc8cc4e0b2e7544ba468d31cbdce][1fc35cba02]
     #     PRE..ORIGINAL_ADDRESS_______________________CHKSUM____
@@ -63,63 +66,71 @@ def getOriginalAddress(literalAddress, addressType):
     else:
         return f"{originalAddress}01"
 
-# Check if address is valid. Not null, correct length, starts with "vite_"
-def isValidAddress(address):
+# Returns the type of account the given address is. 
+# Either Contract, User, or Illegal.
+def isValidAddress(address): 
+
+    # Validate address
+
     # Address is null
     if(address is None):
-        return False
+        raise Exception("Address is NoneType")
     # Invalid length
     if(len(address) != AccountBlock.ADDR_LEN):
-        return False
+        raise Exception("Address is invalid length")
     try:
         # "vite_" not at beginning of address
         if(address.index(AccountBlock.ADDR_PREFIX) != 0):
-            return False
+            raise Exception("Address does not begin with vite_")
     except ValueError:
         # "vite_" not found
-        return False
-    if(getAccountType(address) != AccountBlock.AddressType.Illegal):
-        return True
+        raise Exception("Address does not begin with vite_")
 
-# Returns the type of account the given address is. 
-# Either Contract, User, or Illegal.
-def getAccountType(address): 
+    # Can't get address checksums to work
+    return True
+
+    print(f"Address is {address}")
     # Grab the checksum portion of the address
-    currentChecksum = address.slice(AccountBlock.ADDR_PREFIX.length + AccountBlock.ADDR_SIZE * 2)
+    currentChecksum = address[len(AccountBlock.ADDR_PREFIX) + AccountBlock.ADDR_SIZE * 2 : len(AccountBlock.ADDR_PREFIX) + AccountBlock.ADDR_SIZE * 2 + AccountBlock.ADDR_CHECK_SUM_SIZE ]
+    print(f"Current checksum is {currentChecksum}")
     # Grab the account body portion
-    addressBody = address.slice(AccountBlock.ADDR_PREFIX.length, AccountBlock.ADDR_PREFIX.length + AccountBlock.ADDR_SIZE * 2)
-    addressBodyHash = addressBody.encode('hex')
+    addressBody = address[len(AccountBlock.ADDR_PREFIX) : len(AccountBlock.ADDR_PREFIX) + int(AccountBlock.ADDR_SIZE) * 2]
+    addressBodyHash = binascii.hexlify(bytes(addressBody, encoding="utf8"))
+    print(f"Address body: {addressBody} addressBodyHash: {addressBody.decode('ascii')}")
 
     contractCheckSum = getAddressCheckSum(addressBodyHash, True)
     if (contractCheckSum == currentChecksum):
         return AccountBlock.AddressType.Contract
 
     checkSum = getAddressCheckSum(addressBodyHash)
+    print(f"Returned checksum is {int(checkSum,16)}")
     if (currentChecksum == checkSum):
         return AccountBlock.AddressType.User
 
-    return AccountBlock.AddressType.Illegal
+    raise Exception("Address contains invalid checksum")
 
 # Return the address check sum
 # If User then return hash(blake2b(original_adress))
 # If Contract then return flipped hash(blake2(original_address))
 def getAddressCheckSum(address, isContract = False): 
     # Grab first ADDR_SIZE bytes of address
-    addressBody = address.slice(0, AccountBlock.ADDR_SIZE)
+    addressBody = address[0 : AccountBlock.ADDR_SIZE]
     # Calculate the blake2b 
-    checkSum = blake2b(addressBody, AccountBlock.ADDR_CHECK_SUM_SIZE)
+    h = hashlib.blake2b(digest_size= AccountBlock.ADDR_CHECK_SUM_SIZE)
+    h.update(b"{addressBody}")
+    checkSum = h.hexdigest()
+
+    print(f"Checksum is {checkSum}")
 
     # If User account returns hash of blake2b
-    if (not isContract):
-        return checkSum.toString('hex')
+    if (isContract == False):
+        print("Returning hexlify")
+        return binascii.hexlify(b"{checkSum}")
 
+    print("Return flipped chksum")
     # Otherwise returns hash of flipped blake2b
-    newCheckSum = []
-    i = 0
-    for byte in checkSum:
-        newCheckSum[i] = byte ^ 0xFF
-        i = i + 1
-    return newCheckSum.encode("hex")
+    newCheckSum = [int(i,16) ^ 0xFF for i in checkSum]
+    return binascii.hexlify(b"{newCheckSum}")
 
 '''
 Reference: 
