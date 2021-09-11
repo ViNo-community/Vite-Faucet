@@ -69,6 +69,7 @@ class ViteFaucetBot(commands.Bot):
         self.token_amount = float(os.getenv('token_amount'))
         self.token_id = os.getenv('token_id')
         self.max_rewards_amount = float(os.getenv('max_rewards_amount') or 0.0) 
+        self.low_balance_alert = float(os.getenv('low_balance_alert') or 0.0) 
         self.command_prefix = os.getenv('command_prefix') or "!"
         # Assert that DISCORD_TOKEN is not blank
         assert self.discord_token is not None, 'DISCORD_TOKEN must be set in .env.'

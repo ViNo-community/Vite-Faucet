@@ -1,3 +1,6 @@
+from send_vite import get_account_balance
+from hash import isValidAddress
+from accountBlock import AccountBlock, AddressType
 import asyncio
 import datetime
 
@@ -73,6 +76,7 @@ class GameCog(commands.Cog, name="Game"):
             response = f"No score information yet for {ctx.message.author}"
             await ctx.send(response)
             return
+
         # Check that vite_address is not blank
         if(vite_address == ""):
             # See if a wallet address is saved in our player data
@@ -81,10 +85,19 @@ class GameCog(commands.Cog, name="Game"):
             else:
                 await ctx.send(f"Usage: {self.bot.command_prefix}withdraw [vite address]")
                 return    
-        # Make sure that address is for vite
-        if(vite_address.startswith("vite") == False):
-            await ctx.send(f"Please only use vite addresses. Usage: {self.bot.command_prefix}start <vite address>")
+
+        # Validate withdrawal address
+        try:
+            if(isValidAddress(vite_address) == False):
+                Common.log(f"Invalid withdrawal adress \"{vite_address}\"")
+                response = f"Invalid withdrawal adress \"{vite_address}\""
+                await ctx.send(response)
+        except Exception as e:
+            Common.logger.error(f"Invalid withdrawal address \"{vite_address}\": {e}", exc_info=True)   
+            response = f"Invalid withdrawal address \"{vite_address}\": {e}"
+            await ctx.send(response)
             return
+
         try:
             # Deposit the balance to the vite address
             self.bot.send_vite(ctx.message.author,vite_address,send_balance)
@@ -107,6 +120,20 @@ class GameCog(commands.Cog, name="Game"):
             Common.log(f"Cannot play. Bot is currently disabled")
             await ctx.send(f"Trivia game has been temporarily disabled") 
             return
+
+        # Check account balance
+        balance = get_account_balance(self.bot.faucet_address)
+        # Check if balance can cover any more correct answers
+        if(balance <= self.bot.token_amount):
+            Common.log(f"Cannot play. Bot is currently disabled due to low account balance: {balance}")
+            await ctx.send(f"Trivia game has been temporarily disabled due to low account balance") 
+            return
+        # Check if balance is below low balance alert
+        elif(balance <= self.bot.low_balance_alert):
+            message = f"Faucet balance {balance} is below low balance alert {self.bot.low_balance_alert}"
+            Common.log(message)
+            # Alert mods of low balance
+            await ctx.send(f"@Core {message}")
 
         try:
             day_limit = 0
