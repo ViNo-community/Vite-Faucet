@@ -94,7 +94,7 @@ class BotCog(commands.Cog, name="Bot"):
         except Exception as e:
             Common.logger.error(f"Error in set_greylist {e}", exc_info=True)   
             raise Exception(f"Exception in set_greylist", e)   
-'''
+    '''
     @commands.command(name='set_token_reward', help='Set reward size for one correct answer [Admin Only]')
     @commands.has_any_role('Core','Dev')
     async def set_token_reward(self, ctx, param=""):
@@ -140,7 +140,7 @@ class BotCog(commands.Cog, name="Bot"):
         except Exception as e:
             Common.logger.error(f"Error in set_max_reward {e}", exc_info=True)   
             raise Exception(f"Exception in set_max_reward", e)   
-            '''
+    '''
 
     # Start the bot
     @commands.command(name='start', help="Start the bot [Admin Only]")
