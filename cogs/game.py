@@ -249,7 +249,7 @@ class GameCog(commands.Cog, name="Game"):
            # raise Exception(f"Error processing question request", e)   
                     
     @commands.command(name='export', help="Export CSV file to channel. [Admin Only]")
-    @commands.has_any_role('Core','Dev')
+    @commands.has_any_role('Core','Dev','VINO Team')
     async def export(self, ctx, date=""):
         try:
              # If no date provided use todays date

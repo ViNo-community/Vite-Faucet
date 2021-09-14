@@ -11,7 +11,7 @@ class BotCog(commands.Cog, name="Bot"):
         self.bot = bot
 
     @commands.command(name='set_prefix', help='Set bot prefix [Admin Only]')
-    @commands.has_any_role('Core','Dev')
+    @commands.has_any_role('Core','Dev','VINO Team')
     async def set_prefix(self, ctx, new_prefix=""):
         # Check that new prefix is valid
         if(new_prefix == ""):
@@ -32,6 +32,7 @@ class BotCog(commands.Cog, name="Bot"):
 
     # Shows all current bot settings
     @commands.command(name='show_config', aliases=['config','botconfig','bot_config'], help="Show the current bot config")
+    @commands.has_any_role('Core','Dev','VINO Team')
     async def show_config(self,ctx):
         try:
             balance = get_account_balance(self.bot.faucet_address)
@@ -60,7 +61,7 @@ class BotCog(commands.Cog, name="Bot"):
 
     # Set logging level for the bot
     @commands.command(name='set_logging', aliases=['set_logging_level'], help="Set logging level [Admin Only]")
-    @commands.has_any_role('Core','Dev')
+    @commands.has_any_role('Core','Dev','VINO Team')
     async def set_logging(self,ctx,new_level):
         try:
             new_logging_level = int(new_level)
@@ -76,7 +77,7 @@ class BotCog(commands.Cog, name="Bot"):
             raise Exception(f"Could not change logging level to {new_logging_level}", e)    
 
     @commands.command(name='set_greylist', help='Set greylist time period in minutes [Admin Only]')
-    @commands.has_any_role('Core','Dev')
+    @commands.has_any_role('Core','Dev','VINO Team')
     async def set_greylist(self, ctx, param=""):
         try:
             new_greylist = float(param)
@@ -96,7 +97,7 @@ class BotCog(commands.Cog, name="Bot"):
             raise Exception(f"Exception in set_greylist", e)   
     '''
     @commands.command(name='set_token_reward', help='Set reward size for one correct answer [Admin Only]')
-    @commands.has_any_role('Core','Dev')
+    @commands.has_any_role('Core','Dev','VINO Team')
     async def set_token_reward(self, ctx, param=""):
         try:
             new_token_amount = float(param)
@@ -119,7 +120,7 @@ class BotCog(commands.Cog, name="Bot"):
             raise Exception(f"Exception in set_token_reward", e)   
 
     @commands.command(name='set_max_reward', help='Set max rewards allowed per time period [Admin Only]')
-    @commands.has_any_role('Core','Dev')
+    @commands.has_any_role('Core','Dev','VINO Team')
     async def set_max_reward(self, ctx, param=""):
         try:
             amount = float(param)
@@ -144,20 +145,20 @@ class BotCog(commands.Cog, name="Bot"):
 
     # Start the bot
     @commands.command(name='start', help="Start the bot [Admin Only]")
-    @commands.has_any_role('Core','Dev')
+    @commands.has_any_role('Core','Dev','VINO Team')
     async def start(self,ctx):
         self.bot.disabled = False
         await ctx.send("Trivia game has been enabled")
 
     # Start the bot
     @commands.command(name='stop', help="Stop the bot [Admin Only]")
-    @commands.has_any_role('Core','Dev')
+    @commands.has_any_role('Core','Dev','VINO Team')
     async def stop(self,ctx):
         self.bot.disabled = True     
         await ctx.send(f"Trivia game has been disabled") 
 
     @commands.command(name='invite', help="Displays invite link [Admin Only]")
-    @commands.has_any_role('Core','Dev')
+    @commands.has_any_role('Core','Dev','VINO Team')
     async def invite(self,ctx):
         try:
             client_id = self.bot.get_client_id()
