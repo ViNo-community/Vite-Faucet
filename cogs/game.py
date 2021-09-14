@@ -132,6 +132,8 @@ class GameCog(commands.Cog, name="Game"):
         elif(balance <= self.bot.low_balance_alert):
             message = f"Faucet balance {balance} is below low balance alert {self.bot.low_balance_alert}"
             Common.log(message)
+            # Temporarily disable game
+            self.bot.disabled = True    
             # Alert mods of low balance
             await ctx.send(f"@Core {message}")
 
