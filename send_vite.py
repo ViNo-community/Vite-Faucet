@@ -115,5 +115,5 @@ def _send_vite(from_address, to_address, amount):
     # Call send_vite.js script
     command = f"send_vite.js {to_address} {amount}"
     print("Command : $ " + command)
-    subprocess.call(f"scripts/send_vite.js {to_address} {amount}")
+    subprocess.run(['scripts/send_vite.js', to_address, str(amount)])
    # os.system(f"scripts/send_vite.js {to_address} {amount}")
