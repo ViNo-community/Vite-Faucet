@@ -1,0 +1,10 @@
+{
+    "API_KEY": "your api key",
+    "VITE_LOGIN": {
+        "type": "private_key",
+        "index": 0,
+        "credentials": "your private key"
+    },
+    "VITE_NODE": "https://buidl.vite.net/gvite",
+    "PORT": 48132
+}

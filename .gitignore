@@ -8,3 +8,5 @@ logs/*
 transactions/*
 *.ref
 *.db
+config.json
+node_modules

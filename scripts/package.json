@@ -1,0 +1,17 @@
+{
+  "name": "vite-send-script",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bignumber.js": "^9.0.1",
+    "vitejs-notthomiz": "^2.3.15",
+    "vitejs-notthomiz-http": "^2.3.15",
+    "vitejs-notthomiz-ws": "^2.3.15"
+  }
+}
