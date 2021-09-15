@@ -1,6 +1,8 @@
 from send_vite import get_account_balance
 import asyncio
 import datetime
+import requests
+from bs4 import BeautifulSoup
 
 import discord
 from player import Player
@@ -317,7 +319,32 @@ class GameCog(commands.Cog, name="Game"):
             await ctx.send(embed=embed)  
         except Exception as e:
             Common.logger.error(f"Error generating scoreboard: {e}", exc_info=True)      
-            raise Exception(f"Error generating scoreboard ", e)   
+            raise Exception(f"Error generating scoreboard ", e) 
+
+
+    # Hidden Easter Egg command - !meow - shows a random image of a cat
+    @commands.command(name='woof',hidden=True)
+    async def woof(self,ctx):
+        try:
+            # Grab google image search results for cat
+            page= requests.get('http://www.google.com/search?q=dogs&source=lnms&tbm=isch', headers={'User-Agent': 'Mozilla/5.0'})
+            # Parse through and grab all the non-gif image links
+            soup = BeautifulSoup(page.text, 'html.parser')
+            dog_images = []
+            for link in soup.find_all('img'):
+                src=link.get('src')
+                if(not src.endswith('gif')):    # Exclude gifs
+                    dog_images.append(src)
+            # Grab a random image from the list
+            idx = random.randint(0,len(dog_images))
+            # Embed the image and share with chat
+            imageURL = dog_images[idx]
+            embed = discord.Embed()
+            embed.set_image(url=imageURL)
+            await ctx.send(embed=embed)
+        except Exception as e:
+            raise Exception("Could not process meow request", e)  
+
 
 # Plug-in function to add cog
 def setup(bot):
