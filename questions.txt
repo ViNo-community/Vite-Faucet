@@ -551,8 +551,8 @@ a type of cryptocurrency
 an exchange
 
 What makes cryptocurrency secure?
-Mathematics 
-computer Servers 
+mathematics 
+hard-drives
 electronic banks
 insurance
 
@@ -561,12 +561,6 @@ All listed options
 An Exchange
 Crypto ATM
 Peer to Peer transactions
-
-Where can you store Cryptocurrency ?
-hardware/software wallet
-bank account
-floppy disk
-in your pocket
 
 What is the name of the famous Bitcoin exchange from Japan that collapsed in 2014?
 Mt. Gox
@@ -765,3 +759,27 @@ Trade --> Dividends --> Stake
 Trade --> Mining --> Add
 Trade--> Mining --> Market Making
 Trade --> Spot --> Buy
+
+The quota required for a transaction in Vite depends on all EXCEPT:
+Transaction amount
+Source address
+Destination address
+Block type
+
+What is ViteJS?
+A Javascript SDK for Vite
+The hottest new rap group 
+A guerilla group in Nigeria 
+A fancy cologne 
+
+What is Rosetta API?
+An open standard designed to simplify blockchain deployment and interaction developed by Coinbase.
+An API that lets users translate between spoken languages seemlessly.
+An API that standarizes different cryptographic algorithms
+An alien space-craft from the Andromeda galaxy
+
+What is the technological singularity?
+A hypothetical point in time in which technological growth explodes in an expotential self-feeding cycle, resulting in AI superintelligence and dramatic changes to human civilization.
+Where your socks disappear to in the dryer.
+The point in which AI becomes conscious.
+What happens when you Google "google." 
