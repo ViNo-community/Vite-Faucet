@@ -1,6 +1,4 @@
 from send_vite import get_account_balance
-from hash import isValidAddress
-from accountBlock import AccountBlock, AddressType
 import asyncio
 import datetime
 
@@ -88,7 +86,7 @@ class GameCog(commands.Cog, name="Game"):
 
         # Validate withdrawal address
         try:
-            if(isValidAddress(vite_address) == False):
+            if(Common.isValidAddress(vite_address) == False):
                 Common.log(f"Invalid withdrawal adress \"{vite_address}\"")
                 response = f"Invalid withdrawal adress \"{vite_address}\""
                 await ctx.send(response)

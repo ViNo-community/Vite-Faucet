@@ -1,8 +1,14 @@
+from accountBlock import AccountBlock
 import os
 from dotenv import load_dotenv
 import logging
 import datetime
 from pathlib import Path
+
+ADDR_PREFIX = 'vite_'
+ADDR_SIZE = int(20)
+ADDR_CHECK_SUM_SIZE = int(10)
+ADDR_LEN = len(ADDR_PREFIX) + ADDR_SIZE * 2 + ADDR_CHECK_SUM_SIZE
 
 class Common():
 
@@ -72,6 +78,30 @@ class Common():
     @staticmethod
     def leftPadZeros(number, len):
         return str(number).zfill(len)
+
+    # Returns the type of account the given address is. 
+    # Either Contract, User, or Illegal.
+    @staticmethod
+    def isValidAddress(address): 
+
+        # Validate address
+
+        # Address is null
+        if(address is None):
+            raise Exception("Address is NoneType")
+        # Invalid length
+        if(len(address) != ADDR_LEN):
+            raise Exception("Address is invalid length")
+        try:
+            # "vite_" not at beginning of address
+            if(address.index(ADDR_PREFIX) != 0):
+                raise Exception("Address does not begin with vite_")
+        except ValueError:
+            # "vite_" not found
+            raise Exception("Address does not begin with vite_")
+
+        # Can't get address checksums to work
+        return True
         
     # Helper function for logging bot commands
     # <- {User} : {command}

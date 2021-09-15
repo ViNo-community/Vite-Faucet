@@ -109,7 +109,7 @@ def get_pow_difficulty(address,toAddress,prevHash,data=""):
 
 
 # _send_vite function with private key
-def _send_vite(from_address, to_address, amount, data, tokenId, key):
+def _send_vite(from_address, to_address, amount):
 
     balance = get_account_balance(from_address)
     print(f"Account: {from_address} Balance: {balance}")
@@ -118,28 +118,5 @@ def _send_vite(from_address, to_address, amount, data, tokenId, key):
     if(amount >= balance):
         raise Exception(f"Insufficient funds. Balance: {balance} Amount requested: {amount}")
 
-    # Send with tx_sendTxWithPrivateKey
-    accountBlock = {
-        "jsonrpc":
-        "2.0",
-        "id":
-        1,
-        "method":
-        "tx_sendTxWithPrivateKey",
-        "params": [{
-            "selfAddr": from_address,
-            "toAddr": to_address,
-            "tokenTypeId": tokenId,
-            "privateKey": key,
-            "amount": str(int(round(Common.viteToRaw(amount)))),
-            "data": data,
-            "blockType": 2
-        }]
-    }
-
-    # Send accountBlock
-    result = json_rpc(rpc_url, accountBlock)
-    # If error return error result
-    if "error" in result:
-        return result['error']
+    # Call send_vite.js script
 
