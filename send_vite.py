@@ -3,6 +3,7 @@ import os
 from dotenv.main import load_dotenv
 import requests
 from common import Common
+import subprocess
 
 session = requests.Session()
 session.trust_env = False
@@ -112,4 +113,7 @@ def _send_vite(from_address, to_address, amount):
         raise Exception(f"Insufficient funds. Balance: {balance} Amount requested: {amount}")
 
     # Call send_vite.js script
-
+    command = f"send_vite.js {to_address} {amount}"
+    print("Command : $ " + command)
+    subprocess.call(f"scripts/send_vite.js {to_address} {amount}")
+   # os.system(f"scripts/send_vite.js {to_address} {amount}")
