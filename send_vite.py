@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-#
-
-
-
-from accountBlock import AccountBlock, BlockType
 import json
 import os
 from dotenv.main import load_dotenv
