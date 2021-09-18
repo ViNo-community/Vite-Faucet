@@ -48,7 +48,7 @@ class BotCog(commands.Cog, name="Bot"):
             embed.add_field(name="Faucet Address", value=self.bot.faucet_address, inline=True)
             embed.add_field(name="Faucet Balance", value=f"{balance:,.4f}", inline=True)
             embed.add_field(name="Faucet Quota", value=f"{quota} UT", inline=True)
-            embed.add_field(name="Low Balance Alert", value=self.bot.low_balance_alert, inline=True)
+            embed.add_field(name="Low Balance Alert", value=f"{self.bot.low_balance_alert:,.4f}", inline=True)
             embed.add_field(name="Token Type ID (TTI)", value=self.bot.token_id, inline=True)
             embed.add_field(name="Token Reward per Correct Answer", value=self.bot.token_amount, inline=True)
             embed.add_field(name="Max Rewards per Quiz Period", value=self.bot.max_rewards_amount, inline=True)
