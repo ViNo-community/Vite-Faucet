@@ -130,12 +130,16 @@ class GameCog(commands.Cog, name="Game"):
             return
         # Check if balance is below low balance alert
         elif(balance <= self.bot.low_balance_alert):
-            message = f"Faucet balance {balance} is below low balance alert {self.bot.low_balance_alert}"
+            message = f"Faucet balance {balance:,.4f} is below low balance alert {self.bot.low_balance_alert:,.4f}"
             Common.log(message)
             # Temporarily disable game
             self.bot.disabled = True    
             # Alert mods of low balance
-            await ctx.send(f"@Core {message}")
+            #moderator = discord.utils.get(ctx.guild.roles, id=000000000000000)
+            channel = self.bot.get_channel(855044743964000256)
+            await channel.send(f"@Core {message}")
+            await ctx.send(f"Trivia game has been temporarily disabled due to low account balance") 
+            return
 
         try:
             day_limit = 0
