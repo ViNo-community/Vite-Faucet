@@ -136,9 +136,8 @@ class GameCog(commands.Cog, name="Game"):
             # Temporarily disable game
             self.bot.disabled = True    
             # Alert mods of low balance
-            #moderator = discord.utils.get(ctx.guild.roles, id=000000000000000)
             channel = self.bot.get_channel(855044743964000256)
-            await channel.send(f"@Core {message}")
+            await channel.send(f"<@&842978912518668309> <@&842979377456218123> : {message}")
             await ctx.send(f"Trivia game has been temporarily disabled due to low account balance") 
             return
 
