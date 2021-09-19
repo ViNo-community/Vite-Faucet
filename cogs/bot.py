@@ -2,8 +2,9 @@ import discord
 from discord.ext import commands
 import dotenv
 from common import Common
+import traceback
 
-from send_vite import get_account_balance, get_account_quota
+from vite_functions import get_account_balance, get_account_quota
 
 class BotCog(commands.Cog, name="Bot"):
 
@@ -35,8 +36,8 @@ class BotCog(commands.Cog, name="Bot"):
     @commands.has_any_role('Core','Dev','VINO Team')
     async def show_config(self,ctx):
         try:
-            balance = get_account_balance(self.bot.faucet_address)
-            quota = get_account_quota(self.bot.faucet_address)
+            balance = await get_account_balance(self.bot.faucet_address)
+            quota = await get_account_quota(self.bot.faucet_address)
             # If disabled, show in Red. If enabled, show in Green
             showColor = discord.Color.green()
             if(self.bot.disabled): showColor = discord.Color.red()
@@ -57,7 +58,9 @@ class BotCog(commands.Cog, name="Bot"):
             embed.add_field(name="Logging Level", value=self.bot.logging_level, inline=True)
             await ctx.send(embed=embed)
         except Exception as e:
+            traceback.print_exc()
             raise Exception("Exception showing info summary", e)   
+           
 
     # Set logging level for the bot
     @commands.command(name='set_logging', aliases=['set_logging_level'], help="Set logging level [Admin Only]")

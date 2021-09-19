@@ -208,12 +208,6 @@ An exchange could exit scam and steal all your crypto
 It increases centralization
 Exchanges can be hacked 
 
-Who invented Bitcoin?
-Satoshi Nakomoto
-Elon Musk
-Homer Simpson
-Al Gore
-
 When was Bitcoin released?
 2009
 2011
@@ -748,12 +742,6 @@ To make Deferred Payments
 Store of Value
 Transfer of Value
 
-who are the ViNo team ? 
-nano and vite crypto enthusiasts 
-italian scooter enthusiast 
-wine enthusiast
-italo disco enthusiast
-
 where in the vite wallet can you stake $VX tokens for daily rewards of ViteX fees ?
 Trade --> Dividends --> Stake
 Trade --> Mining --> Add
@@ -769,7 +757,7 @@ Block type
 What is ViteJS?
 A Javascript SDK for Vite
 The hottest new rap group 
-A guerilla group in Nigeria 
+A species of apes
 A fancy cologne 
 
 What is Rosetta API?
@@ -795,3 +783,27 @@ Ethereum Improvement Plan
 Email Investigation Police
 Escrow Insurance Policy
 Exchange Internal Platform
+
+What is NOT a responsibility of a full node on Vite?
+Mining new blocks on the blockchain 
+Maintaing a complete copy of the ledger
+Sending and receiving transactions
+Verifying transactions on the network
+
+gvite node was developed in:
+Go
+Javascript
+C++
+Java
+
+The minimum amount of Vite that you can stake for quota is:
+134 Vite
+1,000 Vite
+20 Vite
+9,000 Vite
+
+The maxmimum amount of Vite that you can stake for quota is:
+Unlimited
+134 Vite
+100,000 Vite
+100,000,000 Vite

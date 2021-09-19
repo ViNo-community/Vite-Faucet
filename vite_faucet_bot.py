@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
-from send_vite import _send_vite
+from vite_functions import _send_vite
 
 # Import commands from the discord.ext module.
 from discord.ext import commands
@@ -192,15 +192,13 @@ class ViteFaucetBot(commands.Bot):
         return self.client_id 
 
     # Helper function to send tokens to the address
-    def send_vite(self,account_name,vite_address,amount):
+    async def send_vite(self,account_name,vite_address,amount):
 
         try:
             Common.log(f"Sending {amount} to {account_name} wallet: {vite_address}")
             # Send vite from faucet to wallet address
-            hash = _send_vite(self.faucet_address, 
-                vite_address, 
-                amount)
-
+            hash = await _send_vite(self.faucet_address, vite_address, amount)
+            Common.log(f"Transaction Hash: {hash}")
             # Check date if we need to move to a transaction file
             new_filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
             full_new_filename = self.transdir / new_filename
