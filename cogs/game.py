@@ -100,13 +100,14 @@ class GameCog(commands.Cog, name="Game"):
 
         try:
             # Deposit the balance to the vite address
-            self.bot.send_vite(ctx.message.author,vite_address,send_balance)
+            hash = self.bot.send_vite(ctx.message.author,vite_address,send_balance)
+            print(hash)
             # Clear the balance
             my_player_data.clear_unsent_balance()
             # Grab wallet address of user for future reference
             my_player_data.set_wallet_address(vite_address)
             # Alert user of successful withdraw
-            await ctx.send(f"You have successfully sent {send_balance} tokens to {vite_address}")
+            await ctx.send(f"You have successfully sent {send_balance} tokens to {vite_address}: {hash}")
             my_player_data.add_sent_balance(send_balance)
         except Exception as e:
             Common.logger.error(f"Error withdrawing funds: {e}", exc_info=True)   

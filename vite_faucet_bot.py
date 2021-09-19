@@ -197,7 +197,7 @@ class ViteFaucetBot(commands.Bot):
         try:
             Common.log(f"Sending {amount} to {account_name} wallet: {vite_address}")
             # Send vite from faucet to wallet address
-            _send_vite(self.faucet_address, 
+            hash = _send_vite(self.faucet_address, 
                 vite_address, 
                 amount)
 
@@ -219,6 +219,8 @@ class ViteFaucetBot(commands.Bot):
             current_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
             self.transactions_file.write(f"\"{current_time}\",\"{account_name}\",\"{vite_address}\",{amount:.2f}\n")
             self.transactions_file.flush() 
+            # Return transaction hash
+            return hash
         except Exception as ex:
             Common.logger.error(f"Error in send_vite: {ex}", exc_info=True)
             print(traceback.format_exc(), file=sys.stderr)

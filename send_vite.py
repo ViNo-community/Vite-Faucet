@@ -106,14 +106,11 @@ def get_pow_difficulty(address,toAddress,prevHash,data=""):
 def _send_vite(from_address, to_address, amount):
 
     balance = get_account_balance(from_address)
-    print(f"Account: {from_address} Balance: {balance}")
-    
+
     # Make sure that we have enough funds to cover transaction
     if(amount >= balance):
         raise Exception(f"Insufficient funds. Balance: {balance} Amount requested: {amount}")
 
     # Call send_vite.js script
-    command = f"send_vite.js {to_address} {amount}"
-    print("Command : $ " + command)
-    subprocess.run(['scripts/send_vite.js', to_address, str(amount)])
-   # os.system(f"scripts/send_vite.js {to_address} {amount}")
+    result = subprocess.run(['scripts/send_vite.js', to_address, str(amount)], capture_output=True, text=True).stdout
+    return result
