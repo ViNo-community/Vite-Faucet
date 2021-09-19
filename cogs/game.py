@@ -1,7 +1,8 @@
 from send_vite import get_account_balance
 import asyncio
 import datetime
-import requests
+import aiohttp
+import asyncio
 from bs4 import BeautifulSoup
 
 import discord
@@ -326,28 +327,30 @@ class GameCog(commands.Cog, name="Game"):
             raise Exception(f"Error generating scoreboard ", e) 
 
 
-    # Hidden Easter Egg command - !meow - shows a random image of a cat
+    # Hidden Easter Egg command - !woof - show image of dog
     @commands.command(name='woof',hidden=True)
     async def woof(self,ctx):
         try:
-            # Grab google image search results for cat
-            page= requests.get('http://www.google.com/search?q=dogs&source=lnms&tbm=isch', headers={'User-Agent': 'Mozilla/5.0'})
-            # Parse through and grab all the non-gif image links
-            soup = BeautifulSoup(page.text, 'html.parser')
-            dog_images = []
-            for link in soup.find_all('img'):
-                src=link.get('src')
-                if(not src.endswith('gif')):    # Exclude gifs
-                    dog_images.append(src)
-            # Grab a random image from the list
-            idx = random.randint(0,len(dog_images))
-            # Embed the image and share with chat
-            imageURL = dog_images[idx]
-            embed = discord.Embed()
-            embed.set_image(url=imageURL)
-            await ctx.send(embed=embed)
+            # Grab google image search results for dogs
+            session = aiohttp.ClientSession()
+            async with session.get('http://www.google.com/search?q=dogs&source=lnms&tbm=isch', headers={'User-Agent': 'Mozilla/5.0'}) as page:
+                text = await page.text()
+                # Parse through and grab all the non-gif image links
+                soup = BeautifulSoup(text, 'html.parser')
+                dog_images = []
+                for link in soup.find_all('img'):
+                    src=link.get('src')
+                    if(not src.endswith('gif')):    # Exclude gifs
+                        dog_images.append(src)
+                # Grab a random image from the list
+                idx = random.randint(0,len(dog_images))
+                # Embed the image and share with chat
+                imageURL = dog_images[idx]
+                embed = discord.Embed()
+                embed.set_image(url=imageURL)
+                await ctx.send(embed=embed)
         except Exception as e:
-            raise Exception("Could not process meow request", e)  
+            raise Exception("Could not process woof request", e)  
 
 
 # Plug-in function to add cog
