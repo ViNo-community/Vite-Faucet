@@ -84,14 +84,12 @@ class ViteFaucetBot(commands.Bot):
         self.transactions_filename = self.transdir / filename
         # Create file if it does not exist
         if not os.path.exists(self.transactions_filename):
-            print("Does not exist yet")
             Common.log(f"Transactions file does not exist. Creating new file: {self.transactions_filename}")
             # Open transactions file
             self.transactions_file = open(self.transactions_filename, "w")
             # Write header
             self.transactions_file.write(f"\"Time\",\"Name\",\"Vite Address\",\"Amount\",\n")
         else:
-            print("It already exists")
             Common.log(f"Transactions file does exist. Opening file in append mode: {self.transactions_filename}")
             # File exists. Open in append mode
             self.transactions_file = open(self.transactions_filename, "a")
