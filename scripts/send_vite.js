@@ -27,11 +27,9 @@ const provider = /^wss?:$/.test(url.protocol) ?
     new HTTP_RPC(config.VITE_NODE, 6e5) :
     new Error("Invalid node url: "+config.VITE_NODE)
 if(provider instanceof Error)throw provider
-console.log("Connecting to "+config.VITE_NODE)
 
 
 const ViteAPI = new vite.ViteAPI(provider, async () => {
-    console.log("Provider ready !")
     let address
     switch(config.VITE_LOGIN.type){
         case "mnemonic": {
@@ -52,7 +50,6 @@ const ViteAPI = new vite.ViteAPI(provider, async () => {
             throw new Error("Invalid configuration for VITE_LOGIN")
         }
     }
-    console.log("Using "+address.address+" as sender !")
     await new Promise((r) => setImmediate(r))
     const actions = {
         send: async (tokenId, amount, destination) => {
@@ -95,15 +92,10 @@ const ViteAPI = new vite.ViteAPI(provider, async () => {
             }
             await accountBlock.sign()
 
+            // Return hash as confirmation
             const hash = (await accountBlock.send()).hash
+            return hash
 
-            return {
-                hash: hash,
-                from: address.address,
-                to: destination,
-                tokenid: tokenId,
-                amount: amount
-            }
         }
     }
 
