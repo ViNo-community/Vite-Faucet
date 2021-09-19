@@ -1,4 +1,4 @@
-from send_vite import get_account_balance
+from vite_functions import get_account_balance
 import asyncio
 import datetime
 import requests
@@ -100,7 +100,7 @@ class GameCog(commands.Cog, name="Game"):
 
         try:
             # Deposit the balance to the vite address
-            hash = self.bot.send_vite(ctx.message.author,vite_address,send_balance)
+            hash = await self.bot.send_vite(ctx.message.author,vite_address,send_balance)
             print(hash)
             # Clear the balance
             my_player_data.clear_unsent_balance()
@@ -123,7 +123,7 @@ class GameCog(commands.Cog, name="Game"):
             return
 
         # Check account balance
-        balance = get_account_balance(self.bot.faucet_address)
+        balance = await get_account_balance(self.bot.faucet_address)
         # Check if balance can cover any more correct answers
         if(balance <= self.bot.token_amount):
             Common.log(f"Cannot play. Bot is currently disabled due to low account balance: {balance}")
