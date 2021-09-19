@@ -236,7 +236,7 @@ class GameCog(commands.Cog, name="Game"):
                             my_player_data.set_greylist(self.bot.greylist_duration)
                             minutes_left = (my_player_data.get_greylist() - time.time()) / 60.0
                             response = response + f" You have been added to the greylist for a period of {minutes_left:.4f} minutes."
-                            await ctx.send(response)
+                            await ctx.message.author.send(response)
                             return
                 else:
                     # Record loss
