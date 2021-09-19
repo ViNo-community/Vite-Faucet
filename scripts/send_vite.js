@@ -1,10 +1,16 @@
 #!/usr/bin/env node
-const vite = require("vitejs-notthomiz")
-const HTTP_RPC = require("vitejs-notthomiz-http").default
-const WS_RPC = require("vitejs-notthomiz-ws").default
+
+// Usage: ./send_vite.js [vite_address] [vite_amount]
+const vite = require("@vite/vitejs")
+const HTTP_RPC = require("@vite/vitejs-http").default
+const WS_RPC = require("@vite/vitejs-ws").default
 const config = require("./config.json")
 const BigNumber = require("bignumber.js").default
 
+const url = new URL(config.VITE_NODE)
+const tokenID = config.TOKEN_ID
+
+// Grab and validate destination and amount from argv
 const [,,
     destination, amount
 ] = process.argv
@@ -15,7 +21,7 @@ if(!/^\d+(\.\d+)?$/.test(amount)){
     throw new Error("Invalid Amount")
 }
 
-const url = new URL(config.VITE_NODE)
+// Set up Vite API (either WS or HTTP)
 const provider = /^wss?:$/.test(url.protocol) ? 
     new WS_RPC(config.VITE_NODE, 6e5, {
         protocol: "",
@@ -27,7 +33,6 @@ const provider = /^wss?:$/.test(url.protocol) ?
     new HTTP_RPC(config.VITE_NODE, 6e5) :
     new Error("Invalid node url: "+config.VITE_NODE)
 if(provider instanceof Error)throw provider
-
 
 const ViteAPI = new vite.ViteAPI(provider, async () => {
     let address
@@ -71,6 +76,7 @@ const ViteAPI = new vite.ViteAPI(provider, async () => {
             })
             accountBlock.setProvider(ViteAPI)
             .setPrivateKey(address.privateKey)
+            // Find out how much quota is needed
             const [
                 quota,
                 difficulty
@@ -85,22 +91,22 @@ const ViteAPI = new vite.ViteAPI(provider, async () => {
                     data: accountBlock.data
                 }))
             ])
-            
+            // Set up PoW
             const availableQuota = new BigNumber(quota.currentQuota)
             if(availableQuota.isLessThan(difficulty.requiredQuota)){
                 await accountBlock.PoW(difficulty.difficulty)
             }
+            // Sign account block
             await accountBlock.sign()
 
             // Return hash as confirmation
-            const hash = (await accountBlock.send()).hash
-            return hash
+            return (await accountBlock.send()).hash
 
         }
     }
 
     try{
-        const result = await actions.send("tti_5649544520544f4b454e6e40", new BigNumber(amount).shiftedBy(18).toFixed().split(".")[0], destination)
+        const result = await actions.send(tokenID, new BigNumber(amount).shiftedBy(18).toFixed().split(".")[0], destination)
         console.log(result)
         process.exit(0)
     }catch(err){

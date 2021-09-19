@@ -1,9 +1,9 @@
 {
-    "API_KEY": "your api key",
+    "TOKEN_ID": "tti_5649544520544f4b454e6e40",
     "VITE_LOGIN": {
         "type": "private_key",
         "index": 0,
-        "credentials": "your private key"
+        "credentials": "ENTER PRIVATE KEY"
     },
     "VITE_NODE": "https://buidl.vite.net/gvite",
     "PORT": 48132
