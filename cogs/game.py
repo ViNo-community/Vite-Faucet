@@ -101,9 +101,14 @@ class GameCog(commands.Cog, name="Game"):
 
         try:
             # Deposit the balance to the vite address
-            hash = await self.bot.send_vite(ctx.message.author,vite_address,send_balance)
-            if(hash != None):
-                print(hash)
+            res = await self.bot.send_vite(ctx.message.author,vite_address,send_balance)
+            if res.returncode == 1:
+                # Script returned error
+                error = res.stderr
+                Common.logger.error(f"Error withdrawing funds: {error}")
+                await ctx.send(f"Error withdrawing funds: {error} Please retry")
+            else:
+                hash = res.stdout
                 # Clear the balance
                 my_player_data.clear_unsent_balance()
                 # Grab wallet address of user for future reference
@@ -111,8 +116,6 @@ class GameCog(commands.Cog, name="Game"):
                 # Alert user of successful withdraw
                 await ctx.send(f"You have successfully sent {send_balance} tokens to {vite_address}: {hash}")
                 my_player_data.add_sent_balance(send_balance)
-            else:
-                await ctx.send(f"Error withdrawing funds. Please retry")
         except Exception as e:
             Common.logger.error(f"Error withdrawing funds: {e}", exc_info=True)   
             raise Exception(f"Exception with withdrawal to {vite_address}", e)   

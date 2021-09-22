@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
-from vite_functions import _send_vite
+from vite_functions import send_transaction
 
 # Import commands from the discord.ext module.
 from discord.ext import commands
@@ -195,28 +195,31 @@ class ViteFaucetBot(commands.Bot):
         try:
             Common.log(f"Sending {amount} to {account_name} wallet: {vite_address}")
             # Send vite from faucet to wallet address
-            hash = await _send_vite(self.faucet_address, vite_address, amount)
-            Common.log(f"Transaction Hash: {hash}")
-            # Check date if we need to move to a transaction file
-            new_filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
-            full_new_filename = self.transdir / new_filename
-            #print(f"Transactions file: {self.transactions_filename} vs us {full_new_filename}")
-            if(full_new_filename != self.transactions_filename):
-                Common.log(f"Closing old transactions file {self.transactions_filename}")
-                # Close old file
-                self.transactions_file.close()
-                # Open new file
-                self.transactions_filename = full_new_filename
-                self.transactions_file = open(self.transactions_filename, "w")
-                # Write header as first line
-                self.transactions_file.write(f"\"Time\",\"Name\",\"Vite Address\",\"Amount\",\n")
-                Common.log(f"Opening new transaction file {self.transactions_filename}")
-            # Record transaction in spreadsheet
-            current_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-            self.transactions_file.write(f"\"{current_time}\",\"{account_name}\",\"{vite_address}\",{amount:.2f}\n")
-            self.transactions_file.flush() 
-            # Return transaction hash
-            return hash
+            res = await send_transaction(self.faucet_address, vite_address, amount)
+            if res.returncode == 1:
+                return res
+            else:
+                hash = res.stdout
+                Common.log(f"Transaction Hash: {hash}")
+                # Check date if we need to move to a transaction file
+                new_filename = datetime.datetime.now().strftime("%Y%m%d") + "_transactions.csv"
+                full_new_filename = self.transdir / new_filename
+                if(full_new_filename != self.transactions_filename):
+                    Common.log(f"Closing old transactions file {self.transactions_filename}")
+                    # Close old file
+                    self.transactions_file.close()
+                    # Open new file
+                    self.transactions_filename = full_new_filename
+                    self.transactions_file = open(self.transactions_filename, "w")
+                    # Write header as first line
+                    self.transactions_file.write(f"\"Time\",\"Name\",\"Vite Address\",\"Amount\",\n")
+                    Common.log(f"Opening new transaction file {self.transactions_filename}")
+                # Record transaction in spreadsheet
+                current_time = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+                self.transactions_file.write(f"\"{current_time}\",\"{account_name}\",\"{vite_address}\",{amount:.2f}\n")
+                self.transactions_file.flush() 
+                # Return transaction hash
+                return res
         except Exception as ex:
             Common.logger.error(f"Error in send_vite: {ex}", exc_info=True)
             print(traceback.format_exc(), file=sys.stderr)
