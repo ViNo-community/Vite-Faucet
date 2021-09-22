@@ -12,6 +12,8 @@ rpc_url = os.getenv('rpc_url')
 rpc_timeout = float(os.getenv('rpc_timeout'))
 token_id = os.getenv('token_id')
 
+RETRY_AMOUNT = 3
+
 # Post JSON payload to RPC_URL and return result
 async def client_post(rpc_url, payload):
     try:
@@ -46,8 +48,18 @@ async def get_account_info(address):
 # Get account balance in Vite for specified account
 async def get_account_balance(address):
     try:
+        # Try RETRY_AMOUNT times
+        retries = 0
+        response = None
         # Get account info for this address
-        response = await get_account_info(address)
+        while(response is None and retries < RETRY_AMOUNT):
+            response = await get_account_info(address)
+            retries = retries + 1
+        # Raise exception if response is None
+        if(response is None):
+            raise Exception("Null response for get_account_balance")
+        if "error" in response:
+            raise Exception(f"Error grabbing account balance: {response}")
         # Get balance for VITE from balanceInfoMap
         result = response['result']  
         balanceInfo = result['balanceInfoMap']   
@@ -61,6 +73,9 @@ async def get_account_balance(address):
 # Get quota balance in UT for specified address
 async def get_account_quota(address):
     try:
+        # Try RETRY_AMOUNT times
+        retries = 0
+        response = None
         # Make payload
         payload = {
             "jsonrpc": "2.0",
@@ -68,8 +83,13 @@ async def get_account_quota(address):
             "method": "contract_getQuotaByAccount",
             "params": [ address,]
         }
-        # Send request
-        response = await client_post(rpc_url, payload)
+        # Send request. Try RETRY_AMOUNT times
+        while(response is None and retries < RETRY_AMOUNT):
+            response = await client_post(rpc_url, payload)
+            retries = retries + 1
+        # Raise exception if response is None
+        if(response is None):
+            raise Exception("Null response for get_account_balance")
         # If error response, raise exception
         if "error" in response:
             raise Exception(f"Error grabbing quota info: {response}")
@@ -85,6 +105,7 @@ async def get_account_quota(address):
 # _send_vite function with private key
 async def send_transaction(from_address, to_address, amount):
     try:
+        retries = 0
         # Grab account balance for this account
         balance = await get_account_balance(from_address)
         # Make sure that we have enough funds to cover transaction
@@ -92,7 +113,11 @@ async def send_transaction(from_address, to_address, amount):
             raise Exception(f"Insufficient funds. Balance: {balance} Amount requested: {amount}")
         # Call send_vite.js script
         command = ['scripts/send_vite.js', to_address, str(amount)]
-        return subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        res = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        while(res.returncode == 1 and retries < RETRY_AMOUNT):
+            res = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) 
+            retries = retries + 1
+        return res
     # os.system(f"scripts/send_vite.js {to_address} {amount}")
     except Exception as e:
         Common.logger.error(f"Error in _send_vite: {e}", exc_info=True)  
