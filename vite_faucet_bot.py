@@ -172,7 +172,7 @@ class ViteFaucetBot(commands.Bot):
             await ctx.reply(f"I do not know what \"{ctx.invoked_with}\" means.")
         elif isinstance(error, ConnectionError):
             Common.logger.error(f"Connection Error: {error}", exc_info=True)
-            await ctx.reply(f"Connection Error executing command \"{ctx.invoked_with}\". Please check logs")
+            await ctx.reply(f"Connection Error executing command \"{ctx.invoked_with}\". Please try again. Check logs for error details")
         elif isinstance(error, commands.CheckFailure):
             Common.logger.error(f"Check Failure Error: {error} ", exc_info=True)
             await ctx.reply(f"Sorry, you do not have permission to execute \"{ctx.invoked_with}\".")      

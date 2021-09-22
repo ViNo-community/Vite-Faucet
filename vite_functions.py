@@ -91,8 +91,27 @@ async def _send_vite(from_address, to_address, amount):
         if(amount >= balance):
             raise Exception(f"Insufficient funds. Balance: {balance} Amount requested: {amount}")
         # Call send_vite.js script
-        result = subprocess.run(['scripts/send_vite.js', to_address, str(amount)], capture_output=True, text=True).stdout
+        try:
+            res = subprocess.check_output(['scripts/send_vite.js', to_address, str(amount)], text=True)
+            print(f"Response: {res}")
+            return res
+        except subprocess.CalledProcessError:
+            print("That command didn't work, try again")
+        '''
+        result = subprocess.run(['scripts/send_vite.js', to_address, str(amount)], stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE, text=True)
+        stdout = result.stdout
+        stderr = result.stderr
+        print(f"stdout: {stdout} stderr: {stderr}")
+        if(stdout == None or stderr != None):
+            print("send_vite failed!!!")
+            raise Exception(f"send_vite.js failed: {stderr}")
+            return None
+        else:
+            print("send_vite success!!!")
+            return stdout
         return result
+        '''
     # os.system(f"scripts/send_vite.js {to_address} {amount}")
     except Exception as e:
         Common.logger.error(f"Error in _send_vite: {e}", exc_info=True)  
