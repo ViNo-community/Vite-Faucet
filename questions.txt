@@ -516,7 +516,7 @@ In which year was Bitcoin proposed/founded ?
 
 Who is Satoshi Nakamoto?
 Anonymous 
-Prof. Satoshi
+Elon Musk
 Craig White
 Bill Gates
 
@@ -526,35 +526,35 @@ Digital Currency
 Cryptocurrency
 De-centralized
 
-what best describes a blockchain
-a distributed ledger on a peer to peer network
-a centralized Database 
+What best describes a blockchain ?
+A distributed ledger on a peer to peer network
+A centralized database 
 An exchange 
-A type of Cryptocurrency
+A type of computer server
 
 What does P2P stand for ?
-Peer to Peer
-product to product
-password to password 
-private key to public key
+Peer-to-Peer
+Product-to-Product
+Player-to-Player
+Private-Key-to-Public-Key
 
 What is a crypto node ?
-a computer connected to a blockchain network 
-a blockchain server
-a type of cryptocurrency
-an exchange
+A computer connected to a blockchain network 
+A blockchain server
+A type of cryptocurrency
+An exchange
 
 What makes cryptocurrency secure?
-mathematics 
-hard-drives
-electronic banks
-insurance
+Mathematics 
+Faith
+Electronic Banks
+Insurance
 
 Where can you buy Cryptocurrencies?
 All listed options
 An Exchange
 Crypto ATM
-Peer to Peer transactions
+Peer to Peer Transactions
 
 What is the name of the famous Bitcoin exchange from Japan that collapsed in 2014?
 Mt. Gox
@@ -563,10 +563,10 @@ BitFlyer
 Bitconnect
 
 What does the block in the blockchain consist of?
-all of these 
-transaction data
-a hash point
-a timestamp
+All of these 
+Transaction data
+Hash
+Timestamp
 
 How many new bitcoins are created everyday ? 
 3600
@@ -587,10 +587,10 @@ What is the total supply of $VX coins in VIteX?
 21,000,000
 
 A great deal of financial theory is based on the concept of free markets and in particular the theory of:
-perfect competition
-monopolistic competition
-monopoly
-oligopoly
+Perfect Competition
+Monopolistic Competition
+Monopoly
+Oligopoly
 
 What will be value of $100 after two years, if the interest rate during this period is 5%?
 $110.25
@@ -599,25 +599,25 @@ $107.5
 $95
 
 Governments and corporations issue bonds to
-borrow money
-lend money
-both A and B
-none of these
+Borrow money
+Lend money
+Both A and B
+None of these
 
 Any economic resource that can produce economic value to the holder is called
-asset
-return
-maturity
-yield
+Asset
+Return
+Maturity
+Yield
 
 When forward contract is traded on an exchange, it is called
-future contract
-spot contract
-call option
-put option
+Future contract
+Spot contract
+Call option
+Put option
 
 Consider a world without scarcity of resources. Then what would be the consequences?
-All of the options
+All of these
 All prices would be zero
 Markets would be unnecessary
 Economics would no longer be a useful subject
@@ -629,28 +629,28 @@ Friedrich Hayek
 Milton Friedman
 
 The fundamental concept of Economics about resources is that the resources are
-scarce
-equally distributed
-unequally distributed
-unlimited
+Scarce
+Equally Distributed
+Unequally Distributed
+Unlimited
 
 The central role of markets is to determine the
-price of goods
-quality of goods
-quantity of goods
-level of income
+Price of Goods
+Quality of Goods
+Quantity of Goods
+Level of Income
 
 Taxes are used to discourage __________ of a commodity.
-consumption
-production
-saving
-inflation
+Consumption
+Production
+Saving
+Inflation
 
-What is a cryptocurrency blender?
-service that hides coin origins
-coin wallet attachment
-sweet art blog
-futurama character
+What is a cryptocurrency blender (also known as a mixer or tumbler) ?
+A service that hides coin origins
+Coin wallet attachment
+A sweet art blog
+Futurama character
 
 which digital currency came before bitcoin?
 All the options
@@ -688,7 +688,7 @@ Inductor
 Transistor
 Relay
 
-How many bits is a byte?
+How many bits are in a byte?
 8
 4
 16
@@ -720,9 +720,9 @@ Banks
 
 The functions of money includes:
 All of these options
-Value determination
-Store of value
-Means of exchange
+Value Determination
+Store of Value
+Means of Exchange
 
 "Money is what money does." Who said it ?
 Hartley Withers
@@ -732,7 +732,7 @@ Keynes
 
 Which one is included in the secondary function of money ?
 All of these
-To make Deferred Payments
+Deferred Payments
 Store of Value
 Transfer of Value
 
@@ -801,3 +801,21 @@ Unlimited
 134 Vite
 100,000 Vite
 100,000,000 Vite
+
+Blake2 is:
+A cryptographic hashing algorithms
+The hottest boy's name of 2021
+A token on the Vite network
+A collection of NFTs
+
+What makes Solidity++ different from Solidity?
+Solidity++ is asynchronouns 
+Solidity++ is object oriented
+Solidity++ has a garbage collector
+All of these 
+
+Which of the following is NOT a native type in Solidity?
+NFTs
+Boolean
+String
+Integer
