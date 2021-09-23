@@ -103,9 +103,9 @@ class BotCog(commands.Cog, name="Bot"):
             raise Exception(errorMsg, e)   
 
     # Start the bot
-    @commands.command(name='pending', help="Receive pending transactions [Admin Only]")
+    @commands.command(name='receive', aliases=['pending'], help="Receive pending transactions [Admin Only]")
     @commands.has_any_role('Core','Dev','VINO Team')
-    async def pending(self,ctx):
+    async def receive(self,ctx):
         try:
             # Call send_vite.js script
             command = ['node','scripts/pending_transactions.js']
@@ -117,7 +117,9 @@ class BotCog(commands.Cog, name="Bot"):
                 Common.log(message)  
             elif(res.returncode == 1):
                 e = res.stderr
-                Common.logger.error(f"Error receiving pending transactions {e}", exc_info=True) 
+                errorMsg = f"Error receiving pending transactions {e}. Please try again."
+                Common.logger.error(errorMsg, exc_info=True) 
+                await ctx.send(errorMsg)
         except Exception as e:
             errorMsg = f"Error in pending: {e}"
             Common.logger.error(errorMsg, exc_info=True)
