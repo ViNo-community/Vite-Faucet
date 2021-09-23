@@ -1,3 +1,4 @@
+import subprocess
 import discord
 from discord.ext import commands
 import dotenv
@@ -96,55 +97,32 @@ class BotCog(commands.Cog, name="Bot"):
             await ctx.send(f"Greylist duration must be a valid number")
             return
         except Exception as e:
-            Common.logger.error(f"Error in set_greylist {e}", exc_info=True)   
-            raise Exception(f"Exception in set_greylist", e)   
-    '''
-    @commands.command(name='set_token_reward', help='Set reward size for one correct answer [Admin Only]')
-    @commands.has_any_role('Core','Dev','VINO Team')
-    async def set_token_reward(self, ctx, param=""):
-        try:
-            new_token_amount = float(param)
-            if(new_token_amount < 0):
-                await ctx.send(f"Token reward must be positive")
-                return
-            if(new_token_amount >= self.bot.max_rewards_amount):
-                await ctx.send(f"Max_rewards amount must be greater than token_reward amount")
-                return
-            self.bot.token_amount = new_token_amount
-            # Save in .env file
-            dotenv.set_key(".env","token_amount", param)
-            Common.log(f"{ctx.message.author} set new token reward amount to \"{new_token_amount}\"")
-            await ctx.send(f"Token reward has been updated to {self.bot.token_amount}")
-        except ValueError:
-            await ctx.send(f"Token reward be a valid number")
-            return
-        except Exception as e:
-            Common.logger.error(f"Error in set_token_reward {e}", exc_info=True)   
-            raise Exception(f"Exception in set_token_reward", e)   
+            errorMsg = f"Error in set_greylist {e}"
+            Common.logger.error(errorMsg, exc_info=True)
+            await ctx.send(errorMsg)
+            raise Exception(errorMsg, e)   
 
-    @commands.command(name='set_max_reward', help='Set max rewards allowed per time period [Admin Only]')
+    # Start the bot
+    @commands.command(name='pending', help="Receive pending transactions [Admin Only]")
     @commands.has_any_role('Core','Dev','VINO Team')
-    async def set_max_reward(self, ctx, param=""):
+    async def pending(self,ctx):
         try:
-            amount = float(param)
-            if(amount < 0):
-                await ctx.send(f"Max rewards amount must be positive")
-                return
-            if(amount <= self.bot.token_amount):
-                await ctx.send(f"Max_rewards amount must be greater than token_reward amount")
-                return
-            self.bot.max_rewards_amount = amount
-            # Save in .env file
-            dotenv.set_key(".env","max_rewards_amount",param)
-            Common.log(f"{ctx.message.author} set new max rewards amount to \"{amount}\"")
-            await ctx.send(f"Max rewards amount has been updated to {self.bot.max_rewards_amount}")
-        except ValueError:
-            await ctx.send(f"Maximum reward amount must be a valid number")
-            return
+            # Call send_vite.js script
+            command = ['node','scripts/pending_transactions.js']
+            res = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            if(res.returncode == 0):
+                count = res.stdout.rstrip()
+                message = f"{count} pending transactions were received"
+                await ctx.send(message)
+                Common.log(message)  
+            elif(res.returncode == 1):
+                e = res.stderr
+                Common.logger.error(f"Error receiving pending transactions {e}", exc_info=True) 
         except Exception as e:
-            Common.logger.error(f"Error in set_max_reward {e}", exc_info=True)   
-            raise Exception(f"Exception in set_max_reward", e)   
-    '''
+            errorMsg = f"Error in pending: {e}"
+            Common.logger.error(errorMsg, exc_info=True)
+            await ctx.send(errorMsg)
+            raise Exception(errorMsg, e)   
 
     # Start the bot
     @commands.command(name='start', help="Start the bot [Admin Only]")

@@ -8,6 +8,7 @@ const config = require("./config.json")
 const BigNumber = require("bignumber.js").default
 
 const url = new URL(config.VITE_NODE)
+let blocksSent = 0
 
 // Set up Vite API (either WS or HTTP)
 const provider = /^wss?:$/.test(url.protocol) ? 
@@ -48,6 +49,7 @@ const ViteAPI = new vite.ViteAPI(provider, async () => {
     try{
         // Receive pending transactions for this address
         await receivePendingTx(address)
+        console.log(blocksSent)
         process.exit(0)
     } catch(err) {
         console.error(err)
@@ -58,13 +60,13 @@ const ViteAPI = new vite.ViteAPI(provider, async () => {
 
 async function receivePendingTx(address) {
     try {
-        console.log("Looking for pending transactions for" + address.address)
+        //console.log("Looking for pending transactions for" + address.address)
         // Grab RECEIVE_PER_ROUND blocks of pending transactions for address
         const RECEIVE_PER_ROUND = 10;
         let blocks = await ViteAPI.request('ledger_getUnreceivedBlocksByAddress', address.address, 0, RECEIVE_PER_ROUND);
         // Loop thru blocks in unreceived blocks by address
         // And receive them by hash
-        console.log(blocks.length + " transactions found for " + address.address)
+        //console.log(blocks.length + " transactions found for " + address.address)
         for (let i =0; i < blocks.length; i++) {
             let block = blocks[i];
             // Receive transaction with that hash
@@ -86,22 +88,23 @@ async function receivePendingTx(address) {
 async function receiveTx(address, sendBlockHash ) {
     try {
         // Create a receive account block with the sendblockhash
-        console.log("Creating account block with sendblockhas of " + sendBlockHash )
+        //console.log("Creating account block with sendblockhash of " + sendBlockHash )
         const accountBlock = vite.accountBlock.createAccountBlock("receive", {
             address: address.address,
             sendBlockHash: sendBlockHash
         })
         // Set vite client and private key
-        accountBlock.setProvider(ViteAPI).setPrivateKey(address.privateKey)
+        accountBlock.setProvider(ViteAPI).setPrivateKey(address.privateKey);
         // Auto-fill previous hash and block height
         await accountBlock.autoSetPreviousAccountBlock();
         // Sign and send it
         let result = await accountBlock.sign().send();
-        console.log(JSON.stringify(result, null, 4));
+        //console.log(JSON.stringify(result, null, 4));
+        blocksSent++;
         return result;
     } catch(e) {
         // Log error and exit with status 1
-        console.error("Error in receivePendingTx: " + e)
+        console.error("Error in receivePendingTx: " + e.message)
         console.trace()
         process.exit(1)
     }
