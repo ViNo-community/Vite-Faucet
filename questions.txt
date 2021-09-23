@@ -646,12 +646,6 @@ production
 saving
 inflation
 
-0.003 × 0.02 = ?
-0.00006
-0.006
-0.0006
-0.06
-
 What is a cryptocurrency blender?
 service that hides coin origins
 coin wallet attachment
