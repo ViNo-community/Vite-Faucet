@@ -112,7 +112,7 @@ async def send_transaction(from_address, to_address, amount):
         if(amount >= balance):
             raise Exception(f"Insufficient funds. Balance: {balance} Amount requested: {amount}")
         # Call send_vite.js script
-        command = ['scripts/send_vite.js', to_address, str(amount)]
+        command = ['node','scripts/send_vite.js', to_address, str(amount)]
         res = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         while(res.returncode == 1 and retries < RETRY_AMOUNT):
             res = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) 
