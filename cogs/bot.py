@@ -159,17 +159,7 @@ class BotCog(commands.Cog, name="Bot"):
     async def stop(self,ctx):
         self.bot.disabled = True     
         await ctx.send(f"Trivia game has been disabled") 
-
-    @commands.command(name='invite', help="Displays invite link [Admin Only]")
-    @commands.has_any_role('Core','Dev','VINO Team')
-    async def invite(self,ctx):
-        try:
-            client_id = self.bot.get_client_id()
-            response = f"Open a browser and go to https://discord.com/oauth2/authorize?client_id={client_id}&permissions=247872&scope=bot"
-            await ctx.message.author.send(response)
-        except Exception as e:
-            raise Exception("Exception generating invite link", e)   
-
+ 
 # Plug-in function to add cog
 def setup(bot):
     bot.add_cog(BotCog(bot))

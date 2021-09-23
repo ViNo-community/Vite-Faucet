@@ -25,7 +25,6 @@ class ViteFaucetBot(commands.Bot):
     initialized = False
     online = True
     discord_token = ""
-    client_id = ""
     rpc_url = ""
     logging_level = 0
     greylist_duration = 0.0
@@ -59,7 +58,6 @@ class ViteFaucetBot(commands.Bot):
         self.faucet_address = os.getenv('faucet_address')
         self.logging_level = os.getenv("logging_level")
         self.discord_token = os.getenv('discord_token')
-        self.client_id = os.getenv('client_id')
         self.greylist_duration = float(os.getenv('greylist_duration') or 0.0)
         self.answer_timeout = float(os.getenv('answer_timeout') or 20.0)
         self.token_amount = float(os.getenv('token_amount'))
@@ -185,9 +183,6 @@ class ViteFaucetBot(commands.Bot):
         print("Bot disconnected")
         # Log successful connection
         Common.log_error(f"{self.user.name} disconnected.")  
-
-    def get_client_id(self):
-        return self.client_id 
 
     # Helper function to send tokens to the address
     async def send_vite(self,account_name,vite_address,amount):
