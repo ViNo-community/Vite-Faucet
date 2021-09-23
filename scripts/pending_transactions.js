@@ -7,48 +7,72 @@ const WS_RPC = require("@vite/vitejs-ws").default
 const config = require("./config.json")
 const BigNumber = require("bignumber.js").default
 
-// Set up Vite API client
-const httpProvider = new HTTP_RPC(config.VITE_NODE);
-var viteClient = new vite.ViteAPI(httpProvider, () => {
-    console.log('Vite client successfully connected: ');
-});
+const url = new URL(config.VITE_NODE)
 
-try{
-    // Create wallet address from private key credentials in config.json
-    let address =  vite.wallet.createAddressByPrivateKey(config.VITE_LOGIN.credentials)
-    console.log("Using address " + address.address)
-    // Receive pending transactions for this address
-    receivePendingTx(address)
-    // Exit with status 0 - success
-    process.exit(0)
-} catch(e) {
-    // Log error and exit with status 1
-    console.error("Error: " + e)
-    console.trace()
-    process.exit(1)
-}
+// Set up Vite API (either WS or HTTP)
+const provider = /^wss?:$/.test(url.protocol) ? 
+    new WS_RPC(config.VITE_NODE, 6e5, {
+        protocol: "",
+        headers: "",
+        clientConfig: "",
+        retryTimes: Infinity,
+        retryInterval: 10000
+    }) : /^https?:$/.test(url.protocol) ? 
+    new HTTP_RPC(config.VITE_NODE) :
+    new Error("Invalid node url: "+config.VITE_NODE)
+if(provider instanceof Error)throw provider
+
+const ViteAPI = new vite.ViteAPI(provider, async () => {
+    let address
+    switch(config.VITE_LOGIN.type){
+        case "mnemonic": {
+            config.VITE_LOGIN.type = "seed"
+            config.VITE_LOGIN.credentials = vite.wallet.getSeedFromMnemonics(config.VITE_LOGIN.credentials).seedHex
+        }
+        case "seed": {
+            config.VITE_LOGIN.type = "private_key"
+            config.VITE_LOGIN.credentials = vite.wallet.deriveKeyPairByIndex(config.VITE_LOGIN.credentials, config.VITE_LOGIN.index).privateKey
+            config.VITE_LOGIN.index = 0
+        }
+        case "private_key": {
+            if(config.VITE_LOGIN.index !== 0)throw new Error("Invalid index with private key: "+config.VITE_LOGIN.index)
+            address = vite.wallet.createAddressByPrivateKey(config.VITE_LOGIN.credentials)
+            break
+        }
+        default: {
+            throw new Error("Invalid configuration for VITE_LOGIN")
+        }
+    }
+    await new Promise((r) => setImmediate(r))
+
+    try{
+        // Receive pending transactions for this address
+        await receivePendingTx(address)
+        process.exit(0)
+    } catch(err) {
+        console.error(err)
+        process.exit(1)
+    }
+})
+
 
 async function receivePendingTx(address) {
     try {
-        console.log("In receivePendingTx for " + address.address)
-        const accountBlock = await viteClient.request('ledger_getLatestAccountBlock', address);
-        console.log(accountBlock)
-        let blocks2 = await viteClient.request('ledger_getUnreceivedBlocksByAddress', address.address, 0, RECEIVE_PER_ROUND);
-
+        console.log("Looking for pending transactions for" + address.address)
+        // Grab RECEIVE_PER_ROUND blocks of pending transactions for address
         const RECEIVE_PER_ROUND = 10;
-        let blocks = await viteClient.request('ledger_getUnreceivedBlocksByAddress', address.address, 0, RECEIVE_PER_ROUND);
-        console.log("After")
+        let blocks = await ViteAPI.request('ledger_getUnreceivedBlocksByAddress', address.address, 0, RECEIVE_PER_ROUND);
         // Loop thru blocks in unreceived blocks by address
         // And receive them by hash
         console.log(blocks.length + " transactions found for " + address.address)
         for (let i =0; i < blocks.length; i++) {
             let block = blocks[i];
-            // Receive 
+            // Receive transaction with that hash
             await receiveTx(address, block.hash);
         }
         // Recursively call until no more pending transactions
         if (blocks.length >= RECEIVE_PER_ROUND) {
-            await receivePendingTx(viteClient, address);
+            await receivePendingTx(ViteAPI, address);
         }
     } catch(e) {
         // Log error and exit with status 1
@@ -59,14 +83,14 @@ async function receivePendingTx(address) {
     
 }
 
-async function receiveTx(address, { sendBlockHash }) {
+async function receiveTx(address, sendBlockHash ) {
     try {
         // Create a receive account block with the sendblockhash
+        console.log("Creating account block with sendblockhas of " + sendBlockHash )
         const accountBlock = vite.accountBlock.createAccountBlock("receive", {
             address: address.address,
             sendBlockHash: sendBlockHash
         })
-        console.log("Receive transaction " + sendBlockHash)
         // Set vite client and private key
         accountBlock.setProvider(ViteAPI).setPrivateKey(address.privateKey)
         // Auto-fill previous hash and block height
