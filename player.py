@@ -13,6 +13,7 @@ class Player:
     # Number of questions answered correctly
     right_answers = 0
     total_answers = 0
+    score = 0
     # Number of points
     points = 0
     # Balance of the account
@@ -91,9 +92,13 @@ class Player:
         self.total_answers = self.total_answers + 1
         # Add points
         self.points = self.points + POINTS_PER_ANSWER
+        # Record score
+        self.score = self.get_score()
     # Add a wrong answer to the score
     def add_loss(self):
         self.total_answers = self.total_answers + 1
+        # Record score
+        self.score = self.get_score()
 
     # Get number of correct answers
     def get_right_answers(self):

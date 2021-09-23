@@ -307,7 +307,7 @@ class GameCog(commands.Cog, name="Game"):
             score_string = ""
             i = 0
             # Generate the data strings from player score data 
-            for player_name, player in sorted(self.bot.player_data.items(), key=lambda x: x[1].points, reverse = True):
+            for player_name, player in sorted(self.bot.player_data.items(), key=lambda x: (x[1].points,x[1].score), reverse = True):
                 my_player_data = self.bot.player_data[player_name]
                 # Show trophy emojis
                 if(i == 0):
