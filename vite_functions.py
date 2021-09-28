@@ -62,8 +62,14 @@ async def get_account_balance(address):
             raise Exception(f"Error grabbing account balance: {response}")
         # Get balance for VITE from balanceInfoMap
         result = response['result']  
+        if(result is None):
+            raise Exception("Null response for response['result']")
         balanceInfo = result['balanceInfoMap']   
+        if(balanceInfo is None):
+            raise Exception("Null response for result['balanceInfoMap']")
         viteInfo = balanceInfo[token_id]
+        if(viteInfo is None):
+            raise Exception("Null response for balanceInfo[token_id]")
         balance = float(viteInfo['balance'])
         # Convert from raw to Vite
         return Common.rawToVite(balance)

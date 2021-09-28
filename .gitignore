@@ -10,3 +10,4 @@ transactions/*
 *.db
 config.json
 node_modules
+score_data.txt

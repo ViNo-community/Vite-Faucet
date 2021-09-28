@@ -221,6 +221,25 @@ class ViteFaucetBot(commands.Bot):
             print(f"Error in send_vite {ex}")
             raise ex
 
+    # Save score data to a text file
+    async def save_player_data(self):
+        try:
+            # Open score_data.txt to save score data
+            with open('score_data.txt', 'w') as score_data_file:
+                # Loop thru player data
+                for player_name, player in self.player_data.items():
+                    # Grab data for this player
+                    p = self.player_data[player_name]
+                    # Write <name>,<points>,<right answers>,<total answers>,<wallet address>
+                    saveStr = f"{p.get_name()},{p.get_points()},{p.get_right_answers()},{p.get_total_answers()},{p.get_wallet_address()}\n"
+                    score_data_file.write(saveStr)
+                    # Dump object to file
+                   # pickle.dump(p, score_data_file)
+                Common.log(f"Saved player data")    
+        except Exception as e:
+            errorMsg = f"Error saving player data"
+            Common.logger.error(f"{errorMsg}: {e}", exc_info=True)   
+
 if __name__=='__main__':
     # Initiate Discord bot
     try:

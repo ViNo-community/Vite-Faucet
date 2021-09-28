@@ -120,7 +120,7 @@ class GameCog(commands.Cog, name="Game"):
             Common.logger.error(f"Error withdrawing funds: {e}", exc_info=True)   
             raise Exception(f"Exception with withdrawal to {vite_address}", e)   
 
-    @commands.command(name='play', help="Play the trivia game.")
+    @commands.command(name='play', alias=['p'], help="Play the trivia game.")
     async def play(self, ctx):
 
         # Check if bot is disabled
@@ -225,6 +225,8 @@ class GameCog(commands.Cog, name="Game"):
                 if(correct):
                     # Record win
                     my_player_data.add_win()
+                    # Save player data
+                    await self.bot.save_player_data()
                     # Add reward amount to balance
                     my_player_data.add_balance(self.bot.token_amount)
                     day_limit = my_player_data.get_daily_limit()
@@ -247,6 +249,8 @@ class GameCog(commands.Cog, name="Game"):
                 else:
                     # Record loss
                     my_player_data.add_loss()
+                    # Save player data
+                    await self.bot.save_player_data()
                     await ctx.message.author.send(f"I'm sorry, that answer was wrong. The correct " + 
                         f"answer was \"{correct_answer}\"")
             except asyncio.TimeoutError:
