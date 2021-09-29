@@ -4,6 +4,7 @@ from common import Common
 from question import Question
 import traceback
 import sys
+import csv
 
 # Import the os,time,random module.
 import os
@@ -239,6 +240,24 @@ class ViteFaucetBot(commands.Bot):
         except Exception as e:
             errorMsg = f"Error saving player data"
             Common.logger.error(f"{errorMsg}: {e}", exc_info=True)   
+
+    # Load score data from text file
+    async def load_player_data(self):
+        try:
+            # Open score_data.txt to load score data
+            with open('score_data.txt', 'r') as score_data_file:
+                reader = csv.DictReader(score_data_file)
+                # Go thru line by line
+                for row in reader:
+                    print(row['first_name'], row['last_name'])
+                # Read line by line
+                for line in score_data_file:
+                    # Parse info out of line
+                    Common.log(f"Loading play data from {line}")
+                      
+        except Exception as e:
+            errorMsg = f"Error saving player data"
+            Common.logger.error(f"{errorMsg}: {e}", exc_info=True)          
 
 if __name__=='__main__':
     # Initiate Discord bot
