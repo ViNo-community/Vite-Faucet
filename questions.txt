@@ -819,3 +819,27 @@ NFTs
 Boolean
 String
 Integer
+
+What does it mean for a node to synchronize ? 
+To fully download the complete ledger at current block height
+When it has mismatched data from its peers
+To be able to play a killer drum solo
+To be able to identify fake nodes 
+
+What is quadratic voting? 
+A voting prcoess where voters vote to express the degree of their preferences, rather than just the direction of their preferences.
+A voting process where election results are determined through quadratic regression.
+A voting process where you can only vote if you remember the quadratic formula. 
+A voting process where every vote you cast has only 1/4th of the weight of your previous vote. 
+
+ViteX supports all of the following mining methods EXCEPT:
+steak mining
+stake mining
+trade mining
+liquidity mining
+
+What is an example of arbitrage?
+Profitting off the price difference when Exchange A is selling X at 0.50, and Exchange B is selling X at 0.52. 
+Finding ways to sue crypto companies by using arbitrary legal definitions. 
+Borrowing money against their current funds to trade cryptocurrency “on margin” on an exchange. 
+Gaining revenue by providing liquidity to liquidity pools. 
