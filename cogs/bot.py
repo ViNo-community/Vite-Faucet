@@ -51,7 +51,7 @@ class BotCog(commands.Cog, name="Bot"):
             # Show account balances as embed
             embed=discord.Embed(title="Account Balance", color=showColor)
             embed.add_field(name="Balance", value=f"{balance:,.2f}", inline=True)
-            embed.add_field(name="Pending Balance", value=f"{pending:,.2f}", inline=True)
+            embed.add_field(name="Available Balance", value=f"{pending:,.2f}", inline=True)
             embed.add_field(name="Low Balance Alert", value=f"{self.bot.low_balance_alert:,.2f}", inline=True)
             await ctx.send(embed=embed)
         except Exception as e:
