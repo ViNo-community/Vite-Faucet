@@ -322,6 +322,8 @@ class GameCog(commands.Cog, name="Game"):
                 name_string = name_string + f"{my_player_data.get_name()}\n"
                 points_string = points_string + f"{my_player_data.get_points()}\n"
                 score_string = score_string + f"{str(round(my_player_data.get_score(),2))}%\n"
+                # Only show top 25 players
+                if(i >= 25): break
             # Construct the table
             embed=discord.Embed(title="Scoreboard", color=discord.Color.dark_blue())
             embed.add_field(name="Name", value=name_string, inline=True)
