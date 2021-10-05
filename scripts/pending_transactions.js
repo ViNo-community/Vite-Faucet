@@ -78,7 +78,7 @@ async function receivePendingTx(address) {
         }
     } catch(e) {
         // Log error and exit with status 1
-        console.error("Error in receivePendingTx: " + e)
+        console.error("Error in receivePendingTx: ", e)
         console.trace()
         process.exit(1)
     }
@@ -104,7 +104,7 @@ async function receiveTx(address, sendBlockHash ) {
         return result;
     } catch(e) {
         // Log error and exit with status 1
-        console.error("Error in receivePendingTx: " + e)
+        console.error("Error in receivePendingTx: ", e)
         console.trace()
         process.exit(1)
     }
