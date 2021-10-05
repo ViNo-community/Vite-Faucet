@@ -37,6 +37,8 @@ class ViteFaucetBot(commands.Bot):
     command_prefix = "!"
     permission = 0
     timeout = 5.0
+    # statistics
+    total_distributed = 0.0
     # Disabled or not
     disabled = False
     # List of questions

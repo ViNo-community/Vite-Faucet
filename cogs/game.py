@@ -54,7 +54,7 @@ class GameCog(commands.Cog, name="Game"):
             Common.logger.error(f"Error showing scoreboard: {e}", exc_info=True)   
             raise Exception("Exception showing score", e)       
 
-    @commands.command(name='withdraw', help="Withdraw your balance to an external vite wallet.")
+    @commands.command(name='withdraw', aliases=['w'], help="Withdraw your balance to an external vite wallet.")
     async def deposit(self, ctx, vite_address=""):
         # Check the bot is not disabled
         if(self.bot.disabled):
@@ -114,7 +114,10 @@ class GameCog(commands.Cog, name="Game"):
                 # Grab wallet address of user for future reference
                 my_player_data.set_wallet_address(vite_address)
                 # Alert user of successful withdraw
-                await ctx.send(f"You have successfully sent {send_balance} tokens to {vite_address}: {hash}")
+                await ctx.send(f"You have successfully sent {send_balance} tokens to {vite_address} : {hash}")
+                # Increment total amount of vite distributed counter
+                self.bot.total_distributed = self.bot.total_distributed + send_balance
+                # Increment sent balance in player data
                 my_player_data.add_sent_balance(send_balance)
         except Exception as e:
             Common.logger.error(f"Error withdrawing funds: {e}", exc_info=True)   
@@ -138,7 +141,7 @@ class GameCog(commands.Cog, name="Game"):
             return
         # Check if balance is below low balance alert
         elif(balance <= self.bot.low_balance_alert):
-            message = f"Faucet balance {balance:,.4f} is below low balance alert {self.bot.low_balance_alert:,.4f}"
+            message = f"Faucet balance {balance:,.2f} is below low balance alert {self.bot.low_balance_alert:,.2f}"
             Common.log(message)
             # Temporarily disable game
             self.bot.disabled = True    
@@ -171,7 +174,7 @@ class GameCog(commands.Cog, name="Game"):
                     # If greylist is still in future
                     Common.log(f"Greylist is in future : {my_player_data.get_greylist()}")
                     minutes_left = (my_player_data.get_greylist() - time.time()) / 60.0
-                    response = f" You are greylisted for another {minutes_left:.4f} minutes."
+                    response = f" You are greylisted for another {minutes_left:.2f} minutes."
                     await ctx.send(response)
                     return
                 else:
@@ -241,7 +244,7 @@ class GameCog(commands.Cog, name="Game"):
                             # Greylist. Record future time greylist_timeout minutes in the future
                             my_player_data.set_greylist(self.bot.greylist_duration)
                             minutes_left = (my_player_data.get_greylist() - time.time()) / 60.0
-                            response = response + f" You have been added to the greylist for a period of {minutes_left:.4f} minutes."
+                            response = response + f" You have been added to the greylist for a period of {minutes_left:.2f} minutes."
                             await ctx.message.author.send(response)
                             return
                 else:

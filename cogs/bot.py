@@ -33,22 +33,44 @@ class BotCog(commands.Cog, name="Bot"):
             raise Exception(f"Could not change command prefix to \"{new_prefix}\"", e)  
 
     # Shows all current bot settings
-    @commands.command(name='balance', aliases=['bal'], help="Show the current faucet account balance")
-    @commands.has_any_role('Core','Dev','VINO Team')
+    @commands.command(name='balance', aliases=['bal','balances','b'], help="Show the current faucet account balance")
     async def balance(self,ctx):
         try:
-            withdraw_total = 0
+            pending_transactions = 0.0
+            # Grab current balance
             balance = await get_account_balance(self.bot.faucet_address)
-            pending = balance - withdraw_total
-            quota = await get_account_quota(self.bot.faucet_address)
+            # Sum all unsent balances
+            for player_name, player in self.bot.player_data.items():
+                my_player_data = self.bot.player_data[player_name]
+                pending_transactions = pending_transactions + my_player_data.get_unsent_balance()
+            # Calculate balance minus pending withdrawals
+            pending = balance - pending_transactions
             # If disabled, show in Red. If enabled, show in Green
             showColor = discord.Color.green()
             if(self.bot.disabled): showColor = discord.Color.red()
             # Show account balances as embed
             embed=discord.Embed(title="Account Balance", color=showColor)
             embed.add_field(name="Balance", value=f"{balance:,.2f}", inline=True)
-            embed.add_field(name="Pending Balance ", value=f"{balance:,.2f}", inline=True)
+            embed.add_field(name="Pending Balance", value=f"{pending:,.2f}", inline=True)
             embed.add_field(name="Low Balance Alert", value=f"{self.bot.low_balance_alert:,.2f}", inline=True)
+            await ctx.send(embed=embed)
+        except Exception as e:
+            traceback.print_exc()
+            raise Exception("Exception showing info summary", e)   
+
+    # Shows faucet statistics
+    @commands.command(name='statistics', aliases=['stat','stats'], help="Show faucet statistics")
+    async def statistics(self,ctx):
+        try:
+            lusers = len(self.bot.player_data)
+            distributed = self.bot.total_distributed
+            # If disabled, show in Red. If enabled, show in Green
+            showColor = discord.Color.green()
+            if(self.bot.disabled): showColor = discord.Color.red()
+            # Show account balances as embed
+            embed=discord.Embed(title="Faucet Statistics", color=showColor)
+            embed.add_field(name="Number of Users", value=lusers, inline=True)
+            embed.add_field(name="Vite Distributed in Total", value=f"{distributed:,.2f}", inline=True)
             await ctx.send(embed=embed)
         except Exception as e:
             traceback.print_exc()
@@ -56,7 +78,6 @@ class BotCog(commands.Cog, name="Bot"):
 
     # Shows all current bot settings
     @commands.command(name='show_config', aliases=['config','botconfig','bot_config'], help="Show the current bot config")
-    @commands.has_any_role('Core','Dev','VINO Team')
     async def show_config(self,ctx):
         try:
             balance = await get_account_balance(self.bot.faucet_address)
@@ -70,9 +91,9 @@ class BotCog(commands.Cog, name="Bot"):
             embed.add_field(name="Command Prefix", value=self.bot.command_prefix, inline=True)
             embed.add_field(name="RPC URL", value=self.bot.rpc_url, inline=True)
             embed.add_field(name="Faucet Address", value=self.bot.faucet_address, inline=True)
-            embed.add_field(name="Faucet Balance", value=f"{balance:,.4f}", inline=True)
+            embed.add_field(name="Faucet Balance", value=f"{balance:,.2f}", inline=True)
             embed.add_field(name="Faucet Quota", value=f"{quota} UT", inline=True)
-            embed.add_field(name="Low Balance Alert", value=f"{self.bot.low_balance_alert:,.4f}", inline=True)
+            embed.add_field(name="Low Balance Alert", value=f"{self.bot.low_balance_alert:,.2f}", inline=True)
             embed.add_field(name="Token Type ID (TTI)", value=self.bot.token_id, inline=True)
             embed.add_field(name="Token Reward per Correct Answer", value=self.bot.token_amount, inline=True)
             embed.add_field(name="Max Rewards per Quiz Period", value=self.bot.max_rewards_amount, inline=True)
