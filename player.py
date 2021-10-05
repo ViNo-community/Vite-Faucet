@@ -123,7 +123,10 @@ class Player:
             greylist_string = "Not Set"
         else:
             minutes_left = (self.greylist - time.time()) / 60.0
-            greylist_string = f"{minutes_left:.4f} minutes left."
+            if(minutes_left <= 0):
+                greylist_string = "Not Set"
+            else:
+                greylist_string = f"{minutes_left:.4f} minutes left."
         return greylist_string
     # Set greylist to minutes minutes in the future
     def set_greylist(self,minutes):
