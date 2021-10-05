@@ -33,6 +33,28 @@ class BotCog(commands.Cog, name="Bot"):
             raise Exception(f"Could not change command prefix to \"{new_prefix}\"", e)  
 
     # Shows all current bot settings
+    @commands.command(name='balance', aliases=['bal'], help="Show the current faucet account balance")
+    @commands.has_any_role('Core','Dev','VINO Team')
+    async def balance(self,ctx):
+        try:
+            withdraw_total = 0
+            balance = await get_account_balance(self.bot.faucet_address)
+            pending = balance - withdraw_total
+            quota = await get_account_quota(self.bot.faucet_address)
+            # If disabled, show in Red. If enabled, show in Green
+            showColor = discord.Color.green()
+            if(self.bot.disabled): showColor = discord.Color.red()
+            # Show account balances as embed
+            embed=discord.Embed(title="Account Balance", color=showColor)
+            embed.add_field(name="Balance", value=f"{balance:,.2f}", inline=True)
+            embed.add_field(name="Pending Balance ", value=f"{balance:,.2f}", inline=True)
+            embed.add_field(name="Low Balance Alert", value=f"{self.bot.low_balance_alert:,.2f}", inline=True)
+            await ctx.send(embed=embed)
+        except Exception as e:
+            traceback.print_exc()
+            raise Exception("Exception showing info summary", e)   
+
+    # Shows all current bot settings
     @commands.command(name='show_config', aliases=['config','botconfig','bot_config'], help="Show the current bot config")
     @commands.has_any_role('Core','Dev','VINO Team')
     async def show_config(self,ctx):
