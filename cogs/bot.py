@@ -123,6 +123,7 @@ class BotCog(commands.Cog, name="Bot"):
         except Exception as e:
             raise Exception(f"Could not change logging level to {new_logging_level}", e)    
 
+    # Set the greylist duration period [Admin Only]
     @commands.command(name='set_greylist', help='Set greylist time period in minutes [Admin Only]')
     @commands.has_any_role('Core','Dev','VINO Team')
     async def set_greylist(self, ctx, param=""):
@@ -168,6 +169,75 @@ class BotCog(commands.Cog, name="Bot"):
             Common.logger.error(errorMsg, exc_info=True)
             await ctx.send(errorMsg)
             raise Exception(errorMsg, e)   
+
+    # Set reward amount per correct answer (Admin only)
+    @commands.command(name='set_token_reward', help='Set reward size for one correct answer [Admin Only]')
+    @commands.has_any_role('Core','Dev','VINO Team')
+    async def set_token_reward(self, ctx, param=""):
+        try:
+            new_token_amount = float(param)
+            if(new_token_amount < 0):
+                await ctx.send(f"Token reward must be positive")
+                return
+            if(new_token_amount >= self.bot.max_rewards_amount):
+                await ctx.send(f"Max_rewards amount must be greater than token_reward amount")
+                return
+            self.bot.token_amount = new_token_amount
+            # Save in .env file
+            dotenv.set_key(".env","token_amount", param)
+            Common.log(f"{ctx.message.author} set new token reward amount to \"{new_token_amount}\"")
+            await ctx.send(f"Token reward has been updated to {self.bot.token_amount}")
+        except ValueError:
+            await ctx.send(f"Token reward be a valid number")
+            return
+        except Exception as e:
+            Common.logger.error(f"Error in set_token_reward {e}", exc_info=True)   
+            raise Exception(f"Exception in set_token_reward", e)   
+
+    # Set max reward amount per greylist period (Admin only)
+    @commands.command(name='set_max_reward', help='Set max rewards allowed per time period [Admin Only]')
+    @commands.has_any_role('Core','Dev','VINO Team')
+    async def set_max_reward(self, ctx, param=""):
+        try:
+            amount = float(param)
+            if(amount < 0):
+                await ctx.send(f"Max rewards amount must be positive")
+                return
+            if(amount <= self.bot.token_amount):
+                await ctx.send(f"Max_rewards amount must be greater than token_reward amount")
+                return
+            self.bot.max_rewards_amount = amount
+            # Save in .env file
+            dotenv.set_key(".env","max_rewards_amount",param)
+            Common.log(f"{ctx.message.author} set new max rewards amount to \"{amount}\"")
+            await ctx.send(f"Max rewards amount has been updated to {self.bot.max_rewards_amount}")
+        except ValueError:
+            await ctx.send(f"Maximum reward amount must be a valid number")
+            return
+        except Exception as e:
+            Common.logger.error(f"Error in set_max_reward {e}", exc_info=True)   
+            raise Exception(f"Exception in set_max_reward", e)   
+
+    # Set low balance alert amount per greylist period (Admin only)
+    @commands.command(name='set_low_balance_alert', help='Set low balance alert amount [Admin Only]')
+    @commands.has_any_role('Core','Dev','VINO Team')
+    async def set_low_balance_alert(self, ctx, param=""):
+        try:
+            amount = float(param)
+            if(amount < 0):
+                await ctx.send(f"Low balance alert amount must be positive")
+                return
+            self.bot.low_balance_alert = amount
+            # Save in .env file
+            dotenv.set_key(".env","low_balance_alert",param)
+            Common.log(f"{ctx.message.author} set new low balance alert amount to \"{amount}\"")
+            await ctx.send(f"Low balance alert amount has been updated to {self.bot.low_balance_alert}")
+        except ValueError:
+            await ctx.send(f"Low balance alert amount must be a valid number")
+            return
+        except Exception as e:
+            Common.logger.error(f"Error in set_low_balance_alert {e}", exc_info=True)   
+            raise Exception(f"Exception in set_low_balance_alert", e)   
 
     # Start the bot
     @commands.command(name='start', help="Start the bot [Admin Only]")
