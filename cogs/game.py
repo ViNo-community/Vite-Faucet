@@ -120,7 +120,7 @@ class GameCog(commands.Cog, name="Game"):
             Common.logger.error(f"Error withdrawing funds: {e}", exc_info=True)   
             raise Exception(f"Exception with withdrawal to {vite_address}", e)   
 
-    @commands.command(name='play', help="Play the trivia game.")
+    @commands.command(name='play', aliases=['p'], help="Play the trivia game.")
     async def play(self, ctx):
 
         # Check if bot is disabled
