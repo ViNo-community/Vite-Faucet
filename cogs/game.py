@@ -315,13 +315,11 @@ class GameCog(commands.Cog, name="Game"):
                 # Show trophy emojis
                 if(i == 0):
                     name_string = name_string + ":first_place:"
-                    i = i + 1
                 elif(i == 1):
                     name_string = name_string + ":second_place:"
-                    i = i + 1
                 elif(i == 2):
                     name_string = name_string + ":third_place:"
-                    i = i + 1
+                i = i + 1
                 name_string = name_string + f"{my_player_data.get_name()}\n"
                 points_string = points_string + f"{my_player_data.get_points()}\n"
                 score_string = score_string + f"{str(round(my_player_data.get_score(),2))}%\n"
