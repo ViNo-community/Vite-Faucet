@@ -95,8 +95,23 @@ async function receiveTx(address, sendBlockHash ) {
         })
         // Set vite client and private key
         accountBlock.setProvider(ViteAPI).setPrivateKey(address.privateKey);
-        // Auto-fill previous hash and block height
-        await accountBlock.autoSetPreviousAccountBlock();
+        // Find out how much quota is needed
+        const [quota,difficulty] = await Promise.all([
+            ViteAPI.request("contract_getQuotaByAccount", address.address),
+            accountBlock.autoSetPreviousAccountBlock()
+            .then(() => ViteAPI.request("ledger_getPoWDifficulty", {
+                address: accountBlock.address,
+                previousHash: accountBlock.previousHash,
+                blockType: accountBlock.blockType,
+                toAddress: accountBlock.toAddress,
+                data: accountBlock.data
+            }))
+        ])
+        // Set up PoW if needed
+        const availableQuota = new BigNumber(quota.currentQuota)
+        if(availableQuota.isLessThan(difficulty.requiredQuota)){
+            await accountBlock.PoW(difficulty.difficulty)
+        }
         // Sign and send it
         let result = await accountBlock.sign().send();
         //console.log(JSON.stringify(result, null, 4));
