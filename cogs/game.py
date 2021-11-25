@@ -138,7 +138,7 @@ class GameCog(commands.Cog, name="Game"):
                 my_player_data = self.bot.player_data[player_name]
                 wallet_address = my_player_data.wallet_address
                 # Check if this vite address already exists in our dictionary
-                if(wallets.has_key(wallet_address)):
+                if(wallet_address in wallets):
                     # Name and shame
                     alt = wallets[wallet_address]
                     msg = f"Duplicate address detected {wallet_address} : {alt} and {player_name}"
