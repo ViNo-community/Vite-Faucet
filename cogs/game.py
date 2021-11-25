@@ -79,6 +79,7 @@ class GameCog(commands.Cog, name="Game"):
             return
 
         # Check that vite_address is not blank
+        vite_address = vite_address.replace('@','@\u200b')
         if(vite_address == ""):
             # See if a wallet address is saved in our player data
             if(my_player_data.get_wallet_address() != ""):
@@ -126,7 +127,7 @@ class GameCog(commands.Cog, name="Game"):
     # Scans player data for duplicate vite addresses
     @commands.command(name='alts', aliases=['find_alts'], help="Scans for alt accounts using the same wallet addresses.")
     @commands.has_any_role('Core','Dev','VINO Team')
-    async def alts(self, ctx, vite_address=""):
+    async def alts(self, ctx):
 
         try:
             # Create <vite address> -> <user name> mapping
@@ -300,6 +301,7 @@ class GameCog(commands.Cog, name="Game"):
     @commands.has_any_role('Core','Dev','VINO Team')
     async def export(self, ctx, date=""):
         try:
+            date = date.replace('@','@\u200b') # Kaffin-proof user input
              # If no date provided use todays date
             if(date == ""):
                 # Grab current transactions file

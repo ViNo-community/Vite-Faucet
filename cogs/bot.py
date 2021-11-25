@@ -113,6 +113,7 @@ class BotCog(commands.Cog, name="Bot"):
     @commands.command(name='set_logging', aliases=['set_logging_level'], help="Set logging level [Admin Only]")
     @commands.has_any_role('Core','Dev','VINO Team')
     async def set_logging(self,ctx,new_level):
+        new_level = new_level.replace('@','@\u200b') # Kaffin-proof user input
         try:
             new_logging_level = int(new_level)
             # Update logging level
@@ -124,12 +125,13 @@ class BotCog(commands.Cog, name="Bot"):
             Common.log(f"{ctx.message.author} set new logging level to \"{new_logging_level}\"")
             await ctx.send(f"Set logging level to {new_logging_level}")
         except Exception as e:
-            raise Exception(f"Could not change logging level to {new_logging_level}", e)    
+            raise Exception(f"Could not change logging level to {new_level}", e)    
 
     # Set the greylist duration period [Admin Only]
     @commands.command(name='set_greylist', help='Set greylist time period in minutes [Admin Only]')
     @commands.has_any_role('Core','Dev','VINO Team')
     async def set_greylist(self, ctx, param=""):
+        param = param.replace('@','@\u200b') # Kaffin-proof user input
         try:
             new_greylist = float(param)
             if(new_greylist < 0):
@@ -177,6 +179,7 @@ class BotCog(commands.Cog, name="Bot"):
     @commands.command(name='set_token_reward', help='Set reward size for one correct answer [Admin Only]')
     @commands.has_any_role('Core','Dev','VINO Team')
     async def set_token_reward(self, ctx, param=""):
+        param = param.replace('@','@\u200b') # Kaffin-proof user input
         try:
             new_token_amount = float(param)
             if(new_token_amount < 0):
@@ -201,6 +204,7 @@ class BotCog(commands.Cog, name="Bot"):
     @commands.command(name='set_max_reward', help='Set max rewards allowed per time period [Admin Only]')
     @commands.has_any_role('Core','Dev','VINO Team')
     async def set_max_reward(self, ctx, param=""):
+        param = param.replace('@','@\u200b') # Kaffin-proof user input
         try:
             amount = float(param)
             if(amount < 0):
@@ -225,6 +229,7 @@ class BotCog(commands.Cog, name="Bot"):
     @commands.command(name='set_low_balance_alert', help='Set low balance alert amount [Admin Only]')
     @commands.has_any_role('Core','Dev','VINO Team')
     async def set_low_balance_alert(self, ctx, param=""):
+        param = param.replace('@','@\u200b') # Kaffin-proof user input
         try:
             amount = float(param)
             if(amount < 0):
