@@ -123,13 +123,15 @@ class GameCog(commands.Cog, name="Game"):
             Common.logger.error(f"Error withdrawing funds: {e}", exc_info=True)   
             raise Exception(f"Exception with withdrawal to {vite_address}", e)   
 
-
+    # Scans player data for duplicate vite addresses
     @commands.command(name='alts', aliases=['find_alts'], help="Scans for alt accounts using the same wallet addresses.")
+    @commands.has_any_role('Core','Dev','VINO Team')
     async def deposit(self, ctx, vite_address=""):
 
         try:
             # Create <vite address> -> <user name> mapping
             wallets = {}
+            alts_found = 0
             # Loop thru player_data
             for player_name, player in self.bot.player_data.items():
                 # Grab wallet address
@@ -142,9 +144,15 @@ class GameCog(commands.Cog, name="Game"):
                     msg = f"Duplicate address detected {wallet_address} : {alt} and {player_name}"
                     Common.log(msg)
                     await ctx.send(msg)
+                    alts_found += 1
                 else:  
                     # Add it to dictionary  
                     wallets[wallet_address] = player_name
+            msg = f"No alts found"
+            if(alts_found != 0):
+                msg = f"{alts_found} alts found."
+            Common.log(msg)
+            await ctx.send(msg)
         except Exception as e:
             Common.logger.error(f"Error trying to find alts: {e}", exc_info=True)   
             raise Exception(f"Exception with trying to find alts:", e)               
