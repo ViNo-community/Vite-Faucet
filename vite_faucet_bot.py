@@ -169,7 +169,8 @@ class ViteFaucetBot(commands.Bot):
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
             Common.logger.error(f"{ctx.message.author} tried unknown command \"{ctx.invoked_with}\" Error: {error}", exc_info=True)
-            await ctx.reply(f"I do not know what \"{ctx.invoked_with}\" means.")
+            command = ctx.invoked_with.replace('@','@\u200b')
+            await ctx.reply(f"I do not know what \"{command}\" means.")
         elif isinstance(error, ConnectionError):
             Common.logger.error(f"Connection Error: {error}", exc_info=True)
             await ctx.reply(f"Connection Error executing command \"{ctx.invoked_with}\". Please try again. Check logs for error details")
