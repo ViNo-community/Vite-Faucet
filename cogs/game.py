@@ -115,7 +115,7 @@ class GameCog(commands.Cog, name="Game"):
                 # Grab wallet address of user for future reference
                 my_player_data.set_wallet_address(vite_address)
                 # Alert user of successful withdraw
-                await ctx.send(f"You have successfully sent {send_balance} tokens to {vite_address} : https://vitescan.io/tx/transaction/{hash}")
+                await ctx.send(f"You have successfully sent {send_balance} tokens to {vite_address} : https://vitescan.io/tx/{hash}")
                 # Increment total amount of vite distributed counter
                 self.bot.total_distributed = self.bot.total_distributed + send_balance
                 # Increment sent balance in player data
