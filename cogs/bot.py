@@ -19,6 +19,9 @@ class BotCog(commands.Cog, name="Bot"):
         if(new_prefix == ""):
             await ctx.send(f"Usage: {self.bot.command_prefix}set_prefix <new_prefix>")
             return
+        if('@' in new_prefix):
+            await ctx.send(f"Prefix cannot contain @")
+            return
         try:
             # Update command prefix
             self.bot.command_prefix = new_prefix
