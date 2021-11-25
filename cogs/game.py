@@ -126,7 +126,7 @@ class GameCog(commands.Cog, name="Game"):
     # Scans player data for duplicate vite addresses
     @commands.command(name='alts', aliases=['find_alts'], help="Scans for alt accounts using the same wallet addresses.")
     @commands.has_any_role('Core','Dev','VINO Team')
-    async def deposit(self, ctx, vite_address=""):
+    async def alts(self, ctx, vite_address=""):
 
         try:
             # Create <vite address> -> <user name> mapping
