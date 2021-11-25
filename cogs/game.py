@@ -123,6 +123,32 @@ class GameCog(commands.Cog, name="Game"):
             Common.logger.error(f"Error withdrawing funds: {e}", exc_info=True)   
             raise Exception(f"Exception with withdrawal to {vite_address}", e)   
 
+
+    @commands.command(name='alts', aliases=['find_alts'], help="Scans for alt accounts using the same wallet addresses.")
+    async def deposit(self, ctx, vite_address=""):
+
+        try:
+            # Create <vite address> -> <user name> mapping
+            wallets = {}
+            # Loop thru player_data
+            for player_name, player in self.bot.player_data.items():
+                # Grab wallet address
+                my_player_data = self.bot.player_data[player_name]
+                wallet_address = my_player_data.wallet_address
+                # Check if this vite address already exists in our dictionary
+                if(wallets.has_key(wallet_address)):
+                    # Name and shame
+                    alt = wallets[wallet_address]
+                    msg = f"Duplicate address detected {wallet_address} : {alt} and {player_name}"
+                    Common.log(msg)
+                    await ctx.send(msg)
+                else:  
+                    # Add it to dictionary  
+                    wallets[wallet_address] = player_name
+        except Exception as e:
+            Common.logger.error(f"Error trying to find alts: {e}", exc_info=True)   
+            raise Exception(f"Exception with trying to find alts:", e)               
+
     @commands.command(name='play', aliases=['p'], help="Play the trivia game.")
     async def play(self, ctx):
 
