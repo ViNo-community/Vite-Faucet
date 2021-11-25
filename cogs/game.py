@@ -138,6 +138,9 @@ class GameCog(commands.Cog, name="Game"):
                 # Grab wallet address
                 my_player_data = self.bot.player_data[player_name]
                 wallet_address = my_player_data.wallet_address
+                # If wallet_address is blank skip check
+                if(wallet_address == ""):
+                    continue
                 # Check if this vite address already exists in our dictionary
                 if(wallet_address in wallets):
                     # Name and shame
